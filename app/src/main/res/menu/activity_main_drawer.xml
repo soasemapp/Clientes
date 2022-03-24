@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_baseline_search_24"
+            android:title="@string/menu_home" />
+        <item
+            android:id="@+id/nav_gallery"
+            android:icon="@drawable/ic_baseline_account_circle_24"
+            android:title="@string/menu_gallery" />
+        <item
+            android:id="@+id/nav_slideshow"
+            android:icon="@drawable/icons8_lista_64"
+            android:title="@string/menu_slideshow" />
+
+        <item
+            android:id="@+id/activityConsulCoti2"
+            android:icon="@drawable/icons8_lista_de_ingredientes_96"
+            android:title="@string/menu_cotizacion" />
+
+        <item
+            android:id="@+id/activityConsulPedi2"
+            android:icon="@drawable/icons8_mover_por_carretilla_128"
+            android:title="@string/menu_pedidos" />
+
+
+
+    </group>
+</menu>

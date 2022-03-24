@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".ui.home.HomeFragment">
+
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <com.smarteist.autoimageslider.SliderView
+            android:id="@+id/image_slider"
+            android:layout_width="match_parent"
+            android:layout_margin="10dp"
+            android:layout_height="150dp"
+            app:sliderAnimationDuration="600"
+            app:sliderAutoCycleDirection="back_and_forth"
+            app:sliderAutoCycleEnabled="true"
+            app:sliderIndicatorAnimationDuration="600"
+            app:sliderIndicatorGravity="center_horizontal|bottom"
+            app:sliderIndicatorMargin="15dp"
+            app:sliderIndicatorOrientation="horizontal"
+            app:sliderIndicatorPadding="3dp"
+            app:sliderIndicatorRadius="2dp"
+            app:sliderIndicatorSelectedColor="#5A5A5A"
+            app:sliderIndicatorUnselectedColor="#FFF"
+            app:sliderScrollTimeInSec="2"
+            app:sliderStartAutoCycle="true" />
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnFilters"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Filtros"
+            android:layout_gravity="right"
+            android:textColor="@color/black"
+            android:backgroundTint="#00F44336"
+            android:layout_margin="10dp"
+
+
+            tools:ignore="UnusedAttribute"
+            />
+
+        <LinearLayout
+            android:id="@+id/Filter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnFMarca"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Marca"
+                    android:backgroundTint="#F44336"
+                    android:layout_margin="10dp"
+                    app:elevation="10dp"
+                    tools:ignore="UnusedAttribute"
+                    />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnFModelo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Modelo"
+                    android:backgroundTint="@color/PrimaryColor"
+                    android:layout_margin="10dp"
+                    app:elevation="10dp"
+                    tools:ignore="UnusedAttribute"
+                    />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btfLinea"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Linea"
+                    android:backgroundTint="@color/PrimaryColor"
+                    android:layout_margin="10dp"
+                    app:elevation="10dp"
+                    tools:ignore="UnusedAttribute"
+                    />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/checkyear"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.4"
+                    android:maxLines="1"
+                    android:layout_marginStart="5dp"
+                    android:text="Año" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="10dp"
+                    android:hint="AÑO INICIO"
+                    android:maxLines="1"
+                    app:boxBackgroundMode="outline"
+                    app:boxCornerRadiusTopEnd="10dp"
+                    app:boxCornerRadiusTopStart="10dp"
+                    app:startIconDrawable="@drawable/icons_fecha_hasta"
+                    app:startIconTint="@null"
+                    >
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/yearInicio"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:maxLength="4"
+                        android:textSize="10sp"
+                        android:autoSizeMinTextSize="5sp"
+                        android:autoSizeMaxTextSize="15sp"
+                        android:textAlignment="textEnd"
+                        android:imeOptions="actionDone"
+                        app:counterMaxLength="4" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="10dp"
+                    android:hint="AÑO FINAL"
+                    android:maxLines="1"
+                    app:boxBackgroundMode="outline"
+                    app:boxCornerRadiusTopEnd="10dp"
+                    app:boxCornerRadiusTopStart="10dp"
+                    app:startIconDrawable="@drawable/icons_fecha_hasta"
+                    app:startIconTint="@null"
+                    >
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/yearfinal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:maxLength="4"
+
+                        android:textSize="10sp"
+                        android:autoSizeMinTextSize="10sp"
+                        android:autoSizeMaxTextSize="15sp"
+                        android:textAlignment="textEnd"
+                        android:imeOptions="actionDone"
+                        app:counterMaxLength="4" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnBuscar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Buscar"
+            android:backgroundTint="#000000"
+            android:layout_margin="10dp"
+            app:elevation="10dp"
+            tools:ignore="UnusedAttribute"
+            />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/listProductos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+
+    </LinearLayout>
+
+</ScrollView>
+
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

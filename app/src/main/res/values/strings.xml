@@ -1,0 +1,52 @@
+<resources>
+    <string name="app_name">MiCedis</string>
+    <string name="bienvenido">Bienvenido</string>
+    <string name="usuario">Usuario</string>
+    <string name="siguiente">SIGUIENTE</string>
+    <string name="iniciar_sesion">INICIAR SESION</string>
+    <string name="solicitar_tu_usuario">SOLICITAR TU USUARIO</string>
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome!"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="todo">TODO</string>
+    <string name="contrase_a">Contraseña</string>
+    <string name="entrar">Entrar</string>
+    <string name="olvidaste_tu_contrase_a">¿Olvidaste tu contraseña?</string>
+    <string name="tienes_cuenta">¿Tienes cuenta?</string>
+    <string name="SelectEmpres">Selecciona una empresa</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="nombre_s">Nombre(s)</string>
+    <string name="rfc">RFC DE FACTURACION</string>
+    <string name="apellidos">Apellidos</string>
+    <string name="telefono">Telefono</string>
+    <string name="correa">Correo</string>
+    <string name="completa_tus_datos">Completa tus datos</string>
+    <string name="registrar">REGISTRAR</string>
+    <string name="la_contrase_a_debe_contener_entre_6_a_20_caracteres_sin_espacios">La contraseña debe contener entre 6 a 20 caracteres sin espacios</string>
+    <string name="seleccione_la_empresa">Seleccione la empresa</string>
+    <string name="busqueda_producto">Busqueda/Producto</string>
+    <string name="title_activity_primera">PrimeraActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Busqueda</string>
+    <string name="menu_gallery">Perfil</string>
+    <string name="menu_slideshow">Estado de cuenta</string>
+    <string name="menu_pedidos">Pedidos</string>
+    <string name="menu_cotizacion">Orden de Venta</string>
+    <string name="title_activity_inicio">inicioActivity</string>
+    <string name="cliente">Cliente</string>
+
+
+</resources>

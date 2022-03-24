@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragmentos.Fragment_SelectEmpresas">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/seleccione_la_empresa"
+            android:textAlignment="center"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:layout_margin="10dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/red_700">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnJacve"
+                    android:layout_width="0dp"
+                    android:layout_height="95dp"
+                    android:layout_weight="1"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/desingimage"
+                    android:backgroundTint="@color/white"
+                    app:icon="@drawable/jacve"
+                    app:iconTint="@null" />
+
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnAutodis"
+                    android:layout_width="0dp"
+                    android:layout_height="95dp"
+                    android:layout_weight="1"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/desingimage"
+                    android:backgroundTint="@color/white"
+                    app:icon="@drawable/autodis"
+                    app:iconTint="@null" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnCecra"
+                    android:layout_width="0dp"
+                    android:layout_height="95dp"
+                    android:layout_weight="1"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/desingimage"
+                    android:backgroundTint="@color/white"
+                    app:icon="@drawable/cecra"
+                    app:iconTint="@null" />
+
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnGuvi"
+                    android:layout_width="0dp"
+                    android:layout_height="95dp"
+                    android:layout_weight="1"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/desingimage"
+                    android:backgroundTint="@color/white"
+                     app:icon="@drawable/guvi"
+                    app:iconTint="@null" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnVipla"
+                    android:layout_width="0dp"
+                    android:layout_height="95dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/desingimage"
+                    android:backgroundTint="@color/white"
+                    app:icon="@drawable/vipla"
+                    android:layout_margin="5dp"
+                    app:iconTint="@null"/>
+
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnPressa"
+                    android:layout_width="0dp"
+                    android:layout_height="95dp"
+                    android:layout_weight="1"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/desingimage"
+                    android:backgroundTint="@color/white"
+                    app:icon="@drawable/pressa"
+                    app:iconTint="@null" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSPR"
+                    android:layout_width="wrap_content"
+                    android:layout_height="95dp"
+                    android:background="@drawable/desingimage"
+                    android:backgroundTint="@color/white"
+                    app:icon="@drawable/spr_logotipo_bordes"
+                    android:layout_margin="5dp"
+                    app:iconTint="@null"/>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+
+
+    </LinearLayout>
+</FrameLayout>
