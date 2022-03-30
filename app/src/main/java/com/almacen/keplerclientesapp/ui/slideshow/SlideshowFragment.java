@@ -238,9 +238,11 @@ public class SlideshowFragment extends Fragment {
                         Date date2 = sdformat.parse(listFacturas.get(i).getFechadeNacimiento());
 
                         if(date1.after(date2)){
-                            txtSaldo.setBackgroundColor(Color.WHITE);
+                            txtSaldo.setBackgroundColor(Color.RED);
+                            txtSaldo.setTextColor(Color.WHITE);
                         }else{
-
+                            txtSaldo.setBackgroundColor(Color.WHITE);
+                            txtSaldo.setTextColor(Color.BLACK);
                         }
 
 
@@ -253,9 +255,8 @@ public class SlideshowFragment extends Fragment {
 
 
                     txtSaldo.setGravity(Gravity.END);
-                    txtSaldo.setText(Html.fromHtml((listFacturas.get(i).getSaldodeFactura().equals("0") ? "<font color='#F32121'> PAGADO </font>" : "$<font color='#4CAF50'>" + formatNumberCurrency(listFacturas.get(i).getSaldodeFactura())) + "</font>"));
+                    txtSaldo.setText((listFacturas.get(i).getSaldodeFactura().equals("0") ? Html.fromHtml("<font color='#F32121'> PAGADO </font>" ):  Html.fromHtml("<font color='#000000'> $</font>" ) + formatNumberCurrency(listFacturas.get(i).getSaldodeFactura())));
                     txtSaldo.setPadding(20, 20, 20, 20);
-                    txtSaldo.setTextColor(Color.BLACK);
                     txtSaldo.setLayoutParams(layaoutDes);
                     fila.addView(txtSaldo);
 
@@ -297,7 +298,9 @@ public class SlideshowFragment extends Fragment {
                                         valormonto.getChildAt(4).setBackgroundColor(Color.LTGRAY);
 
                                         TextView txfolio = (TextView) valorfolio.getChildAt(0);
+                                        TextView txsaldo = (TextView) valorsaldo.getChildAt(3);
 
+                                        txsaldo.setTextColor(Color.BLACK);
                                         strFolio=txfolio.getText().toString();
                                       }
                                 } else if(i==-1) {
@@ -315,7 +318,27 @@ public class SlideshowFragment extends Fragment {
                                     valorfolio.getChildAt(0).setBackgroundColor(Color.BLACK);
                                     valorplazo.getChildAt(1).setBackgroundColor(Color.WHITE);
                                     valorvence.getChildAt(2).setBackgroundColor(Color.BLACK);
-                                    valorsaldo.getChildAt(3).setBackgroundColor(Color.WHITE);
+                                    SimpleDateFormat sdformat = new SimpleDateFormat("yyyy-MM-dd");
+                                    try {
+                                        Date date1 = sdformat.parse(fechaactual);
+                                        Date date2 = sdformat.parse(listFacturas.get(i).getFechadeNacimiento());
+
+                                        if(date1.after(date2)){
+                                            valorsaldo.getChildAt(3).setBackgroundColor(Color.RED);
+                                            TextView txsaldo = (TextView) valorsaldo.getChildAt(3);
+
+                                            txsaldo.setTextColor(Color.WHITE);
+                                        }else{
+                                            valorsaldo.getChildAt(3).setBackgroundColor(Color.WHITE);
+                                            TextView txsaldo = (TextView) valorsaldo.getChildAt(3);
+
+                                            txsaldo.setTextColor(Color.BLACK);
+                                        }
+
+
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
                                     valormonto.getChildAt(4).setBackgroundColor(Color.WHITE);
 
                                     TextView txplazo = (TextView) valorplazo.getChildAt(1);
