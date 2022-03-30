@@ -45,7 +45,11 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import dmax.dialog.SpotsDialog;
 
@@ -68,7 +72,9 @@ public class SlideshowFragment extends Fragment {
     private TableLayout tableLayout;
     TableRow fila;
     String  strFolio="";
-
+    Calendar c1 = Calendar.getInstance();
+    SimpleDateFormat dateformatActually = new SimpleDateFormat("yyyy-MM-dd");
+    String fechaactual = dateformatActually.format(c1.getTime());
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -110,7 +116,6 @@ public class SlideshowFragment extends Fragment {
 
             }
         });
-
 
 
 
@@ -225,7 +230,28 @@ public class SlideshowFragment extends Fragment {
                     fila.addView(txtFechaVencimiento);
 
                     txtSaldo = new TextView(getActivity().getApplicationContext());
-                    txtSaldo.setBackgroundColor(Color.WHITE);
+
+
+                    SimpleDateFormat sdformat = new SimpleDateFormat("yyyy-MM-dd");
+                    try {
+                        Date date1 = sdformat.parse(fechaactual);
+                        Date date2 = sdformat.parse(listFacturas.get(i).getFechadeNacimiento());
+
+                        if(date1.after(date2)){
+                            txtSaldo.setBackgroundColor(Color.WHITE);
+                        }else{
+
+                        }
+
+
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+
+
+
+
                     txtSaldo.setGravity(Gravity.END);
                     txtSaldo.setText(Html.fromHtml((listFacturas.get(i).getSaldodeFactura().equals("0") ? "<font color='#F32121'> PAGADO </font>" : "$<font color='#4CAF50'>" + formatNumberCurrency(listFacturas.get(i).getSaldodeFactura())) + "</font>"));
                     txtSaldo.setPadding(20, 20, 20, 20);
@@ -357,7 +383,7 @@ public class SlideshowFragment extends Fragment {
                 response = (SoapObject) response.getProperty("estadodecuenta");
                 response = (SoapObject) response.getProperty(i);
                 String folio_factura = response.getPropertyAsString("folio_factura");
-                String plazo_factura = response.getPropertyAsString("plazo_factura");
+                String plazo_factura = response.getPropertyAsString("plazo");
                 String fechav = response.getPropertyAsString("fechav");
                 String saldo_factura = response.getPropertyAsString("saldo_factura");
                 String monto_factura = response.getPropertyAsString("monto_factura");
