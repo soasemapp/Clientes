@@ -16,9 +16,11 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".EstadodeCuentaActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.ActivityFactuDetall"
-            android:parentActivityName=".activity.inicioActivity"
-             />
+            android:parentActivityName=".activity.inicioActivity" />
         <activity
             android:name=".activity.Carrito.CarritoComprasActivity"
             android:parentActivityName=".activity.inicioActivity" />
