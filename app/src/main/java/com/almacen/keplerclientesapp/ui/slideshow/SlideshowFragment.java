@@ -176,6 +176,7 @@ int contVencidas=0,contnovencidas=0;
                     if (date1.after(date2)) {
                         contVencidas++;
                         Vencimiento = Vencimiento + Double.parseDouble(listFacturas.get(i).getSaldodeFactura());
+                        montototal = montototal + Double.parseDouble(listFacturas.get(i).getSaldodeFactura());
                     } else {
                         contnovencidas++;
                         montototal = montototal + Double.parseDouble(listFacturas.get(i).getSaldodeFactura());
