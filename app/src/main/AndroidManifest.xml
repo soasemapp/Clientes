@@ -17,7 +17,8 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".BusquedaActivity"
-            android:exported="false" />
+            android:parentActivityName=".activity.inicioActivity"
+            />
         <activity
             android:name=".EstadodeCuentaActivity"
             android:exported="false" />
@@ -41,7 +42,7 @@
             android:parentActivityName=".activity.Pedidos.ActivityConsulPedi" />
         <activity
             android:name=".DetalladoProductosActivity"
-            android:parentActivityName=".activity.inicioActivity" />
+            android:parentActivityName=".BusquedaActivity" />
         <activity
             android:name=".activity.inicioActivity"
             android:label="@string/title_activity_inicio"

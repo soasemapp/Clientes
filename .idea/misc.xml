@@ -13,6 +13,7 @@
         <entry key="..\:/Users/j_are/OneDrive/Documentos/Proyectos Con Git/app/src/main/res/drawable/sharkfondoinicio.xml" value="0.1855" />
         <entry key="..\:/Users/j_are/OneDrive/Documentos/Proyectos Con Git/app/src/main/res/drawable/side_nav_bar.xml" value="0.2055" />
         <entry key="..\:/Users/j_are/OneDrive/Documentos/Proyectos Con Git/app/src/main/res/drawable/trackonefondoinicio.xml" value="0.1855" />
+        <entry key="..\:/Users/j_are/OneDrive/Documentos/Proyectos Con Git/app/src/main/res/layout/action_bar_toolbar.xml" value="0.3052586575459598" />
         <entry key="..\:/Users/j_are/OneDrive/Documentos/Proyectos Con Git/app/src/main/res/layout/activity_busqueda.xml" value="0.371875" />
         <entry key="..\:/Users/j_are/OneDrive/Documentos/Proyectos Con Git/app/src/main/res/layout/activity_consul_coti.xml" value="0.2046875" />
         <entry key="..\:/Users/j_are/OneDrive/Documentos/Proyectos Con Git/app/src/main/res/layout/activity_consul_pedi.xml" value="0.2046875" />
@@ -20,8 +21,19 @@
         <entry key="..\:/Users/j_are/OneDrive/Documentos/Proyectos Con Git/app/src/main/res/layout/activity_estadode_cuenta.xml" value="0.2046875" />
         <entry key="..\:/Users/j_are/OneDrive/Documentos/Proyectos Con Git/app/src/main/res/layout/activity_inicio.xml" value="0.2046875" />
         <entry key="..\:/Users/j_are/OneDrive/Documentos/Proyectos Con Git/app/src/main/res/layout/activity_login.xml" value="0.12817028985507245" />
+        <entry key="..\:/Users/j_are/OneDrive/Documentos/Proyectos Con Git/app/src/main/res/layout/app_bar_main.xml" value="0.3052586575459598" />
+        <entry key="..\:/Users/j_are/OneDrive/Documentos/Proyectos Con Git/app/src/main/res/layout/content_main.xml" value="0.3052586575459598" />
         <entry key="..\:/Users/j_are/OneDrive/Documentos/Proyectos Con Git/app/src/main/res/layout/fragment_home.xml" value="0.25" />
         <entry key="..\:/Users/j_are/OneDrive/Documentos/Proyectos Con Git/app/src/main/res/layout/fragment_slideshow.xml" value="0.20697463768115942" />
+        <entry key="..\:/Users/j_are/OneDrive/Documentos/Proyectos Con Git/app/src/main/res/layout/item_list_productosnuevoseagle.xml" value="0.371875" />
+        <entry key="..\:/Users/j_are/OneDrive/Documentos/Proyectos Con Git/app/src/main/res/layout/item_list_productosnuevospartech.xml" value="0.12569474134245404" />
+        <entry key="..\:/Users/j_are/OneDrive/Documentos/Proyectos Con Git/app/src/main/res/layout/item_list_productosnuevosrodatech.xml" value="0.12569474134245404" />
+        <entry key="..\:/Users/j_are/OneDrive/Documentos/Proyectos Con Git/app/src/main/res/layout/item_list_productosnuevosshark.xml" value="0.12569474134245404" />
+        <entry key="..\:/Users/j_are/OneDrive/Documentos/Proyectos Con Git/app/src/main/res/layout/item_list_productosnuevostrackone.xml" value="0.12569474134245404" />
+        <entry key="..\:/Users/j_are/OneDrive/Documentos/Proyectos Con Git/app/src/main/res/layout/nav_header_main.xml" value="0.3052586575459598" />
+        <entry key="..\:/Users/j_are/OneDrive/Documentos/Proyectos Con Git/app/src/main/res/layout/pantallacargacarrito.xml" value="0.3052586575459598" />
+        <entry key="..\:/Users/j_are/OneDrive/Documentos/Proyectos Con Git/app/src/main/res/layout/slider_item.xml" value="0.3052586575459598" />
+        <entry key="..\:/Users/j_are/OneDrive/Documentos/Proyectos Con Git/app/src/main/res/menu/activity_main_drawer.xml" value="0.3052586575459598" />
       </map>
     </option>
   </component>

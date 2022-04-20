@@ -14,21 +14,26 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.almacen.keplerclientesapp.SetandGet.SetGetListMarca;
 import com.almacen.keplerclientesapp.SetandGet.SetGetListProductos;
 import com.almacen.keplerclientesapp.SetandGet.SetGetListProductos2;
 import com.almacen.keplerclientesapp.SetterandGetter.ListLineaSANDG;
+import com.almacen.keplerclientesapp.XMLS.xmlBusqueGeneral;
 import com.almacen.keplerclientesapp.XMLS.xmlBusqueProductos;
 import com.almacen.keplerclientesapp.XMLS.xmlListLine;
 import com.almacen.keplerclientesapp.XMLS.xmlListMarca;
 import com.almacen.keplerclientesapp.XMLS.xmlListModelo;
 import com.almacen.keplerclientesapp.XMLS.xmlProductoConsulta;
 import com.almacen.keplerclientesapp.adapter.AdapterSearchProduct;
+import com.almacen.keplerclientesapp.includes.MyToolbar;
 import com.almacen.keplerclientesapp.ui.home.HomeFragment;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
@@ -75,14 +80,21 @@ public class BusquedaActivity extends AppCompatActivity {
     LinearLayout linearFiltro;
     int ban = 1;
 
+    String BusquedaProducto = "";
+
+    EditText BusquedaProductoed;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_busqueda);
 
 
-        mDialog = new SpotsDialog.Builder().setContext(getApplicationContext()).setMessage("Espere un momento...").build();
+        mDialog = new SpotsDialog.Builder().setContext(BusquedaActivity.this).setMessage("Espere un momento...").build();
         preference = getSharedPreferences("Login", Context.MODE_PRIVATE);
+        MyToolbar.show(this, "Busqueda", true);
+
+
         editor = preference.edit();
         strusr = preference.getString("user", "null");
         strpass = preference.getString("pass", "null");
@@ -94,6 +106,8 @@ public class BusquedaActivity extends AppCompatActivity {
         strcodBra = preference.getString("codBra", "null");
         strco = preference.getString("code", "null");
         StrServer = preference.getString("Servidor", "null");
+        BusquedaProducto = getIntent().getStringExtra("Producto");
+
 
         btnMarca = findViewById(R.id.btnFMarca);
         btnModelo = findViewById(R.id.btnFModelo);
@@ -103,8 +117,8 @@ public class BusquedaActivity extends AppCompatActivity {
         yearCheck = findViewById(R.id.checkyear);
         RecyclerProductos = findViewById(R.id.listProductos);
         btnBuscar = findViewById(R.id.btnBuscar);
-
-        linearFiltro =findViewById(R.id.Filter);
+        BusquedaProductoed = findViewById(R.id.idBusqueda);
+        linearFiltro = findViewById(R.id.Filter);
         btnfiltro = findViewById(R.id.btnFilters);
         linearFiltro.setVisibility(View.GONE);
 
@@ -149,7 +163,7 @@ public class BusquedaActivity extends AppCompatActivity {
                 } else {
                     listProdu1.clear();
                     listModelo.clear();
-                    AlertDialog.Builder alerta = new AlertDialog.Builder(getApplicationContext());
+                    AlertDialog.Builder alerta = new AlertDialog.Builder(BusquedaActivity.this);
                     alerta.setMessage("No has seleccionado una marca o modelo").setIcon(R.drawable.icons8_error_52).setCancelable(false).setNegativeButton("Ok", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
@@ -201,8 +215,8 @@ public class BusquedaActivity extends AppCompatActivity {
                 for (int i = 0; i < listMarca.size(); i++) {
                     opciones[i] = listMarca.get(i).getDescripcion();
                 }
-                mDialog.dismiss();
-                AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(BusquedaActivity.this);
                 builder.setTitle("¿Que Marca Buscas?");
 
 
@@ -222,6 +236,7 @@ public class BusquedaActivity extends AppCompatActivity {
 // create and show the alert dialog
                 AlertDialog dialog = builder.create();
                 dialog.show();
+
             }
         });
 
@@ -243,7 +258,7 @@ public class BusquedaActivity extends AppCompatActivity {
                     opciones[i] = listaLinea.get(i).getLinea();
                 }
                 mDialog.dismiss();
-                AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+                AlertDialog.Builder builder = new AlertDialog.Builder(BusquedaActivity.this);
                 builder.setTitle("¿Que Linea Buscas?");
 
 
@@ -262,6 +277,33 @@ public class BusquedaActivity extends AppCompatActivity {
                 dialog.show();
             }
         });
+
+
+        BusquedaProductoed.setImeOptions(3);
+
+        BusquedaProductoed.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+
+
+                listProdu1.clear();
+                listProdu2.clear();
+                BusquedaActivity.BusquedaGeneral task = new BusquedaActivity.BusquedaGeneral();
+                task.execute();
+
+                return false;
+            }
+        });
+
+
+        if (BusquedaProducto != null) {
+            listProdu1.clear();
+            listProdu2.clear();
+            BusquedaActivity.BusquedaGeneral task1 = new BusquedaActivity.BusquedaGeneral();
+            task1.execute();
+        }
+
+
     }
 
 
@@ -382,7 +424,7 @@ public class BusquedaActivity extends AppCompatActivity {
                 opciones[i] = listModelo.get(i).getDescripcion();
             }
             mDialog.dismiss();
-            AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+            AlertDialog.Builder builder = new AlertDialog.Builder(BusquedaActivity.this);
             builder.setTitle("¿Que Modelo Buscas?");
 
 
@@ -698,12 +740,89 @@ public class BusquedaActivity extends AppCompatActivity {
         } catch (Exception ex) {
         }
     }
-/*
 
-    public void DetalledelProdcuto(View view) {
+    private class BusquedaGeneral extends AsyncTask<Void, Void, Void> {
 
-         }
-*/
+        @Override
+        protected void onPreExecute() {
+            mDialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            BusquedaGeneral();
+            return null;
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.P)
+        @Override
+        protected void onPostExecute(Void result) {
+            eagle = "";
+            for (int i = 0; i < listProdu1.size(); i++) {
+                if ((i + 1) == listProdu1.size()) {
+                    eagle += listProdu1.get(i).getProductos();
+                } else {
+                    eagle += listProdu1.get(i).getProductos() + ",";
+                }
+            }
+
+            BusquedaActivity.ListProductosPrecios task = new BusquedaActivity.ListProductosPrecios();
+            task.execute();
+        }
+
+
+    }
+
+    private void BusquedaGeneral() {
+        String SOAP_ACTION = "BusquedaGeneral";
+        String METHOD_NAME = "BusquedaGeneral";
+        String NAMESPACE = "http://" + StrServer + "/WSk75ClienteSSoap/";
+        String URL = "http://" + StrServer + "/WSk75ClienteSSoap";
+
+
+        try {
+
+            SoapObject Request = new SoapObject(NAMESPACE, METHOD_NAME);
+            xmlBusqueGeneral soapEnvelope = new xmlBusqueGeneral(SoapEnvelope.VER11);
+            soapEnvelope.xmlBusqueGeneral(strusr, strpass, BusquedaProducto, BusquedaProducto);
+            soapEnvelope.dotNet = true;
+            soapEnvelope.implicitTypes = true;
+            soapEnvelope.setOutputSoapObject(Request);
+            HttpTransportSE trasport = new HttpTransportSE(URL);
+            trasport.debug = true;
+            trasport.call(SOAP_ACTION, soapEnvelope);
+            SoapObject response = (SoapObject) soapEnvelope.bodyIn;
+            for (int i = 0; i < response.getPropertyCount(); i++) {
+                SoapObject response0 = (SoapObject) soapEnvelope.bodyIn;
+                response0 = (SoapObject) response0.getProperty(i);
+
+                listProdu1.add(new SetGetListProductos(
+                        (response0.getPropertyAsString("k_Producto").equals("anyType{}") ? "" : response0.getPropertyAsString("k_Producto")),
+                        (response0.getPropertyAsString("k_Descripcion").equals("anyType{}") ? "" : response0.getPropertyAsString("k_Descripcion")),
+                        (response0.getPropertyAsString("k_Marca").equals("anyType{}") ? "" : response0.getPropertyAsString("k_Marca")),
+                        (response0.getPropertyAsString("k_Modelo").equals("anyType{}") ? "" : response0.getPropertyAsString("k_Modelo")),
+                        (response0.getPropertyAsString("k_Litros").equals("anyType{}") ? "" : response0.getPropertyAsString("k_Litros")),
+                        (response0.getPropertyAsString("k_Year").equals("anyType{}") ? "" : response0.getPropertyAsString("k_Year")),
+                        "",
+                        ""));
+
+
+            }
+
+
+        } catch (SoapFault soapFault) {
+            mDialog.dismiss();
+            soapFault.printStackTrace();
+        } catch (XmlPullParserException e) {
+            mDialog.dismiss();
+            e.printStackTrace();
+        } catch (IOException e) {
+            mDialog.dismiss();
+            e.printStackTrace();
+        } catch (Exception ex) {
+            mDialog.dismiss();
+        }
+    }
 
 
 }

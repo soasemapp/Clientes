@@ -20,9 +20,6 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="10dp"
             android:hint="Busqueda"
             android:maxLines="1"
             app:boxBackgroundMode="outline"
@@ -47,7 +44,6 @@
             android:id="@+id/image_slider"
             android:layout_width="match_parent"
             android:layout_height="150dp"
-            android:layout_marginTop="15dp"
             app:sliderAnimationDuration="600"
             app:sliderAutoCycleDirection="back_and_forth"
             app:sliderAutoCycleEnabled="true"
@@ -68,16 +64,14 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingTop="10dp"
-            android:layout_margin="10dp"
+            android:layout_marginBottom="7dp"
             android:background="@drawable/eaglefondoinicio">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_margin="5dp"
-                android:gravity="center"
-                >
+                android:gravity="center">
 
                 <View
                     android:layout_width="5dp"
@@ -122,7 +116,7 @@
                 android:id="@+id/listProductosEagle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+
                 android:orientation="horizontal">
 
             </androidx.recyclerview.widget.RecyclerView>
@@ -136,8 +130,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingTop="10dp"
-            android:layout_margin="10dp"
+            android:layout_marginBottom="7dp"
             android:background="@drawable/trackonefondoinicio">
 
             <LinearLayout
@@ -191,7 +184,6 @@
                 android:id="@+id/listProductTrackone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
                 android:orientation="horizontal">
             </androidx.recyclerview.widget.RecyclerView>
 
@@ -204,8 +196,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingTop="10dp"
-            android:layout_margin="10dp"
+            android:layout_marginBottom="7dp"
             android:background="@drawable/rodatechfondoinicio">
 
             <LinearLayout
@@ -259,9 +250,7 @@
                 android:id="@+id/listProductosRodatech"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
                 android:orientation="horizontal">
-
             </androidx.recyclerview.widget.RecyclerView>
 
 
@@ -273,8 +262,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingTop="10dp"
-            android:layout_margin="10dp"
+            android:layout_marginBottom="7dp"
             android:background="@drawable/partechfondoinicio">
 
             <LinearLayout
@@ -328,7 +316,6 @@
                 android:id="@+id/listProductosPartech"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
                 android:orientation="horizontal">
 
             </androidx.recyclerview.widget.RecyclerView>
@@ -342,8 +329,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingTop="10dp"
-            android:layout_margin="10dp"
+            android:layout_marginBottom="7dp"
             android:background="@drawable/sharkfondoinicio">
 
             <LinearLayout
@@ -397,7 +383,6 @@
                 android:id="@+id/listProductosShark"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
                 android:orientation="horizontal">
 
             </androidx.recyclerview.widget.RecyclerView>

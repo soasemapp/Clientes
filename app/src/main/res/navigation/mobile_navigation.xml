@@ -36,5 +36,9 @@
         android:id="@+id/activityConsulCoti2"
         android:name="com.almacen.keplerclientesapp.activity.Pedidos.ActivityConsulCoti"
         android:label="ActivityConsulPedi" />
+    <activity
+        android:id="@+id/busquedaActivity"
+        android:name="com.almacen.keplerclientesapp.BusquedaActivity"
+        android:label="BusquedaActivity" />
 
 </navigation>

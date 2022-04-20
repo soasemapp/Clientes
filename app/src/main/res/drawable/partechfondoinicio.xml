@@ -9,6 +9,5 @@
     <stroke
         android:width="2dp"
         android:color="@color/AccentColor" />
-    <corners
-        android:radius="20dp"/>
+
 </shape>
