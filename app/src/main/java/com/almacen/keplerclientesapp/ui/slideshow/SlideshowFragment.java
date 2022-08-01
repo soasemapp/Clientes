@@ -87,6 +87,8 @@ public class SlideshowFragment extends Fragment {
     TextView Vencimientotxt,montotaltxt,grafvencidas,grafnovencidas;
     PieChartView pieChartView;
     Button totalvencidasbt,totalmontobt;
+    private SharedPreferences preference2;
+    private SharedPreferences.Editor editor2;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -98,6 +100,11 @@ public class SlideshowFragment extends Fragment {
         idlistFacturas = view.findViewById(R.id.idlistFacturas);
         preference = getActivity().getSharedPreferences("Login", Context.MODE_PRIVATE);
         editor = preference.edit();
+
+        preference2 = getActivity().getSharedPreferences("EstadoCuenta", Context.MODE_PRIVATE);
+        editor2 = preference2.edit();
+
+
         strusr = preference.getString("user", "null");
         strpass = preference.getString("pass", "null");
         strname = preference.getString("name", "null");
@@ -124,7 +131,8 @@ public class SlideshowFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent Factura = new Intent(getActivity(), EstadodeCuentaActivity.class);
-                Factura.putExtra("val", 1);
+                    editor2.putInt("valor", 1);
+                    editor2.commit();
                 startActivity(Factura);
             }
         });
@@ -133,7 +141,8 @@ public class SlideshowFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent Facturar = new Intent(getActivity(), EstadodeCuentaActivity.class);
-                Facturar.putExtra("val", 2);
+                editor2.putInt("valor", 2);
+                editor2.commit();
                 startActivity(Facturar);
             }
         });
@@ -146,6 +155,9 @@ public class SlideshowFragment extends Fragment {
 
         return view;
     }
+
+
+
 
     private class Facturas extends AsyncTask<Void, Void, Void> {
 

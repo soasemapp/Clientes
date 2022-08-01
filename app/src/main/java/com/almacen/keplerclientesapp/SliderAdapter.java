@@ -1,51 +1,66 @@
 package com.almacen.keplerclientesapp;
-
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.smarteist.autoimageslider.SliderViewAdapter;
 
-public class SliderAdapter extends SliderViewAdapter<SliderAdapter.Holder> {
+import java.util.ArrayList;
+import java.util.List;
 
-    int[] images;
+public class SliderAdapter extends SliderViewAdapter<SliderAdapter.SliderAdapterViewHolder> {
 
-    public SliderAdapter(int[] images){
+    // list for storing urls of images.
+    private final List<SliderData> mSliderItems;
 
-        this.images = images;
-
+    // Constructor
+    public SliderAdapter(Context context, ArrayList<SliderData> sliderDataArrayList) {
+        this.mSliderItems = sliderDataArrayList;
     }
 
+    // We are inflating the slider_layout
+    // inside on Create View Holder method.
     @Override
-    public Holder onCreateViewHolder(ViewGroup parent) {
-
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.slider_item,parent,false);
-        return new Holder(view);
+    public SliderAdapterViewHolder onCreateViewHolder(ViewGroup parent) {
+        View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.slider_view_items, null);
+        return new SliderAdapterViewHolder(inflate);
     }
 
+    // Inside on bind view holder we will
+    // set data to item of Slider View.
     @Override
-    public void onBindViewHolder(Holder viewHolder, int position) {
+    public void onBindViewHolder(SliderAdapterViewHolder viewHolder, final int position) {
 
-        viewHolder.imageView.setImageResource(images[position]);
+        final SliderData sliderItem = mSliderItems.get(position);
 
+        // Glide is use to load image
+        // from url in your imageview.
+        Glide.with(viewHolder.itemView)
+                .load(sliderItem.getImgUrl())
+                .fitCenter()
+                .into(viewHolder.imageViewBackground);
     }
 
+    // this method will return
+    // the count of our list.
     @Override
     public int getCount() {
-        return images.length;
+        return mSliderItems.size();
     }
 
-    public class Holder extends  SliderViewAdapter.ViewHolder{
+    static class SliderAdapterViewHolder extends SliderViewAdapter.ViewHolder {
+        // Adapter class for initializing
+        // the views of our slider view.
+        View itemView;
+        ImageView imageViewBackground;
 
-        ImageView imageView;
-
-        public Holder(View itemView){
+        public SliderAdapterViewHolder(View itemView) {
             super(itemView);
-            imageView = itemView.findViewById(R.id.image_view);
-
+            imageViewBackground = itemView.findViewById(R.id.myimage);
+            this.itemView = itemView;
         }
     }
-
 }

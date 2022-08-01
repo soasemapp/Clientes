@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.almacen.keplerclientesapp.SetandGet.SetGetLisFacturas;
 import com.almacen.keplerclientesapp.XMLS.xmlUsuarioConsulta;
 import com.almacen.keplerclientesapp.activity.ActivityFactuDetall;
+import com.almacen.keplerclientesapp.includes.MyToolbar;
 import com.almacen.keplerclientesapp.ui.slideshow.SlideshowFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -62,6 +63,8 @@ public class EstadodeCuentaActivity extends AppCompatActivity {
     SimpleDateFormat dateformatActually = new SimpleDateFormat("yyyy-MM-dd");
     String fechaactual = dateformatActually.format(c1.getTime());
     int ban;
+    private SharedPreferences preference2;
+    private SharedPreferences.Editor editor2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +77,10 @@ public class EstadodeCuentaActivity extends AppCompatActivity {
         tableLayout = findViewById(R.id.table);
         preference = getSharedPreferences("Login", Context.MODE_PRIVATE);
         editor = preference.edit();
+
+        preference2 = getSharedPreferences("EstadoCuenta", Context.MODE_PRIVATE);
+        editor2 = preference2.edit();
+
         strusr = preference.getString("user", "null");
         strpass = preference.getString("pass", "null");
         strname = preference.getString("name", "null");
@@ -84,7 +91,17 @@ public class EstadodeCuentaActivity extends AppCompatActivity {
         strcodBra = preference.getString("codBra", "null");
         strco = preference.getString("code", "null");
         StrServer = preference.getString("Servidor", "null");
-        ban = getIntent().getIntExtra("val", 0);
+        ban = preference2.getInt("valor", 0);
+
+
+        if(ban==1){
+
+            MyToolbar.show(this, "Facturas-Vencidas", true);
+
+        }else{
+            MyToolbar.show(this, "Facturas", true);
+        }
+
         listFacturas = new ArrayList<>();
         btnBusCot = findViewById(R.id.btnbusquedacoti);
 
@@ -96,6 +113,8 @@ public class EstadodeCuentaActivity extends AppCompatActivity {
                 Intent FactutaDetall = new Intent(EstadodeCuentaActivity.this, ActivityFactuDetall.class);
                 FactutaDetall.putExtra("Folio", strFolio);
                 FactutaDetall.putExtra("NumSucu", strcodBra);
+                FactutaDetall.putExtra("val", ban);
+
                 startActivity(FactutaDetall);
 
             }
@@ -288,7 +307,7 @@ public class EstadodeCuentaActivity extends AppCompatActivity {
                                     public void onClick(View view) {
 
                                         int idfila = view.getId();
-                                        for (int i = -1; i < listFacturas.size(); i++) {
+                                        for (int i = -1; i < listFacturas2vencidas.size(); i++) {
                                             int selector = tableLayout.getChildAt(i + 1).getId();
                                             if (idfila == selector) {
 
@@ -612,6 +631,19 @@ public class EstadodeCuentaActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+
+        int count = getFragmentManager().getBackStackEntryCount();
+
+        if (count == 0) {
+            super.onBackPressed();
+            getFragmentManager().popBackStack();
+        } else {
+            getFragmentManager().popBackStack();//No se porqué puse lo mismo O.o
+        }
+
+    }
     private static String formatNumberCurrency(String number) {
         DecimalFormat formatter = new DecimalFormat("###,###,##0.00");
         return formatter.format(Double.parseDouble(number));

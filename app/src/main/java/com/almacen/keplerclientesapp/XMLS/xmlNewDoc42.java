@@ -30,11 +30,10 @@ public class xmlNewDoc42 extends SoapSerializationEnvelope {
     String Calle = "";
     String Colonia = "";
     String Poblacion = "";
-    String FolioPrev="";
-    String Via="";
-    String stridEnvio="";
+    String FolioPrev = "";
+    String Via = "";
+    String stridEnvio = "";
     ArrayList<DetallCotiSANDG> listasearch2 = new ArrayList<>();
-    ArrayList<valExiPedSANDG> listasearch3 = new ArrayList<>();
     double DescProstr = 0;
     double Descuentorec = 0;
     String DescuentoStr;
@@ -46,16 +45,16 @@ public class xmlNewDoc42 extends SoapSerializationEnvelope {
     double monto3;
     String Server;
     int canst;
-
+String Vendedor;
 
     public xmlNewDoc42(int version) {
         super(version);
     }
 
 
-    public void xmlNewDoc42( String comentario,String nombreCliente, String claveCliente, String fechaActual, String fechaVencimiento,
-                           String sucursal, String usuario, String clave, String rfcCliente, String plazo, String montototal, String iva, String descuento, String descuentoPro,
-                           String Desc1,String calle, String colonia, String poblacion, String folioPrev,String Via,String stridEnvio, ArrayList<DetallCotiSANDG> listasearch2, ArrayList<valExiPedSANDG> listasearch3 ,String StrServer) {
+    public void xmlNewDoc42(String comentario, String nombreCliente, String claveCliente, String fechaActual, String fechaVencimiento,
+                            String sucursal, String usuario, String clave, String rfcCliente, String plazo, String montototal, String iva, String descuento, String descuentoPro,
+                            String Desc1, String calle, String colonia, String poblacion, String folioPrev, String Via, String stridEnvio, ArrayList<DetallCotiSANDG> listasearch2, String StrServer,String vendedor) {
         this.Comentario = comentario;
         this.NombreCliente = nombreCliente;
         this.ClaveCliente = claveCliente;
@@ -78,8 +77,8 @@ public class xmlNewDoc42 extends SoapSerializationEnvelope {
         this.Via = Via;
         this.stridEnvio = stridEnvio;
         this.listasearch2 = listasearch2;
-        this.listasearch3 = listasearch3;
         this.Server = StrServer;
+        this.Vendedor = vendedor;
     }
 
     @Override
@@ -170,6 +169,10 @@ public class xmlNewDoc42 extends SoapSerializationEnvelope {
         writer.text(Desc1);
         writer.endTag(tem, "k_desc1");
 
+        writer.startTag(tem, "k_agente");
+        writer.text(Vendedor);
+        writer.endTag(tem, "k_agente");
+
         writer.startTag(tem, "k_moneda");
         writer.text("PESOS");
         writer.endTag(tem, "k_moneda");
@@ -203,7 +206,7 @@ public class xmlNewDoc42 extends SoapSerializationEnvelope {
 
         for (int i = 0; i < listasearch2.size(); i++) {
             precio = Double.valueOf(listasearch2.get(i).getPrecio());
-            cantidad = Double.valueOf(listasearch3.get(i).getBajNeg());
+            cantidad = Double.valueOf(listasearch2.get(i).getBackOrder());
             descuento = Double.valueOf(listasearch2.get(i).getDesc());
             monto = precio * cantidad;
             monto2 = monto * (descuento / 100);
@@ -214,21 +217,18 @@ public class xmlNewDoc42 extends SoapSerializationEnvelope {
         }
 
 
-
-
-
-        DescProstr=Double.parseDouble(Desc1)/100;
-        Descuentorec = Subtotal*DescProstr;
+        DescProstr = Double.parseDouble(Desc1) / 100;
+        Descuentorec = Subtotal * DescProstr;
         DescuentoStr = String.valueOf(Descuentorec);
 
         double Subtotal2;
-        Subtotal2 =Subtotal-Descuentorec;
+        Subtotal2 = Subtotal - Descuentorec;
 
 
         double ivaCal;
         double MontoTotal;
 
-        ivaCal = Subtotal2 * (!Server.equals("vazlocolombia.dyndns.org:9085")?0.16 : 0.19);
+        ivaCal = Subtotal2 * (!Server.equals("vazlocolombia.dyndns.org:9085") ? 0.16 : 0.19);
         MontoTotal = Subtotal2 + ivaCal;
 
         Iva = String.valueOf(ivaCal);
@@ -237,7 +237,7 @@ public class xmlNewDoc42 extends SoapSerializationEnvelope {
         DecimalFormat formato1 = new DecimalFormat("#.00");
 
         writer.startTag(tem, "k_desc");
-        writer.text(formatNumberCurrency(DescuentoStr));
+        writer.text(DescuentoStr);
         writer.endTag(tem, "k_desc");
 
 
@@ -247,12 +247,12 @@ public class xmlNewDoc42 extends SoapSerializationEnvelope {
 
 
         writer.startTag(tem, "k_iva");
-        writer.text(formatNumberCurrency(Iva));
+        writer.text(Iva);
         writer.endTag(tem, "k_iva");
 
 
         writer.startTag(tem, "k_monto");
-        writer.text(formatNumberCurrency(Montototal));
+        writer.text(Montototal);
         writer.endTag(tem, "k_monto");
 
         writer.startTag(tem, "k_70");
@@ -260,26 +260,25 @@ public class xmlNewDoc42 extends SoapSerializationEnvelope {
         writer.endTag(tem, "k_70");
 
 
-
         writer.startTag(tem, "k_74");
         writer.text(stridEnvio);
         writer.endTag(tem, "k_74");
 
 
-
+        writer.startTag(tem, "k_63");
+        writer.text("UD4201-");
+        writer.endTag(tem, "k_63");
 
         /*Items*/
         writer.startTag(tem, "k_items");
         for (int i = 0; i < listasearch2.size(); i++) {
 
-            precio=Double.valueOf(listasearch2.get(i).getPrecio());
-            cantidad =Double.valueOf(listasearch3.get(i).getBajNeg());
-            descuento =Double.valueOf(listasearch2.get(i).getDesc());
-            monto=precio * cantidad;
-            monto2 = monto * (descuento/100);
-            monto3 =monto-monto2;
-
-
+            precio = Double.valueOf(listasearch2.get(i).getPrecio());
+            cantidad = Double.valueOf(listasearch2.get(i).getBackOrder());
+            descuento = Double.valueOf(listasearch2.get(i).getDesc());
+            monto = precio * cantidad;
+            monto2 = monto * (descuento / 100);
+            monto3 = monto - monto2;
 
 
             writer.startTag(tem, "item");
@@ -290,7 +289,7 @@ public class xmlNewDoc42 extends SoapSerializationEnvelope {
 
 
             writer.startTag(tem, "k_Q");
-            writer.text(String.valueOf(listasearch3.get(i).getBajNeg()));
+            writer.text(String.valueOf(listasearch2.get(i).getBackOrder()));
             writer.endTag(tem, "k_Q");
 
             writer.startTag(tem, "k_desc1");
@@ -298,14 +297,12 @@ public class xmlNewDoc42 extends SoapSerializationEnvelope {
             writer.endTag(tem, "k_desc1");
 
             writer.startTag(tem, "k_descr");
-            writer.text(listasearch3.get(i).getDescripcion());
+            writer.text(listasearch2.get(i).getDescripcion());
             writer.endTag(tem, "k_descr");
 
             writer.startTag(tem, "k_unidad");
-            writer.text(listasearch3.get(i).getUnidad());
+            writer.text(listasearch2.get(i).getUnidad());
             writer.endTag(tem, "k_unidad");
-
-
 
 
             writer.startTag(tem, "k_precio");
@@ -313,17 +310,12 @@ public class xmlNewDoc42 extends SoapSerializationEnvelope {
             writer.endTag(tem, "k_precio");
 
 
-
-
-
-
-
             writer.startTag(tem, "k_monto");
             writer.text(formato1.format(monto3));
             writer.endTag(tem, "k_monto");
 
             writer.startTag(tem, "k_iva");
-            writer.text((!Server.equals("vazlocolombia.dyndns.org:9085")?"16" : "19"));
+            writer.text((!Server.equals("vazlocolombia.dyndns.org:9085") ? "16" : "19"));
             writer.endTag(tem, "k_iva");
 
             writer.startTag(tem, "k_ieps");
@@ -339,7 +331,6 @@ public class xmlNewDoc42 extends SoapSerializationEnvelope {
             writer.endTag(tem, "k_genero");
 
 
-
             writer.endTag(tem, "item");
 
         }
@@ -353,10 +344,4 @@ public class xmlNewDoc42 extends SoapSerializationEnvelope {
 
     }
 
-    private static String formatNumberCurrency(String number) {
-        DecimalFormat formatter = new DecimalFormat("###,###,##0.00");
-        return formatter.format(Double.parseDouble(number));
-
-
-    }
 }

@@ -17,26 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PrimeraPaActivity extends AppCompatActivity {
-    SliderView sliderView;
-    int[] images = {R.drawable.image1,
-            R.drawable.image2,
-            R.drawable.image3,
-            R.drawable.image4,
-            R.drawable.image5};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_primera_pa);
-
-        sliderView = findViewById(R.id.image_slider);
-
-        SliderAdapter sliderAdapter = new SliderAdapter(images);
-
-        sliderView.setSliderAdapter(sliderAdapter);
-        sliderView.setIndicatorAnimation(IndicatorAnimationType.WORM);
-        sliderView.setSliderTransformAnimation(SliderAnimations.DEPTHTRANSFORMATION);
-        sliderView.startAutoCycle();
-
 
     }
 

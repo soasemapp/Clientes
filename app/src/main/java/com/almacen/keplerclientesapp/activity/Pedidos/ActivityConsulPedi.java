@@ -12,6 +12,8 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -27,6 +29,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.almacen.keplerclientesapp.R;
 import com.almacen.keplerclientesapp.SetterandGetter.ConsulPediSANDG;
 import com.almacen.keplerclientesapp.XMLS.xmlConsulPedi;
+import com.almacen.keplerclientesapp.activity.Carrito.CarritoComprasActivity;
+import com.almacen.keplerclientesapp.activity.MainActivity;
 import com.almacen.keplerclientesapp.adapter.AdaptadorConsulPedi;
 import com.almacen.keplerclientesapp.includes.MyToolbar;
 
@@ -64,7 +68,7 @@ public class ActivityConsulPedi extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_consul_pedi);
 
-        MyToolbar.show(this, "Pedido", true);
+        MyToolbar.show(this, "Pedido", false);
         mDialog = new SpotsDialog.Builder().setContext(ActivityConsulPedi.this).setMessage("Espere un momento...").build();
         preference = getSharedPreferences("Login", Context.MODE_PRIVATE);
         editor = preference.edit();
@@ -205,7 +209,7 @@ public class ActivityConsulPedi extends AppCompatActivity {
                 });
 
                 AlertDialog titulo = alerta.create();
-                titulo.setTitle("Pedidos sin existencia");
+                titulo.setTitle("Pedidos");
                 titulo.show();
             } else {
                 AdaptadorConsulPedi adapter = new AdaptadorConsulPedi(listaConsulPedi);
@@ -263,7 +267,9 @@ public class ActivityConsulPedi extends AppCompatActivity {
                         (response0.getPropertyAsString("k_Fecha").equals("anyType{}") ? " " : response0.getPropertyAsString("k_Fecha")),
                         (response0.getPropertyAsString("k_Cliente").equals("anyType{}") ? " " : response0.getPropertyAsString("k_Cliente")),
                         (response0.getPropertyAsString("k_Nombre").equals("anyType{}") ? " " : response0.getPropertyAsString("k_Nombre")),
-                        (response0.getPropertyAsString("k_Importe").equals("anyType{}") ? " " : response0.getPropertyAsString("k_Importe"))));
+                        (response0.getPropertyAsString("k_Importe").equals("anyType{}") ? " " : response0.getPropertyAsString("k_Importe")),
+                        (response0.getPropertyAsString("k_comentario").equals("anyType{}") ? " " : response0.getPropertyAsString("k_comentario")),
+                        (response0.getPropertyAsString("k_nSucursal").equals("anyType{}") ? " " : response0.getPropertyAsString("k_nSucursal"))));
 
             }
 
@@ -284,6 +290,35 @@ public class ActivityConsulPedi extends AppCompatActivity {
             mDialog.dismiss();
             mensaje = "Error:" + ex.getMessage();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.inicio, menu);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        if (id == R.id.cerrarSe) {
+            editor.clear().commit();
+            editor.apply();
+            Intent cerrar = new Intent(this, MainActivity.class);
+            startActivity(cerrar);
+            System.exit(0);
+            finish();
+        }else if (id == R.id.CarrComp){
+            Intent Shoping = new Intent(this, CarritoComprasActivity.class);
+            startActivity(Shoping);
+
+
+        }
+
+
+        return super.onOptionsItemSelected(item);
     }
 
 }

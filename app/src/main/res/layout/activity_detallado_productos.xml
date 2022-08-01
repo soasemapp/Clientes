@@ -20,16 +20,6 @@
             android:orientation="vertical">
 
 
-            <TextView
-                android:id="@+id/Descr"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:maxLines="4"
-                android:text="Descripcion"
-                android:textColor="@color/black"
-                android:textSize="15sp"
-                android:textStyle="bold" />
 
 
             <ImageView
@@ -38,7 +28,7 @@
                 android:layout_height="200dp"
                 android:layout_margin="10dp"
                 android:background="@color/AccentColor"
-                android:src="@drawable/sprimage" />
+                android:src="@drawable/mycedis3" />
 
             <TextView
                 android:id="@+id/Clave"
@@ -51,49 +41,18 @@
                 android:textAlignment="center"
                 android:textSize="20sp"
                 android:textStyle="bold" />
-            <LinearLayout
+
+            <TextView
+                android:id="@+id/Descr"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:orientation="horizontal">
+                android:maxLines="4"
+                android:text="Descripcion"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/Marca"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:maxLines="4"
-                    android:layout_marginEnd="10dp"
-                    android:text="Marca"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-
-                <TextView
-                    android:id="@+id/Modelo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:maxLines="4"
-                    android:layout_marginEnd="10dp"
-                    android:text="Modelo"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-
-                <TextView
-                    android:id="@+id/Year"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:maxLines="4"
-                    android:text="Año"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-
-
-            </LinearLayout>
 
             <TextView
                 android:id="@+id/Precio"
@@ -157,18 +116,38 @@
 
 
         </LinearLayout>
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:text="Guia del Comprador"
+    android:textSize="20sp"
+    android:textStyle="bold"
+    android:textColor="@color/black"
+    android:textAlignment="center"/>
 
-
-
-            <com.google.android.material.button.MaterialButton
-                android:layout_width="match_parent"
+            <HorizontalScrollView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="5dp"
-                android:layout_weight="0.8"
-                android:backgroundTint="@color/red_700"
-                android:onClick="eliminar"
-                android:text="Eliminar datos"/>
+                android:fillViewport="true">
+
+                <TableLayout
+                    android:id="@+id/table"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:background="@color/cardview_shadow_start_color"
+                    android:padding="5dp"
+                    android:stretchColumns="5">
+
+                </TableLayout>
+
+            </HorizontalScrollView>
 
     </LinearLayout>
 

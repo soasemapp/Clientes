@@ -3,6 +3,7 @@ package com.almacen.keplerclientesapp.activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
@@ -11,6 +12,8 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -50,6 +53,10 @@ public class ActivityFactuDetall extends AppCompatActivity {
     private SharedPreferences preference;
     private SharedPreferences.Editor editor;
 
+
+
+    int ban;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,8 +64,9 @@ public class ActivityFactuDetall extends AppCompatActivity {
 
         tableLayout = (TableLayout) findViewById(R.id.table);
         preference = getSharedPreferences("Login", Context.MODE_PRIVATE);
-
         editor = preference.edit();
+
+
 
         mDialog = new SpotsDialog.Builder().setContext(ActivityFactuDetall.this).setMessage("Espere un momento...").build();
 
@@ -74,6 +82,7 @@ public class ActivityFactuDetall extends AppCompatActivity {
         StrServer = preference.getString("Servidor", "null");
         ClaveFolDialog = getIntent().getStringExtra("Folio");
         ClaveNumDialog = getIntent().getStringExtra("NumSucu");
+        ban = getIntent().getIntExtra("val", 0);
         MyToolbar.show(this, "Factura:" + ClaveFolDialog, true);
 
 
@@ -338,4 +347,6 @@ public class ActivityFactuDetall extends AppCompatActivity {
             mensaje = "Error:" + ex.getMessage();
         }
     }
+
+
 }

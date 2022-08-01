@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -93,6 +94,19 @@
                         android:layout_marginLeft="5dp"
                         android:layout_marginBottom="5dp"
                         android:text="Piezas" />
+                    <TextView
+                        android:id="@+id/Comentario"
+                        android:textStyle="bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="15dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:text="Comentario" />
+
+
+
+
 
                     <View
                         android:layout_width="match_parent"

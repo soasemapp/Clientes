@@ -107,10 +107,8 @@ public class Fragment_SelectEmpresas extends Fragment {
         btnJacve.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
                 AlertDialog.Builder alerta = new AlertDialog.Builder(getContext());
-                alerta.setMessage("¿Esta seguro que desea entrar a JACVE?").setIcon(R.drawable.icons_edificio).setCancelable(false).setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                alerta.setMessage("¿Esta seguro que desea entrar a Jacve?").setIcon(R.drawable.icons_edificio).setCancelable(false).setPositiveButton("Si", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if(Pantalla == 0){
@@ -150,8 +148,6 @@ public class Fragment_SelectEmpresas extends Fragment {
                 AlertDialog titulo = alerta.create();
                 titulo.setTitle("Selección de empresa");
                 titulo.show();
-
-
             }
         });
 

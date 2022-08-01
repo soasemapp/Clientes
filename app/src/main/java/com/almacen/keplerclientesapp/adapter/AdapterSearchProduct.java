@@ -42,12 +42,9 @@ public class AdapterSearchProduct extends RecyclerView.Adapter<AdapterSearchProd
         holder.precio.setText((Double.valueOf(listProductos.get(position).getPrecioAjuste()) == 0 ?
                 (Double.valueOf(listProductos.get(position).getPrecioBase()) == 0 ? Html.fromHtml("<font color = #E81414>No disponible</font>") : "$" + Html.fromHtml("<font color = #48E305>$" + formatNumberCurrency(listProductos.get(position).getPrecioBase()) + "</font>"))
                 : (Double.valueOf(listProductos.get(position).getPrecioAjuste()) == 0 ? Html.fromHtml("<font color = #E81414>No disponible</font>") : Html.fromHtml("<font color = #48E305>$" + formatNumberCurrency(listProductos.get(position).getPrecioAjuste()) + "</font>"))));
-        holder.Marca.setText(listProductos.get(position).getMarca());
-        holder.Modelo.setText(listProductos.get(position).getModelo());
-        holder.year.setText(listProductos.get(position).getYear());
         Picasso.with(context).
-                load("https://vazlo.com.mx/assets/img/productos/chica/jpg/" + listProductos.get(position).getProductos() + ".jpg")
-                .error(R.drawable.icons8_error_52)
+                load("https://www.pressa.mx/es-mx/img/products/xl/"+listProductos.get(position).getProductos()+"/4.webp")
+                .error(R.drawable.ic_baseline_error_24)
                 .fit()
                 .centerInside()
                 .into(holder.prodocuImag);
@@ -87,9 +84,6 @@ public class AdapterSearchProduct extends RecyclerView.Adapter<AdapterSearchProd
             Clave = (TextView) itemView.findViewById(R.id.PartClave);
             Descripcion = (TextView) itemView.findViewById(R.id.Descr);
             precio = (TextView) itemView.findViewById(R.id.Precio);
-            Marca = (TextView) itemView.findViewById(R.id.Marca);
-            Modelo = (TextView) itemView.findViewById(R.id.Modelo);
-            year = (TextView) itemView.findViewById(R.id.year);
             prodocuImag = (ImageView) itemView.findViewById(R.id.productoImag);
         }
     }

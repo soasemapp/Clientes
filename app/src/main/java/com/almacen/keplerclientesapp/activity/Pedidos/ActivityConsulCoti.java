@@ -6,9 +6,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -21,6 +25,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.almacen.keplerclientesapp.R;
 import com.almacen.keplerclientesapp.SetterandGetter.ConsulCotiSANDG;
 import com.almacen.keplerclientesapp.XMLS.xmlConsulCoti;
+import com.almacen.keplerclientesapp.activity.Carrito.CarritoComprasActivity;
+import com.almacen.keplerclientesapp.activity.MainActivity;
 import com.almacen.keplerclientesapp.adapter.AdaptadorConsulCoti;
 import com.almacen.keplerclientesapp.includes.MyToolbar;
 
@@ -51,7 +57,7 @@ public class ActivityConsulCoti extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_consul_coti);
 
-        MyToolbar.show(this, "Orden de Venta", true);
+        MyToolbar.show(this, "Orden de Venta", false);
         mDialog = new SpotsDialog.Builder().setContext(ActivityConsulCoti.this).setMessage("Espere un momento...").build();
 
         preference = getSharedPreferences("Login", Context.MODE_PRIVATE);
@@ -134,7 +140,7 @@ public class ActivityConsulCoti extends AppCompatActivity {
 
             if (listaConsulCoti.size() == 0) {
                 AlertDialog.Builder alerta = new AlertDialog.Builder(ActivityConsulCoti.this);
-                alerta.setMessage("No se encontraron cotizaciones recientes").setCancelable(false).setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+                alerta.setMessage("No cuenta con ninguna orden de venta").setCancelable(false).setNegativeButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.cancel();
@@ -142,7 +148,7 @@ public class ActivityConsulCoti extends AppCompatActivity {
                 });
 
                 AlertDialog titulo = alerta.create();
-                titulo.setTitle("No hay Cotizaciones");
+                titulo.setTitle("Orden de ventas");
                 titulo.show();
             } else {
                 AdaptadorConsulCoti adapter = new AdaptadorConsulCoti(listaConsulCoti);
@@ -164,6 +170,7 @@ public class ActivityConsulCoti extends AppCompatActivity {
         Coti.putExtra("Folio", ClaveFolDialog);
         Coti.putExtra("NumSucu", ClaveNumDialog);
         startActivity(Coti);
+
     }
 
     private void conecta() {
@@ -195,7 +202,9 @@ public class ActivityConsulCoti extends AppCompatActivity {
                         (response0.getPropertyAsString("k_cCliente").equals("anyType{}") ? " " : response0.getPropertyAsString("k_cCliente")),
                         (response0.getPropertyAsString("k_Nombre").equals("anyType{}") ? " " : response0.getPropertyAsString("k_Nombre")),
                         (response0.getPropertyAsString("k_Importe").equals("anyType{}") ? " " : response0.getPropertyAsString("k_Importe")),
-                        (response0.getPropertyAsString("k_Piezas").equals("anyType{}") ? " " : response0.getPropertyAsString("k_Piezas"))));
+                        (response0.getPropertyAsString("k_Piezas").equals("anyType{}") ? " " : response0.getPropertyAsString("k_Piezas")),
+                        (response0.getPropertyAsString("k_nSucursal").equals("anyType{}") ? " " : response0.getPropertyAsString("k_nSucursal")),
+                        (response0.getPropertyAsString("k_comentario").equals("anyType{}") ? " " : response0.getPropertyAsString("k_comentario"))));
 
 
             }
@@ -219,7 +228,34 @@ public class ActivityConsulCoti extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.inicio, menu);
+        return true;
+    }
 
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        if (id == R.id.cerrarSe) {
+            editor.clear().commit();
+            editor.apply();
+            Intent cerrar = new Intent(this, MainActivity.class);
+            startActivity(cerrar);
+            System.exit(0);
+            finish();
+        }else if (id == R.id.CarrComp){
+            Intent Shoping = new Intent(this, CarritoComprasActivity.class);
+            startActivity(Shoping);
+
+
+        }
+
+
+        return super.onOptionsItemSelected(item);
+    }
 
 
 }

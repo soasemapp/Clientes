@@ -9,6 +9,7 @@ public class xmlListLine extends SoapSerializationEnvelope {
 
     String usuario = "";
     String clave = "";
+    String modelo = "";
 
 
     public xmlListLine(int version) {
@@ -16,9 +17,10 @@ public class xmlListLine extends SoapSerializationEnvelope {
     }
 
 
-    public void xmlListLine(String usuario, String clave) {
+    public void xmlListLine(String usuario, String clave, String modelo) {
         this.usuario = usuario;
         this.clave = clave;
+        this.modelo =modelo;
     }
 
 
@@ -35,19 +37,25 @@ public class xmlListLine extends SoapSerializationEnvelope {
 
         writer.startTag(env, "Body");
 
-        writer.startTag(tem, "ListLiPreRequest");
+        writer.startTag(tem, "listlineasRequest");
 
         writer.startTag(tem, "Login");
         writer.startTag(tem, "user");
         writer.text(usuario);
         writer.endTag(tem, "user");
-
         writer.startTag(tem, "pass");
         writer.text(clave);
         writer.endTag(tem, "pass");
         writer.endTag(tem, "Login");
 
-        writer.endTag(tem, "ListLiPreRequest");
+
+        writer.startTag(tem, "Lineas");
+        writer.startTag(tem, "modelo");
+        writer.text(modelo);
+        writer.endTag(tem, "modelo");
+        writer.endTag(tem, "Lineas");
+
+        writer.endTag(tem, "listlineasRequest");
         writer.endTag(env, "Body");
         writer.endTag(env, "Envelope");
         writer.endDocument();

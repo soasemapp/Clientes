@@ -100,6 +100,7 @@ public class CarritoComprasActivity extends AppCompatActivity {
     String Comentario1;
     String Comentario2;
     String Comentario3;
+    String Vendedor;
     String MensajePro;
     String ProductoEqui;
     String ValidaEqui;
@@ -158,7 +159,7 @@ public class CarritoComprasActivity extends AppCompatActivity {
         setContentView(R.layout.activity_carrito_compras);
         mDialog = new SpotsDialog.Builder().setContext(CarritoComprasActivity.this).setMessage("Espere un momento...").build();
 
-        MyToolbar.show(this, "", true);
+        MyToolbar.show(this, "", false);
         recyclerCarrtio = (RecyclerView) findViewById(R.id.lisCarrito);
 
         preference = getSharedPreferences("Login", Context.MODE_PRIVATE);
@@ -203,7 +204,7 @@ public class CarritoComprasActivity extends AppCompatActivity {
         Comentario1 = preferenceClie.getString("Comentario1", "");
         Comentario2 = preferenceClie.getString("Comentario2", "");
         Comentario3 = preferenceClie.getString("Comentario3", "");
-
+        Vendedor = preferenceClie.getString("Vendedor", "");
 
 
 
@@ -420,7 +421,7 @@ public class CarritoComprasActivity extends AppCompatActivity {
 
             SoapObject Request = new SoapObject(NAMESPACE, METHOD_NAME);
             xmlCarritoCompras soapEnvelope = new xmlCarritoCompras(SoapEnvelope.VER11);
-            soapEnvelope.xmlCarritoCompras(Comentario, Nombre, strcode, StrFechaActaul, StrFechaVencimiento, strcodBra, strusr, strpass, rfc, plazo, MontoStr, ivstr, DescuentoStr, DescPro, Desc1, Calle, Colonia, Poblacion, listaCarShoping, StrServer);
+            soapEnvelope.xmlCarritoCompras(Comentario, Nombre, strcode, StrFechaActaul, StrFechaVencimiento, strcodBra, strusr, strpass, rfc, plazo, MontoStr, ivstr, DescuentoStr, DescPro, Desc1, Calle, Colonia, Poblacion, listaCarShoping, StrServer,Vendedor);
             soapEnvelope.dotNet = true;
             soapEnvelope.implicitTypes = true;
             soapEnvelope.setOutputSoapObject(Request);

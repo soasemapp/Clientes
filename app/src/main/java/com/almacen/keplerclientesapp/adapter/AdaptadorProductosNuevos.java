@@ -40,12 +40,11 @@ public class AdaptadorProductosNuevos extends RecyclerView.Adapter<AdaptadorProd
     public void onBindViewHolder(ViewHolderProductosNuevos holder, int position) {
         holder.Parte.setText(listaproductos.get(position).getClave());
         Picasso.with(context).
-                load("https://vazlo.com.mx/assets/img/productos/chica/jpg/" + listaproductos.get(position).getClave() + ".jpg")
-                .error(R.drawable.mycedis3)
+                load("https://www.pressa.mx/es-mx/img/products/xl/"+listaproductos.get(position).getClave()+"/4.webp")
+                .error(R.drawable.ic_baseline_error_24)
                 .fit()
                 .centerInside()
                 .into(holder.imgPro);
-
     }
 
 

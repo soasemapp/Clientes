@@ -16,10 +16,12 @@ import android.os.Bundle;
 import android.text.Html;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.almacen.keplerclientesapp.SetandGet.SetGetListMarca;
@@ -64,8 +66,9 @@ public class BusquedaActivity extends AppCompatActivity {
     ArrayList<SetGetListMarca> listMarca = new ArrayList<>();
     ArrayList<SetGetListMarca> listModelo = new ArrayList<>();
     ArrayList<SetGetListProductos> listProdu1 = new ArrayList<>();
-    ArrayList<SetGetListProductos2> listProdu2 = new ArrayList<>();
     ArrayList<ListLineaSANDG> listaLinea = new ArrayList<>();
+
+    TextView txtmarca,txtmodelo,txtlinea;
 
     String claveMarca;
     Button btnMarca, btnModelo, btfLinea;
@@ -80,8 +83,7 @@ public class BusquedaActivity extends AppCompatActivity {
     LinearLayout linearFiltro;
     int ban = 1;
 
-    String BusquedaProducto = "";
-
+    String BusquedaProducto = null;
     EditText BusquedaProductoed;
 
     @Override
@@ -92,7 +94,7 @@ public class BusquedaActivity extends AppCompatActivity {
 
         mDialog = new SpotsDialog.Builder().setContext(BusquedaActivity.this).setMessage("Espere un momento...").build();
         preference = getSharedPreferences("Login", Context.MODE_PRIVATE);
-        MyToolbar.show(this, "Busqueda", true);
+        MyToolbar.show(this, "Busqueda", false);
 
 
         editor = preference.edit();
@@ -120,6 +122,10 @@ public class BusquedaActivity extends AppCompatActivity {
         BusquedaProductoed = findViewById(R.id.idBusqueda);
         linearFiltro = findViewById(R.id.Filter);
         btnfiltro = findViewById(R.id.btnFilters);
+        txtmarca =findViewById(R.id.marcatxt);
+        txtmodelo =findViewById(R.id.modelotxt);
+        txtlinea =findViewById(R.id.lineatxt);
+
         linearFiltro.setVisibility(View.GONE);
 
         btnfiltro.setOnClickListener(new View.OnClickListener() {
@@ -149,20 +155,16 @@ public class BusquedaActivity extends AppCompatActivity {
                     fechainicio = yearInicial.getText().toString();
                     fechafinal = yearFinal.getText().toString();
                     listProdu1.clear();
-                    listProdu2.clear();
-                    listModelo.clear();
                     BusquedaActivity.ListProductos task = new BusquedaActivity.ListProductos();
                     task.execute();
                 } else if (check.equals("0") && (!marca.equals("") && !modelo.equals(""))) {
                     fechainicio = "";
                     fechafinal = "";
                     listProdu1.clear();
-                    listModelo.clear();
                     BusquedaActivity.ListProductos task = new BusquedaActivity.ListProductos();
                     task.execute();
                 } else {
                     listProdu1.clear();
-                    listModelo.clear();
                     AlertDialog.Builder alerta = new AlertDialog.Builder(BusquedaActivity.this);
                     alerta.setMessage("No has seleccionado una marca o modelo").setIcon(R.drawable.icons8_error_52).setCancelable(false).setNegativeButton("Ok", new DialogInterface.OnClickListener() {
                         @Override
@@ -224,12 +226,24 @@ public class BusquedaActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         btnModelo.setText(Html.fromHtml("Modelo"));
+
                         modelo = "";
+                        linea="";
+
                         claveMarca = listMarca.get(which).getClaveMarca();//Html.fromHtml("Marca" <br/> C/U:$<font color ='#4CAF50' size=4> +listMarca.get(which).getDescripcion())+"</font>")
-                        btnMarca.setText(Html.fromHtml("Marca<br/><font color ='#030303' size=2>" + listMarca.get(which).getDescripcion() + "</font>"));
                         btnModelo.setEnabled(true);
+                        btfLinea.setEnabled(false);
+                        txtmarca.setVisibility(View.VISIBLE);
+                        txtmarca.setText(listMarca.get(which).getDescripcion()+" "+"X");
+                        txtmodelo.setVisibility(View.GONE);
+                        txtmodelo.setText("");
+                        txtlinea.setVisibility(View.GONE);
+                        txtlinea.setText("");
                         listModelo.clear();
+                        listaLinea.clear();
                         marca = listMarca.get(which).getClaveMarca();
+                        BusquedaActivity.ListModelo task = new BusquedaActivity.ListModelo();
+                        task.execute();
                         dialog.dismiss();
                     }
                 });
@@ -243,8 +257,34 @@ public class BusquedaActivity extends AppCompatActivity {
         btnModelo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                BusquedaActivity.ListModelo task = new BusquedaActivity.ListModelo();
-                task.execute();
+                String[] opciones = new String[listModelo.size()];
+
+                for (int i = 0; i < listModelo.size(); i++) {
+                    opciones[i] = listModelo.get(i).getDescripcion();
+                }
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(BusquedaActivity.this);
+                builder.setTitle("¿Que Modelo Buscas?");
+
+
+                builder.setItems(opciones, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        modelo = listModelo.get(which).getClaveMarca();
+                        listaLinea.clear();
+                        txtmodelo.setVisibility(View.VISIBLE);
+                        txtmodelo.setText(listModelo.get(which).getDescripcion()+" "+"X");
+                        txtlinea.setVisibility(View.GONE);
+                        txtlinea.setText("");
+
+
+                        BusquedaActivity.ListLineas task = new BusquedaActivity.ListLineas();
+                        task.execute();
+                    }
+                });
+// create and show the alert dialog
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         });
 
@@ -257,7 +297,7 @@ public class BusquedaActivity extends AppCompatActivity {
                 for (int i = 0; i < listaLinea.size(); i++) {
                     opciones[i] = listaLinea.get(i).getLinea();
                 }
-                mDialog.dismiss();
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(BusquedaActivity.this);
                 builder.setTitle("¿Que Linea Buscas?");
 
@@ -265,10 +305,10 @@ public class BusquedaActivity extends AppCompatActivity {
                 builder.setItems(opciones, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        btfLinea.setText(Html.fromHtml("Linea"));
                         linea = "";
                         linea = listaLinea.get(which).getCodeLinea();
-                        btfLinea.setText(Html.fromHtml("Linea<br/><font color ='#030303' size=2>" + listaLinea.get(which).getCodeLinea() + "</font>"));
+                        txtlinea.setVisibility(View.VISIBLE);
+                        txtlinea.setText(listaLinea.get(which).getLinea()+" "+"X");
                         dialog.dismiss();
                     }
                 });
@@ -278,27 +318,25 @@ public class BusquedaActivity extends AppCompatActivity {
             }
         });
 
+        BusquedaProductoed.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+                if(actionId == EditorInfo.IME_ACTION_SEARCH) { //Do Something } return false; } });
 
-        BusquedaProductoed.setImeOptions(3);
-
-        BusquedaProductoed.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                    BusquedaProducto=BusquedaProductoed.getText().toString();
+                    listProdu1.clear();
 
 
-                listProdu1.clear();
-                listProdu2.clear();
-                BusquedaActivity.BusquedaGeneral task = new BusquedaActivity.BusquedaGeneral();
-                task.execute();
+                    BusquedaActivity.BusquedaGeneral task = new BusquedaActivity.BusquedaGeneral();
+                    task.execute();
 
-                return false;
+                }
+            return false;
             }
         });
 
 
         if (BusquedaProducto != null) {
             listProdu1.clear();
-            listProdu2.clear();
             BusquedaActivity.BusquedaGeneral task1 = new BusquedaActivity.BusquedaGeneral();
             task1.execute();
         }
@@ -307,11 +345,43 @@ public class BusquedaActivity extends AppCompatActivity {
     }
 
 
+
+    public void borrarmarca(View view){
+        marca = "";
+        modelo = "";
+        linea="";
+        btnModelo.setEnabled(false);
+        btfLinea.setEnabled(false);
+        txtmarca.setVisibility(View.GONE);
+        txtmodelo.setVisibility(View.GONE);
+        txtmodelo.setText("");
+        txtlinea.setVisibility(View.GONE);
+        txtlinea.setText("");
+        listModelo.clear();
+        listaLinea.clear();
+    }
+    public void borrarmodelo(View view){
+
+        modelo = "";
+        linea="";
+        btfLinea.setEnabled(false);
+        txtmodelo.setVisibility(View.GONE);
+        txtmodelo.setText("");
+        txtlinea.setVisibility(View.GONE);
+        txtlinea.setText("");
+        listaLinea.clear();
+    }
+    public void borrarmlinea(View view){
+        linea="";
+        txtlinea.setVisibility(View.GONE);
+        txtlinea.setText("");
+        }
+
     private class ListLineas extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPreExecute() {
-
+        mDialog.show();
         }
 
         @Override
@@ -324,7 +394,8 @@ public class BusquedaActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result) {
 
-            String[] opciones = new String[listaLinea.size() + 1];
+            btfLinea.setEnabled(true);
+            mDialog.dismiss();
 
         }
 
@@ -332,17 +403,17 @@ public class BusquedaActivity extends AppCompatActivity {
     }
 
     private void conectar3() {
-        String SOAP_ACTION = "ListLiPre";
-        String METHOD_NAME = "ListLiPre";
-        String NAMESPACE = "http://" + StrServer + "/WSk75Branch/";
-        String URL = "http://" + StrServer + "/WSk75Branch";
+        String SOAP_ACTION = "listlineas";
+        String METHOD_NAME = "listlineas";
+        String NAMESPACE = "http://" + StrServer + "/WSk75ClientesSOAP/";
+        String URL = "http://" + StrServer + "/WSk75ClientesSOAP";
 
 
         try {
 
             SoapObject Request = new SoapObject(NAMESPACE, METHOD_NAME);
             xmlListLine soapEnvelope = new xmlListLine(SoapEnvelope.VER11);
-            soapEnvelope.xmlListLine(strusr, strpass);
+            soapEnvelope.xmlListLine(strusr, strpass,modelo);
             soapEnvelope.dotNet = true;
             soapEnvelope.implicitTypes = true;
             soapEnvelope.setOutputSoapObject(Request);
@@ -381,7 +452,7 @@ public class BusquedaActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-            mDialog.show();
+
 
         }
 
@@ -393,9 +464,8 @@ public class BusquedaActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void result) {
-            mDialog.dismiss();
-            BusquedaActivity.ListLineas task = new BusquedaActivity.ListLineas();
-            task.execute();
+
+
 
         }
     }
@@ -417,31 +487,7 @@ public class BusquedaActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void result) {
-
-            String[] opciones = new String[listModelo.size()];
-
-            for (int i = 0; i < listModelo.size(); i++) {
-                opciones[i] = listModelo.get(i).getDescripcion();
-            }
             mDialog.dismiss();
-            AlertDialog.Builder builder = new AlertDialog.Builder(BusquedaActivity.this);
-            builder.setTitle("¿Que Modelo Buscas?");
-
-
-            builder.setItems(opciones, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-
-                    btnModelo.setText(Html.fromHtml("Modelo<br/><font color ='#030303' size=2>" + listModelo.get(which).getDescripcion() + "</font>"));
-                    modelo = listModelo.get(which).getClaveMarca();
-                    btfLinea.setEnabled(true);
-                    dialog.dismiss();
-                }
-            });
-// create and show the alert dialog
-            AlertDialog dialog = builder.create();
-            dialog.show();
-
         }
 
     }
@@ -463,19 +509,20 @@ public class BusquedaActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void result) {
+            AdapterSearchProduct adapter = new AdapterSearchProduct(listProdu1, context);
+            adapter.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
-            eagle = "";
-            for (int i = 0; i < listProdu1.size(); i++) {
-                if ((i + 1) == listProdu1.size()) {
-                    eagle += listProdu1.get(i).getProductos();
-                } else {
-                    eagle += listProdu1.get(i).getProductos() + ",";
+                    int position = RecyclerProductos.getChildAdapterPosition(RecyclerProductos.findContainingItemView(view));
+                    Intent ProductosDetallados = new Intent(BusquedaActivity.this, DetalladoProductosActivity.class);
+                    String Producto = listProdu1.get(position).getProductos();
+                    ProductosDetallados.putExtra("Producto",Producto);
+                    startActivity(ProductosDetallados);
                 }
-            }
-
-            BusquedaActivity.ListProductosPrecios task = new BusquedaActivity.ListProductosPrecios();
-            task.execute();
-
+            });
+            RecyclerProductos.setAdapter(adapter);
+            mDialog.dismiss();
 
         }
 
@@ -491,129 +538,18 @@ public class BusquedaActivity extends AppCompatActivity {
         try {
             SoapObject Request = new SoapObject(NAMESPACE, METHOD_NAME);
             xmlBusqueProductos soapEnvelope = new xmlBusqueProductos(SoapEnvelope.VER11);
-            soapEnvelope.xmlBusqueProductos(strusr, strpass, fechainicio, fechafinal, marca, modelo, linea, check);
+            soapEnvelope.xmlBusqueProductos(strusr, strpass, fechainicio, fechafinal, marca, modelo, linea, check,strco);
             soapEnvelope.dotNet = true;
             soapEnvelope.implicitTypes = true;
             soapEnvelope.setOutputSoapObject(Request);
             HttpTransportSE trasport = new HttpTransportSE(URL);
             trasport.debug = true;
             trasport.call(SOAP_ACTION, soapEnvelope);
-            SoapObject response = (SoapObject) soapEnvelope.bodyIn;
-            for (int i = 0; i < response.getPropertyCount(); i++) {
-                SoapObject response0 = (SoapObject) soapEnvelope.bodyIn;
-                response0 = (SoapObject) response0.getProperty(i);
 
-                listProdu1.add(new SetGetListProductos(
-                        (response0.getPropertyAsString("k_Producto").equals("anyType{}") ? "" : response0.getPropertyAsString("k_Producto")),
-                        (response0.getPropertyAsString("k_Descripcion").equals("anyType{}") ? "" : response0.getPropertyAsString("k_Descripcion")),
-                        (response0.getPropertyAsString("k_Marca").equals("anyType{}") ? "" : response0.getPropertyAsString("k_Marca")),
-                        (response0.getPropertyAsString("k_Modelo").equals("anyType{}") ? "" : response0.getPropertyAsString("k_Modelo")),
-                        (response0.getPropertyAsString("k_Litros").equals("anyType{}") ? "" : response0.getPropertyAsString("k_Litros")),
-                        (response0.getPropertyAsString("k_Year").equals("anyType{}") ? "" : response0.getPropertyAsString("k_Year")),
-                        "",
-                        ""));
-
-
-            }
-
-        } catch (SoapFault soapFault) {
-            soapFault.printStackTrace();
-        } catch (XmlPullParserException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception ex) {
-        }
-    }
-
-    private class ListProductosPrecios extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected void onPreExecute() {
-
-
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            WebServiceListProductoprecios();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-
-
-            String Producto;
-            String Producto2;
-
-
-            for (int i = 0; i < listProdu1.size(); i++) {
-                for (int j = 0; j < listProdu2.size(); j++) {
-
-                    Producto = listProdu1.get(i).getProductos();
-                    Producto2 = listProdu2.get(j).getProducto();
-                    if (Producto.equals(Producto2)) {
-                        listProdu1.get(i).setPrecioAjuste(listProdu2.get(j).getPrecio_ajuste());
-                        listProdu1.get(i).setPrecioBase(listProdu2.get(j).getPrecio_base());
-                        break;
-                    }
-
-
-                }
-            }
-
-
-            AdapterSearchProduct adapter = new AdapterSearchProduct(listProdu1, context);
-            adapter.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    int position = RecyclerProductos.getChildAdapterPosition(RecyclerProductos.findContainingItemView(view));
-
-
-                    String Producto = listProdu1.get(position).getProductos();
-                    String Descripcion = listProdu1.get(position).getDescripcion();
-                    String Modelo = listProdu1.get(position).getModelo();
-                    String Marca = listProdu1.get(position).getMarca();
-                    String Year = listProdu1.get(position).getYear();
-
-                    Intent ProductosDetallados = new Intent(BusquedaActivity.this, DetalladoProductosActivity.class);
-                    ProductosDetallados.putExtra("Producto", Producto);
-                    ProductosDetallados.putExtra("Descripcion", Descripcion);
-                    ProductosDetallados.putExtra("Modelo", Modelo);
-                    ProductosDetallados.putExtra("Marca", Marca);
-                    ProductosDetallados.putExtra("Year", Year);
-                    startActivity(ProductosDetallados);
-                }
-            });
-            RecyclerProductos.setAdapter(adapter);
-            mDialog.dismiss();
-
-        }
-
-    }
-
-    private void WebServiceListProductoprecios() {
-        String SOAP_ACTION = "ProductoConsulta";
-        String METHOD_NAME = "ProductoConsulta";
-        String NAMESPACE = "http://" + StrServer + "/WSk75ClientesSOAP/";
-        String URL = "http://" + StrServer + "/WSk75ClientesSOAP";
-
-
-        try {
-            SoapObject Request = new SoapObject(NAMESPACE, METHOD_NAME);
-            xmlProductoConsulta soapEnvelope = new xmlProductoConsulta(SoapEnvelope.VER11);
-            soapEnvelope.xmlProductoConsulta(strusr, strpass, strco, eagle, " ", " ", " ", " ");
-            soapEnvelope.dotNet = true;
-            soapEnvelope.implicitTypes = true;
-            soapEnvelope.setOutputSoapObject(Request);
-            HttpTransportSE trasport = new HttpTransportSE(URL);
-            trasport.debug = true;
-            trasport.call(SOAP_ACTION, soapEnvelope);
             SoapObject response = (SoapObject) soapEnvelope.bodyIn;
 
             String Producto;
+            String Descripcion="";
             String precio_base;
             String precio_ajuste;
             String sucursal;
@@ -625,30 +561,26 @@ public class BusquedaActivity extends AppCompatActivity {
 
                 SoapObject response0 = (SoapObject) soapEnvelope.bodyIn;
                 response0 = (SoapObject) response0.getProperty(i);
+
                 Producto = response0.getPropertyAsString("Producto");
-                response0 = (SoapObject) soapEnvelope.bodyIn;
-                response0 = (SoapObject) response0.getProperty(i);
+                Descripcion = response0.getPropertyAsString("Descripcion");
                 response0 = (SoapObject) response0.getProperty("precio_base");
                 precio_base = response0.getPropertyAsString("valor").equals("anyType{}") ? "0" : response0.getPropertyAsString("valor");
-                response0.getPropertyAsString("prefijo");
-                response0.getPropertyAsString("sufijo");
                 response0 = (SoapObject) soapEnvelope.bodyIn;
                 response0 = (SoapObject) response0.getProperty(i);
                 response0 = (SoapObject) response0.getProperty("precio_ajuste");
                 precio_ajuste = response0.getPropertyAsString("valor").equals("anyType{}") ? "0" : response0.getPropertyAsString("valor");
-                response0.getPropertyAsString("prefijo");
-                response0.getPropertyAsString("sufijo");
-                response0 = (SoapObject) soapEnvelope.bodyIn;
-                response0 = (SoapObject) response0.getProperty(i);
-                response0 = (SoapObject) response0.getProperty("existencia");
-                sucursal = response0.getPropertyAsString("sucursal");
-                existencia = response0.getPropertyAsString("existencia");
-                nomSucursal = response0.getPropertyAsString("nomSucursal");
 
-                listProdu2.add(new SetGetListProductos2(Producto, precio_base, precio_ajuste, sucursal, existencia, nomSucursal, "0"));
+                listProdu1.add(new SetGetListProductos(Producto,Descripcion,precio_base,precio_ajuste));
 
 
             }
+
+
+
+
+
+
 
         } catch (SoapFault soapFault) {
             soapFault.printStackTrace();
@@ -657,9 +589,9 @@ public class BusquedaActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (Exception ex) {
-            ex.getMessage();
         }
     }
+
 
     private void WebServiceListMarca() {
         String SOAP_ACTION = "listmarca";
@@ -745,6 +677,7 @@ public class BusquedaActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
+
             mDialog.show();
         }
 
@@ -757,25 +690,32 @@ public class BusquedaActivity extends AppCompatActivity {
         @RequiresApi(api = Build.VERSION_CODES.P)
         @Override
         protected void onPostExecute(Void result) {
-            eagle = "";
-            for (int i = 0; i < listProdu1.size(); i++) {
-                if ((i + 1) == listProdu1.size()) {
-                    eagle += listProdu1.get(i).getProductos();
-                } else {
-                    eagle += listProdu1.get(i).getProductos() + ",";
-                }
-            }
 
-            BusquedaActivity.ListProductosPrecios task = new BusquedaActivity.ListProductosPrecios();
-            task.execute();
+
+            AdapterSearchProduct adapter = new AdapterSearchProduct(listProdu1, context);
+            adapter.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    int position = RecyclerProductos.getChildAdapterPosition(RecyclerProductos.findContainingItemView(view));
+                     Intent ProductosDetallados = new Intent(BusquedaActivity.this, DetalladoProductosActivity.class);
+                     String Producto = listProdu1.get(position).getProductos();
+                     ProductosDetallados.putExtra("Producto",Producto);
+                     startActivity(ProductosDetallados);
+                }
+            });
+            RecyclerProductos.setAdapter(adapter);
+            mDialog.dismiss();
+
+
         }
 
 
     }
 
     private void BusquedaGeneral() {
-        String SOAP_ACTION = "BusquedaGeneral";
-        String METHOD_NAME = "BusquedaGeneral";
+        String SOAP_ACTION = "ProductoConsultaApp";
+        String METHOD_NAME = "ProductoConsultaApp";
         String NAMESPACE = "http://" + StrServer + "/WSk75ClienteSSoap/";
         String URL = "http://" + StrServer + "/WSk75ClienteSSoap";
 
@@ -784,7 +724,7 @@ public class BusquedaActivity extends AppCompatActivity {
 
             SoapObject Request = new SoapObject(NAMESPACE, METHOD_NAME);
             xmlBusqueGeneral soapEnvelope = new xmlBusqueGeneral(SoapEnvelope.VER11);
-            soapEnvelope.xmlBusqueGeneral(strusr, strpass, BusquedaProducto, BusquedaProducto);
+            soapEnvelope.xmlBusqueGeneral(strusr, strpass, strco, BusquedaProducto);
             soapEnvelope.dotNet = true;
             soapEnvelope.implicitTypes = true;
             soapEnvelope.setOutputSoapObject(Request);
@@ -792,22 +732,36 @@ public class BusquedaActivity extends AppCompatActivity {
             trasport.debug = true;
             trasport.call(SOAP_ACTION, soapEnvelope);
             SoapObject response = (SoapObject) soapEnvelope.bodyIn;
+
+            String Producto;
+            String Descripcion="";
+            String precio_base;
+            String precio_ajuste;
+            String sucursal;
+            String existencia;
+            String nomSucursal;
+
+
             for (int i = 0; i < response.getPropertyCount(); i++) {
+
                 SoapObject response0 = (SoapObject) soapEnvelope.bodyIn;
                 response0 = (SoapObject) response0.getProperty(i);
 
-                listProdu1.add(new SetGetListProductos(
-                        (response0.getPropertyAsString("k_Producto").equals("anyType{}") ? "" : response0.getPropertyAsString("k_Producto")),
-                        (response0.getPropertyAsString("k_Descripcion").equals("anyType{}") ? "" : response0.getPropertyAsString("k_Descripcion")),
-                        (response0.getPropertyAsString("k_Marca").equals("anyType{}") ? "" : response0.getPropertyAsString("k_Marca")),
-                        (response0.getPropertyAsString("k_Modelo").equals("anyType{}") ? "" : response0.getPropertyAsString("k_Modelo")),
-                        (response0.getPropertyAsString("k_Litros").equals("anyType{}") ? "" : response0.getPropertyAsString("k_Litros")),
-                        (response0.getPropertyAsString("k_Year").equals("anyType{}") ? "" : response0.getPropertyAsString("k_Year")),
-                        "",
-                        ""));
+                Producto = response0.getPropertyAsString("Producto");
+                Descripcion = response0.getPropertyAsString("Descripcion");
+                response0 = (SoapObject) response0.getProperty("precio_base");
+                precio_base = response0.getPropertyAsString("valor").equals("anyType{}") ? "0" : response0.getPropertyAsString("valor");
+                response0 = (SoapObject) soapEnvelope.bodyIn;
+                response0 = (SoapObject) response0.getProperty(i);
+                response0 = (SoapObject) response0.getProperty("precio_ajuste");
+                precio_ajuste = response0.getPropertyAsString("valor").equals("anyType{}") ? "0" : response0.getPropertyAsString("valor");
+
+                listProdu1.add(new SetGetListProductos(Producto,Descripcion,precio_base,precio_ajuste));
 
 
             }
+
+
 
 
         } catch (SoapFault soapFault) {
@@ -823,6 +777,18 @@ public class BusquedaActivity extends AppCompatActivity {
             mDialog.dismiss();
         }
     }
+    @Override
+    public void onBackPressed() {
 
+        int count = getFragmentManager().getBackStackEntryCount();
+
+        if (count == 0) {
+            super.onBackPressed();
+            getFragmentManager().popBackStack();
+        } else {
+            getFragmentManager().popBackStack();//No se porqué puse lo mismo O.o
+        }
+
+    }
 
 }

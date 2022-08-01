@@ -28,6 +28,7 @@ public class xmlCarritoCompras extends SoapSerializationEnvelope {
     String Colonia = "";
     String Poblacion = "";
     String Server ;
+    String Vendedor;
     ArrayList<CarritoBD> listaCarShoping = new ArrayList<>();
 
 
@@ -38,7 +39,7 @@ public class xmlCarritoCompras extends SoapSerializationEnvelope {
 
     public void xmlCarritoCompras(String comentario,  String nombreCliente, String claveCliente, String fechaActual,
                                   String VechaFencimiento,String sucursal, String usuario, String clave, String rfcCliente,String plazo,
-                                  String montototal, String iva,String Descuento,String DescuentoPro,String Desc1,String Calle ,String Colonia ,String Poblacion ,ArrayList<CarritoBD> listaCarShoping,String StrServer) {
+                                  String montototal, String iva,String Descuento,String DescuentoPro,String Desc1,String Calle ,String Colonia ,String Poblacion ,ArrayList<CarritoBD> listaCarShoping,String StrServer,String vendedor) {
 
         this.Comentario = comentario;
         this.NombreCliente = nombreCliente;
@@ -60,6 +61,7 @@ public class xmlCarritoCompras extends SoapSerializationEnvelope {
         this.Poblacion = Poblacion;
         this.listaCarShoping = listaCarShoping;
         this.Server=StrServer;
+        this.Vendedor=vendedor;
     }
 
     @Override
@@ -145,8 +147,13 @@ public class xmlCarritoCompras extends SoapSerializationEnvelope {
         writer.endTag(tem, "k_poblacion");
 
         writer.startTag(tem, "k_desc1");
-        writer.text(Desc1);
+        writer.text("0");
         writer.endTag(tem, "k_desc1");
+
+
+        writer.startTag(tem, "k_agente");
+        writer.text(Vendedor);
+        writer.endTag(tem, "k_agente");
 
 
         writer.startTag(tem, "k_moneda");
@@ -178,12 +185,17 @@ public class xmlCarritoCompras extends SoapSerializationEnvelope {
         writer.endTag(tem, "k_coment");
 
         writer.startTag(tem, "k_desc");
-        writer.text(Descuento);
+        writer.text("0");
         writer.endTag(tem, "k_desc");
 
         writer.startTag(tem, "k_87");
         writer.text(DescuentoPro);
         writer.endTag(tem, "k_87");
+
+
+        writer.startTag(tem, "k_63");
+        writer.text("UD3501-");
+        writer.endTag(tem, "k_63");
 
 
 
@@ -198,7 +210,14 @@ public class xmlCarritoCompras extends SoapSerializationEnvelope {
 
         /*Items*/
         writer.startTag(tem, "k_items");
+
+
+
         for (int i = 0; i<listaCarShoping.size();i++){
+
+            String NuevoPrecio="",Descuento="";
+            double intNuePrecio=0,intnuevoDescuento=0,semiResultado=0,Resultado=0,DescuentoNivelDocumento=0,DescuentoRestar=0,PrecioNuevo=0,NuevoImporte=0;
+
 
             writer.startTag(tem, "item");
 
@@ -211,7 +230,7 @@ public class xmlCarritoCompras extends SoapSerializationEnvelope {
             writer.endTag(tem, "k_Q");
 
             writer.startTag(tem, "k_desc1");
-            writer.text(listaCarShoping.get(i).getDesc1());
+            writer.text("0");
             writer.endTag(tem, "k_desc1");
 
             writer.startTag(tem, "k_descr");
@@ -223,12 +242,26 @@ public class xmlCarritoCompras extends SoapSerializationEnvelope {
             writer.endTag(tem, "k_unidad");
 
 
+            NuevoPrecio= listaCarShoping.get(i).getPrecio();
+            Descuento=listaCarShoping.get(i).getDesc1();
+            intNuePrecio=Double.parseDouble(NuevoPrecio);
+            intnuevoDescuento=Double.parseDouble(Descuento)/100;
+
+            semiResultado=intNuePrecio*intnuevoDescuento;
+            Resultado = intNuePrecio-semiResultado  ;
+
+            DescuentoNivelDocumento =Double.valueOf(Desc1)/100;
+            DescuentoRestar=Resultado * DescuentoNivelDocumento;
+            PrecioNuevo=Resultado - DescuentoRestar;
+
             writer.startTag(tem, "k_precio");
-            writer.text(listaCarShoping.get(i).getPrecio());
+            writer.text(String.valueOf(PrecioNuevo));
             writer.endTag(tem, "k_precio");
 
+            NuevoImporte = PrecioNuevo * Integer.parseInt(listaCarShoping.get(i).getCantidad());
+
             writer.startTag(tem, "k_monto");
-            writer.text(listaCarShoping.get(i).getMonto());
+            writer.text(String.valueOf(NuevoImporte));
             writer.endTag(tem, "k_monto");
 
             writer.startTag(tem, "k_iva");
@@ -250,7 +283,15 @@ public class xmlCarritoCompras extends SoapSerializationEnvelope {
             writer.endTag(tem, "item");
 
         }
+
         writer.endTag(tem, "k_items");
+
+
+        writer.startTag(tem, "k_horacaptura");
+        writer.text("");
+        writer.endTag(tem, "k_horacaptura");
+
+
         writer.endTag(tem, "Doc");
 
         writer.endTag(tem, "newDocRequest");

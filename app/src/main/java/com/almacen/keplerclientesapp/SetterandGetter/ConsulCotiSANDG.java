@@ -8,8 +8,11 @@ public class ConsulCotiSANDG {
     String Nombre;
     String Importe;
     String Piezas;
+    String nomSucursal;
+    String Comentario;
 
-    public ConsulCotiSANDG(String sucursal, String folio, String fecha, String clave, String nombre, String importe, String piezas) {
+
+    public ConsulCotiSANDG(String sucursal, String folio, String fecha, String clave, String nombre, String importe, String piezas, String nomSucursal, String comentario) {
         Sucursal = sucursal;
         Folio = folio;
         Fecha = fecha;
@@ -17,6 +20,8 @@ public class ConsulCotiSANDG {
         Nombre = nombre;
         Importe = importe;
         Piezas = piezas;
+        this.nomSucursal = nomSucursal;
+        Comentario = comentario;
     }
 
     public String getSucursal() {
@@ -73,5 +78,21 @@ public class ConsulCotiSANDG {
 
     public void setPiezas(String piezas) {
         Piezas = piezas;
+    }
+
+    public String getNomSucursal() {
+        return nomSucursal;
+    }
+
+    public void setNomSucursal(String nomSucursal) {
+        this.nomSucursal = nomSucursal;
+    }
+
+    public String getComentario() {
+        return Comentario;
+    }
+
+    public void setComentario(String comentario) {
+        Comentario = comentario;
     }
 }

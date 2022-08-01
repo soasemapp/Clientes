@@ -7,406 +7,429 @@
     android:fitsSystemWindows="true"
     tools:context=".ui.home.HomeFragment">
 
-<ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Busqueda"
-            android:maxLines="1"
-            app:boxBackgroundMode="outline"
-            app:boxCornerRadiusTopEnd="10dp"
-            app:boxCornerRadiusTopStart="10dp"
-            app:startIconDrawable="@drawable/ic_baseline_search_24">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/idBusqueda"
+            android:orientation="vertical">
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"
-                android:textSize="15sp"
-                android:imeOptions="actionSearch"
+                android:hint="Busqueda"
+                android:maxLines="1"
+                android:layout_margin="5dp"
+                app:boxBackgroundMode="outline"
+                app:boxCornerRadiusTopEnd="10dp"
+                app:boxCornerRadiusTopStart="10dp"
+                app:startIconDrawable="@drawable/ic_baseline_search_24">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/idBusqueda"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:textSize="15sp"
+                    android:imeOptions="actionSearch"
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.smarteist.autoimageslider.SliderView
+                android:id="@+id/image_slider"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                app:sliderAnimationDuration="600"
+                app:sliderAutoCycleDirection="back_and_forth"
+                app:sliderAutoCycleEnabled="true"
+                app:sliderIndicatorAnimationDuration="600"
+                app:sliderIndicatorGravity="center_horizontal|bottom"
+                app:sliderIndicatorMargin="15dp"
+                app:sliderIndicatorOrientation="horizontal"
+                app:sliderIndicatorPadding="3dp"
+                app:sliderIndicatorRadius="1dp"
+                app:sliderIndicatorSelectedColor="#5A5A5A"
+                app:sliderIndicatorUnselectedColor="#FFF"
+                app:sliderScrollTimeInSec="3"
+                app:sliderStartAutoCycle="true"
                 />
 
-        </com.google.android.material.textfield.TextInputLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/layProductosbusqueda"
+                android:orientation="vertical">
 
-
-
-        <com.smarteist.autoimageslider.SliderView
-            android:id="@+id/image_slider"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            app:sliderAnimationDuration="600"
-            app:sliderAutoCycleDirection="back_and_forth"
-            app:sliderAutoCycleEnabled="true"
-            app:sliderIndicatorAnimationDuration="600"
-            app:sliderIndicatorGravity="center_horizontal|bottom"
-            app:sliderIndicatorMargin="15dp"
-            app:sliderIndicatorOrientation="horizontal"
-            app:sliderIndicatorPadding="3dp"
-            app:sliderIndicatorRadius="1dp"
-            app:sliderIndicatorSelectedColor="#5A5A5A"
-            app:sliderIndicatorUnselectedColor="#FFF"
-            app:sliderScrollTimeInSec="3"
-            app:sliderStartAutoCycle="true"
-            />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingTop="10dp"
-            android:layout_marginBottom="7dp"
-            android:background="@drawable/eaglefondoinicio">
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
-
-                <View
-                    android:layout_width="5dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/PrimaryColor"
-                    />
+                android:id="@+id/layProductosNuevos"
+                android:orientation="vertical">
                 <LinearLayout
+                    android:id="@+id/EagleOcultar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_margin="5dp"
-                    android:orientation="vertical">
-                    <TextView
+                    android:orientation="vertical"
+                    android:layout_marginBottom="7dp"
+                    android:background="@drawable/eaglefondoinicio">
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="EAGLE BHP"
-                        android:textStyle="bold"
-                        android:autoSizeMinTextSize="15sp"
-                        android:autoSizeMaxTextSize="20sp"
-                        android:textColor="@color/white"
-                        />
-                    <TextView
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp"
+                        android:gravity="center">
+
+                        <View
+                            android:layout_width="5dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/red_700"
+                            />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_margin="5dp"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="EAGLE BHP"
+                                android:textStyle="bold"
+                                android:autoSizeMinTextSize="15sp"
+                                android:autoSizeMaxTextSize="20sp"
+                                android:textColor="@color/white"
+                                />
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:autoSizeMinTextSize="10sp"
+                                android:autoSizeMaxTextSize="13sp"
+                                android:text="Soportes, bases para amortiguador y cubre polvos"
+                                android:textColor="@color/white"
+                                />
+
+                        </LinearLayout>
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/eagle"
+                            android:layout_weight="1.5"
+
+                            />
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/listProductosEagle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:autoSizeMinTextSize="10sp"
-                        android:autoSizeMaxTextSize="13sp"
-                        android:text="Soportes, bases para amortiguador y cubre polvos"
-                        android:textColor="@color/white"
-                        />
+
+                        android:orientation="horizontal">
+
+                    </androidx.recyclerview.widget.RecyclerView>
+
+
+
 
                 </LinearLayout>
-                <ImageView
+
+                <LinearLayout
+
+                    android:id="@+id/TrackoneOcultar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/eagle"
-                    android:layout_weight="1.5"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="7dp"
+                    android:background="@drawable/trackonefondoinicio">
 
-                    />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp"
+                        android:gravity="center"
+                        >
+
+                        <View
+                            android:layout_width="5dp"
+                            android:layout_height="match_parent"
+                            android:background="#00BCD4"
+                            />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_margin="5dp"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="TRACKONE"
+                                android:textStyle="bold"
+                                android:autoSizeMinTextSize="15sp"
+                                android:autoSizeMaxTextSize="20sp"
+                                android:textColor="@color/white"
+                                />
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:autoSizeMinTextSize="10sp"
+                                android:autoSizeMaxTextSize="13sp"
+                                android:text="Dirección y Suspensión"
+                                android:textColor="@color/white"
+                                />
+
+                        </LinearLayout>
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/trackone"
+                            android:layout_weight="1.5"
+
+                            />
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/listProductTrackone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                    </androidx.recyclerview.widget.RecyclerView>
+
+
+
+
+                </LinearLayout>
+
+                <LinearLayout
+
+                    android:id="@+id/RodatechOcultar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="7dp"
+                    android:background="@drawable/rodatechfondoinicio">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp"
+                        android:gravity="center"
+                        >
+
+                        <View
+                            android:layout_width="5dp"
+                            android:layout_height="match_parent"
+                            android:background="#FFC107"
+                            />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_margin="5dp"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="RODATECH AUTOMOTIVE"
+                                android:textStyle="bold"
+                                android:autoSizeMinTextSize="15sp"
+                                android:autoSizeMaxTextSize="20sp"
+                                android:textColor="@color/white"
+                                />
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:autoSizeMinTextSize="10sp"
+                                android:autoSizeMaxTextSize="13sp"
+                                android:text="Mazas y rodamientos"
+                                android:textColor="@color/white"
+                                />
+
+                        </LinearLayout>
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/rodatech"
+                            android:layout_weight="1.5"
+
+                            />
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/listProductosRodatech"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                    </androidx.recyclerview.widget.RecyclerView>
+
+
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/PartechOcultar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="7dp"
+                    android:background="@drawable/partechfondoinicio">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp"
+                        android:gravity="center"
+                        >
+
+                        <View
+                            android:layout_width="5dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/red_200"
+                            />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_margin="5dp"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="PARTECH"
+                                android:textStyle="bold"
+                                android:autoSizeMinTextSize="15sp"
+                                android:autoSizeMaxTextSize="20sp"
+                                android:textColor="@color/white"
+                                />
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:autoSizeMinTextSize="10sp"
+                                android:autoSizeMaxTextSize="13sp"
+                                android:text="Autopartes hidráulicas"
+                                android:textColor="@color/white"
+                                />
+
+                        </LinearLayout>
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/partech"
+                            android:layout_weight="1.5"
+
+                            />
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/listProductosPartech"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                    </androidx.recyclerview.widget.RecyclerView>
+
+
+
+
+                </LinearLayout>
+
+                <LinearLayout
+
+                    android:id="@+id/SharkOcultar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="7dp"
+                    android:background="@drawable/sharkfondoinicio">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp"
+                        android:gravity="center"
+                        >
+
+                        <View
+                            android:layout_width="5dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/blue_200"
+                            />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_margin="5dp"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="SHARK"
+                                android:textStyle="bold"
+                                android:autoSizeMinTextSize="15sp"
+                                android:autoSizeMaxTextSize="20sp"
+                                android:textColor="@color/white"
+                                />
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:autoSizeMinTextSize="10sp"
+                                android:autoSizeMaxTextSize="13sp"
+                                android:text="Bombas, depósitos y tomas de agua"
+                                android:textColor="@color/white"
+                                />
+
+                        </LinearLayout>
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/shark"
+                            android:layout_weight="1.5"
+
+                            />
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/listProductosShark"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                    </androidx.recyclerview.widget.RecyclerView>
+
+
+
+
+                </LinearLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+
             </LinearLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/listProductosEagle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-
-                android:orientation="horizontal">
-
-            </androidx.recyclerview.widget.RecyclerView>
-
-
-
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginBottom="7dp"
-            android:background="@drawable/trackonefondoinicio">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_margin="5dp"
-                android:gravity="center"
-                >
-
-                <View
-                    android:layout_width="5dp"
-                    android:layout_height="match_parent"
-                    android:background="#00BCD4"
-                    />
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_margin="5dp"
-                    android:orientation="vertical">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="TRACKONE"
-                        android:textStyle="bold"
-                        android:autoSizeMinTextSize="15sp"
-                        android:autoSizeMaxTextSize="20sp"
-                        android:textColor="@color/white"
-                        />
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:autoSizeMinTextSize="10sp"
-                        android:autoSizeMaxTextSize="13sp"
-                        android:text="Dirección y Suspensión"
-                        android:textColor="@color/white"
-                        />
-
-                </LinearLayout>
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/trackone"
-                    android:layout_weight="1.5"
-
-                    />
-            </LinearLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/listProductTrackone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-            </androidx.recyclerview.widget.RecyclerView>
-
-
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginBottom="7dp"
-            android:background="@drawable/rodatechfondoinicio">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_margin="5dp"
-                android:gravity="center"
-                >
-
-                <View
-                    android:layout_width="5dp"
-                    android:layout_height="match_parent"
-                    android:background="#FFC107"
-                    />
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_margin="5dp"
-                    android:orientation="vertical">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="RODATECH AUTOMOTIVE"
-                        android:textStyle="bold"
-                        android:autoSizeMinTextSize="15sp"
-                        android:autoSizeMaxTextSize="20sp"
-                        android:textColor="@color/white"
-                        />
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:autoSizeMinTextSize="10sp"
-                        android:autoSizeMaxTextSize="13sp"
-                        android:text="Mazas y rodamientos"
-                        android:textColor="@color/white"
-                        />
-
-                </LinearLayout>
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/rodatech"
-                    android:layout_weight="1.5"
-
-                    />
-            </LinearLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/listProductosRodatech"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-            </androidx.recyclerview.widget.RecyclerView>
-
-
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginBottom="7dp"
-            android:background="@drawable/partechfondoinicio">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_margin="5dp"
-                android:gravity="center"
-                >
-
-                <View
-                    android:layout_width="5dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/PrimaryColor"
-                    />
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_margin="5dp"
-                    android:orientation="vertical">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="PARTECH"
-                        android:textStyle="bold"
-                        android:autoSizeMinTextSize="15sp"
-                        android:autoSizeMaxTextSize="20sp"
-                        android:textColor="@color/white"
-                        />
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:autoSizeMinTextSize="10sp"
-                        android:autoSizeMaxTextSize="13sp"
-                        android:text="Autopartes hidráulicas"
-                        android:textColor="@color/white"
-                        />
-
-                </LinearLayout>
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/partech"
-                    android:layout_weight="1.5"
-
-                    />
-            </LinearLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/listProductosPartech"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-            </androidx.recyclerview.widget.RecyclerView>
-
-
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginBottom="7dp"
-            android:background="@drawable/sharkfondoinicio">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_margin="5dp"
-                android:gravity="center"
-                >
-
-                <View
-                    android:layout_width="5dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/blue_200"
-                    />
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_margin="5dp"
-                    android:orientation="vertical">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="SHARK"
-                        android:textStyle="bold"
-                        android:autoSizeMinTextSize="15sp"
-                        android:autoSizeMaxTextSize="20sp"
-                        android:textColor="@color/white"
-                        />
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:autoSizeMinTextSize="10sp"
-                        android:autoSizeMaxTextSize="13sp"
-                        android:text="Bombas, depósitos y tomas de agua"
-                        android:textColor="@color/white"
-                        />
-
-                </LinearLayout>
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/shark"
-                    android:layout_weight="1.5"
-
-                    />
-            </LinearLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/listProductosShark"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-            </androidx.recyclerview.widget.RecyclerView>
-
-
-
-
-        </LinearLayout>
-
-
-
-
-
-
-
-
-
-
-
-
-
-    </LinearLayout>
-
-</ScrollView>
+    </ScrollView>
 
 
 

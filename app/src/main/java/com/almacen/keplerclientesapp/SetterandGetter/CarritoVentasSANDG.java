@@ -24,8 +24,10 @@ public class CarritoVentasSANDG {
     String Comentario2;
     String Comentario3;
     String Nombre;
+    String Vendedor;
 
-    public CarritoVentasSANDG(String cliente, String parte, String existencia, String cantidad, String unidad, String precio, String desc1, String desc2, String desc3, String monto, String descr, String rfc, String plazo, String calle, String colonia, String poblacion, String via, String descPro, String desc1Fac, String comentario1, String comentario2, String comentario3, String nombre) {
+
+    public CarritoVentasSANDG(String cliente, String parte, String existencia, String cantidad, String unidad, String precio, String desc1, String desc2, String desc3, String monto, String descr, String rfc, String plazo, String calle, String colonia, String poblacion, String via, String descPro, String desc1Fac, String comentario1, String comentario2, String comentario3, String nombre, String vendedor) {
         this.cliente = cliente;
         this.parte = parte;
         this.existencia = existencia;
@@ -49,8 +51,8 @@ public class CarritoVentasSANDG {
         Comentario2 = comentario2;
         Comentario3 = comentario3;
         Nombre = nombre;
+        Vendedor = vendedor;
     }
-
 
     public String getCliente() {
         return cliente;
@@ -234,5 +236,13 @@ public class CarritoVentasSANDG {
 
     public void setNombre(String nombre) {
         Nombre = nombre;
+    }
+
+    public String getVendedor() {
+        return Vendedor;
+    }
+
+    public void setVendedor(String vendedor) {
+        Vendedor = vendedor;
     }
 }

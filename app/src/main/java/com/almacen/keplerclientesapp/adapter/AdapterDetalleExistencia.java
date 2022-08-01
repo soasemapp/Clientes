@@ -13,18 +13,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.almacen.keplerclientesapp.R;
 import com.almacen.keplerclientesapp.SetandGet.SetGetListProductos;
 import com.almacen.keplerclientesapp.SetandGet.SetGetListProductos2;
-import com.squareup.picasso.Picasso;
+import com.almacen.keplerclientesapp.SetterandGetter.DisponibilidadSANDG;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class AdapterDetalleExistencia extends RecyclerView.Adapter<AdapterDetalleExistencia.ViewHolderDetalleExistencia> implements View.OnClickListener {
 
-    ArrayList<SetGetListProductos2> listProductos;
+    ArrayList<DisponibilidadSANDG> Existencias;
     private View.OnClickListener listener;
 
-    public AdapterDetalleExistencia(ArrayList<SetGetListProductos2> listProductos) {
-        this.listProductos = listProductos;
+    public AdapterDetalleExistencia(ArrayList<DisponibilidadSANDG> Existencias) {
+        this.Existencias = Existencias;
     }
 
     @Override
@@ -36,9 +36,9 @@ public class AdapterDetalleExistencia extends RecyclerView.Adapter<AdapterDetall
 
     @Override
     public void onBindViewHolder(AdapterDetalleExistencia.ViewHolderDetalleExistencia holder, int position) {
-        holder.SUCURSAL.setText(listProductos.get(position).getNomSucursal());
-        int Existencia = Integer.parseInt(listProductos.get(position).getExistencia());
-        holder.Existencia.setText(Html.fromHtml("Disponibilidad : "+((Existencia==0)?"<font color = #FF0000>No hay disponibles </font>":"<font color = #4CAF50>"+listProductos.get(position).getExistencia()+" PZA </font>")));
+        holder.SUCURSAL.setText(Existencias.get(position).getNombre());
+        int Existencia = Integer.parseInt(Existencias.get(position).getDisponibilidad());
+        holder.Existencia.setText(Html.fromHtml("Disponibilidad : "+((Existencia==0)?"<font color = #FF0000>No hay disponibles </font>":"<font color = #4CAF50>"+Existencias.get(position).getDisponibilidad()+" PZA </font>")));
 
 
     }
@@ -46,7 +46,7 @@ public class AdapterDetalleExistencia extends RecyclerView.Adapter<AdapterDetall
 
     @Override
     public int getItemCount() {
-        return listProductos.size();
+        return Existencias.size();
     }
 
     public void setOnClickListener(View.OnClickListener listener) {

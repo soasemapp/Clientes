@@ -60,12 +60,13 @@ public class AdaptadorConsulPedi extends RecyclerView.Adapter<AdaptadorConsulPed
             }
         }
 
-        holder.Sucursal.setText(Html.fromHtml("Sucursal:<br> <font color ='#000000'>" +listaConsulPedi.get(position).getSucursal()+"</font>"));
+        holder.Sucursal.setText(Html.fromHtml("Sucursal:<br> <font color ='#000000'>" +listaConsulPedi.get(position).getSucursalNombre()+"</font>"));
         holder.Folio.setText((Html.fromHtml("Folio:<font color ='#F32121'>" +listaConsulPedi.get(position).getFolio()+"</font>")));
         holder.Fecha.setText(Html.fromHtml("Fecha: <font color ='#000000'>" +listaConsulPedi.get(position).getFecha()+"</font>"));
         holder.Nombre.setText(Html.fromHtml("Nombre:<br> <font color ='#000000'>" +listaConsulPedi.get(position).getNombre()+"</font>"));
         holder.Importe.setText((Html.fromHtml("Importe:<br>  <font color ='#000000'>$</font><font color ='#4CAF50'>" +formatNumberCurrency(listaConsulPedi.get(position).getImporte())+"</font>")));
         holder.Piezas.setText(Html.fromHtml("Piezas: <font color ='#000000'>" +listaConsulPedi.get(position).getPiezas()+"</font>"));
+        holder.comentario.setText(Html.fromHtml("Comentario: <font color ='#000000'>" +listaConsulPedi.get(position).getComentario()+"</font>"));
 
 
     }
@@ -82,7 +83,6 @@ public class AdaptadorConsulPedi extends RecyclerView.Adapter<AdaptadorConsulPed
 
     public void setOnClickListener(View.OnClickListener listener) {
         this.listener = listener;
-
     }
 
     @Override
@@ -94,7 +94,7 @@ public class AdaptadorConsulPedi extends RecyclerView.Adapter<AdaptadorConsulPed
     }
 
     public class ViewHolderConsulPedi extends RecyclerView.ViewHolder {
-        TextView Sucursal, Folio, Fecha,  Nombre, Importe, Piezas;
+        TextView Sucursal, Folio, Fecha,  Nombre, Importe, Piezas,comentario;
 EditText idStatus;
         TextInputLayout imgstatus;
         public ViewHolderConsulPedi(View itemView) {
@@ -107,6 +107,8 @@ EditText idStatus;
             Nombre = (TextView) itemView.findViewById(R.id.NCliente);
             Importe = (TextView) itemView.findViewById(R.id.Importe);
             Piezas = (TextView) itemView.findViewById(R.id.piezas);
+
+            comentario = (TextView) itemView.findViewById(R.id.comentario);
         }
     }
 }

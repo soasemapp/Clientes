@@ -21,10 +21,11 @@
             />
         <activity
             android:name=".EstadodeCuentaActivity"
+            android:parentActivityName=".activity.inicioActivity"
             android:exported="false" />
         <activity
             android:name=".activity.ActivityFactuDetall"
-            android:parentActivityName=".activity.inicioActivity" />
+            android:parentActivityName=".EstadodeCuentaActivity" />
         <activity
             android:name=".activity.Carrito.CarritoComprasActivity"
             android:parentActivityName=".activity.inicioActivity" />

@@ -23,14 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal">
+
 
 
 
@@ -57,15 +50,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
 
-            </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginBottom="10dp"
-                android:orientation="horizontal">
 
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -88,15 +73,8 @@
                         android:inputType="text" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-            </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginBottom="10dp"
-                android:orientation="horizontal">
+
 
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -118,8 +96,28 @@
                         android:editable="false"
                         />
                 </com.google.android.material.textfield.TextInputLayout>
-            </LinearLayout>
 
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"
+                android:hint="Comentario"
+                android:maxLines="1"
+                app:boxBackgroundMode="outline"
+                app:boxCornerRadiusTopEnd="10dp"
+                app:boxCornerRadiusTopStart="10dp"
+                >
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtcomentario"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:editable="false"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
 
@@ -161,6 +159,63 @@
             </LinearLayout>
 
         </ScrollView>
+
+        <TextView
+            android:id="@+id/SubTotal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:layout_marginEnd="10dp"
+            android:padding="5dp"
+            android:text="subtotal"
+            android:textAlignment="textEnd"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/Descuento"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:layout_marginEnd="10dp"
+            android:padding="5dp"
+            android:text="descuento"
+            android:textAlignment="textEnd"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/SubTotal2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:layout_marginEnd="10dp"
+            android:padding="5dp"
+            android:text="subtotal2"
+            android:textAlignment="textEnd"
+            android:textSize="15sp" />
+
+
+        <TextView
+            android:id="@+id/iva"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:layout_marginEnd="10dp"
+            android:padding="5dp"
+            android:text="iva"
+            android:textAlignment="textEnd"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/MontoTotal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:layout_marginEnd="10dp"
+            android:padding="5dp"
+            android:text="monto"
+            android:textAlignment="textEnd"
+            android:textSize="15sp" />
+
 
 
     </LinearLayout>

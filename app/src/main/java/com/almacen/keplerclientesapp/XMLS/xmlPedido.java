@@ -13,7 +13,6 @@ import java.util.ArrayList;
 
 public class xmlPedido extends SoapSerializationEnvelope {
     String Comentario = "";
-    String ClaveVendedor = "";
     String NombreCliente = "";
     String ClaveCliente = "";
     String FechaActual = "";
@@ -47,6 +46,7 @@ public class xmlPedido extends SoapSerializationEnvelope {
     double monto2;
     double monto3;
     String Server;
+    String Vendedor;
 
 
 
@@ -57,11 +57,10 @@ public class xmlPedido extends SoapSerializationEnvelope {
     }
 
 
-    public void xmlPedido( String comentario, String claveVendedor, String nombreCliente, String claveCliente, String fechaActual, String fechaVencimiento,
+    public void xmlPedido( String comentario,  String nombreCliente, String claveCliente, String fechaActual, String fechaVencimiento,
                      String sucursal, String usuario, String clave, String rfcCliente, String plazo, String montototal, String iva, String descuento, String descuentoPro,
-                     String Desc1,String calle, String colonia, String poblacion, String folioPrev,String Via,String stridEnvio,ArrayList<DetallCotiSANDG> listasearch2, ArrayList<valExiPedSANDG> listasearch3, String StrServer) {
+                     String Desc1,String calle, String colonia, String poblacion, String folioPrev,String Via,String stridEnvio,ArrayList<DetallCotiSANDG> listasearch2 , String StrServer,String vendedor) {
         this.Comentario = comentario;
-        this.ClaveVendedor = claveVendedor;
         this.NombreCliente = nombreCliente;
         this.ClaveCliente = claveCliente;
         this.FechaActual = fechaActual;
@@ -83,15 +82,15 @@ public class xmlPedido extends SoapSerializationEnvelope {
         this.Via = Via;
         this.stridEnvio = stridEnvio;
         this.listasearch2 = listasearch2;
-        this.listasearch3 = listasearch3;
         this.Server = StrServer;
+        this.Vendedor=vendedor;
 
     }
 
     @Override
     public void write(XmlSerializer writer) throws IOException {
 
-         env = "http://schemas.xmlsoap.org/soap/envelope/";
+        env = "http://schemas.xmlsoap.org/soap/envelope/";
         String tem = "";
         writer.startDocument("UTF-8", true);
         writer.setPrefix("soap", env);
@@ -178,8 +177,9 @@ public class xmlPedido extends SoapSerializationEnvelope {
         writer.endTag(tem, "k_desc1");
 
         writer.startTag(tem, "k_agente");
-        writer.text(ClaveVendedor);
+        writer.text(Vendedor);
         writer.endTag(tem, "k_agente");
+
 
         writer.startTag(tem, "k_moneda");
         writer.text("PESOS");
@@ -212,7 +212,7 @@ public class xmlPedido extends SoapSerializationEnvelope {
         double Subtotal = 0;
         for (int i = 0; i < listasearch2.size(); i++) {
             precio = Double.valueOf(listasearch2.get(i).getPrecio());
-            cantidad = Double.valueOf(listasearch3.get(i).getExistencia());
+            cantidad = Double.valueOf(listasearch2.get(i).getSurtido());
             descuento = Double.valueOf(listasearch2.get(i).getDesc());
             monto = precio * cantidad;
             monto2 = monto * (descuento / 100);
@@ -244,10 +244,10 @@ public class xmlPedido extends SoapSerializationEnvelope {
         Iva = String.valueOf(ivaCal);
         Montototal = String.valueOf(MontoTotal);
 
-        DecimalFormat formato1 = new DecimalFormat("#.00");
+
 
         writer.startTag(tem, "k_desc");
-        writer.text(formatNumberCurrency(DescuentoStr));
+        writer.text(DescuentoStr);
         writer.endTag(tem, "k_desc");
 
 
@@ -275,15 +275,20 @@ public class xmlPedido extends SoapSerializationEnvelope {
         writer.text("D");
         writer.endTag(tem, "k_36");
 
+        writer.startTag(tem, "k_63");
+        writer.text("UD4101-");
+        writer.endTag(tem, "k_63");
+
+
 
 
         writer.startTag(tem, "k_iva");
-        writer.text(formatNumberCurrency(Iva));
+        writer.text(Iva);
         writer.endTag(tem, "k_iva");
 
 
         writer.startTag(tem, "k_monto");
-        writer.text(formatNumberCurrency(Montototal));
+        writer.text(Montototal);
         writer.endTag(tem, "k_monto");
 
         writer.startTag(tem, "k_70");
@@ -296,6 +301,7 @@ public class xmlPedido extends SoapSerializationEnvelope {
         writer.text(stridEnvio);
         writer.endTag(tem, "k_74");
 
+
         writer.startTag(tem, "k_81");
         writer.text("V");
         writer.endTag(tem, "k_81");
@@ -307,14 +313,6 @@ public class xmlPedido extends SoapSerializationEnvelope {
         writer.startTag(tem, "k_items");
         for (int i = 0; i < listasearch2.size(); i++) {
 
-            precio=Double.valueOf(listasearch2.get(i).getPrecio());
-            cantidad =Double.valueOf(listasearch3.get(i).getExistencia());
-            descuento =Double.valueOf(listasearch2.get(i).getDesc());
-            monto=precio * cantidad;
-            monto2 = monto * (descuento/100);
-            monto3 =monto-monto2;
-
-
             writer.startTag(tem, "item");
 
             writer.startTag(tem, "k_parte");
@@ -322,7 +320,7 @@ public class xmlPedido extends SoapSerializationEnvelope {
             writer.endTag(tem, "k_parte");
 
             writer.startTag(tem, "k_Q");
-            writer.text(listasearch3.get(i).getExistencia());
+            writer.text(listasearch2.get(i).getSurtido());
             writer.endTag(tem, "k_Q");
 
             writer.startTag(tem, "k_desc1");
@@ -330,11 +328,11 @@ public class xmlPedido extends SoapSerializationEnvelope {
             writer.endTag(tem, "k_desc1");
 
             writer.startTag(tem, "k_descr");
-            writer.text(listasearch3.get(i).getDescripcion());
+            writer.text(listasearch2.get(i).getDescripcion());
             writer.endTag(tem, "k_descr");
 
             writer.startTag(tem, "k_unidad");
-            writer.text(listasearch3.get(i).getUnidad());
+            writer.text(listasearch2.get(i).getUnidad());
             writer.endTag(tem, "k_unidad");
 
             writer.startTag(tem, "k_precio");
@@ -344,7 +342,7 @@ public class xmlPedido extends SoapSerializationEnvelope {
 
 
             writer.startTag(tem, "k_monto");
-            writer.text(formato1.format(monto3));
+            writer.text(listasearch2.get(i).getPrecioNuevo());
             writer.endTag(tem, "k_monto");
 
 
@@ -403,10 +401,4 @@ public class xmlPedido extends SoapSerializationEnvelope {
 
     }
 
-    private static String formatNumberCurrency(String number) {
-        DecimalFormat formatter = new DecimalFormat("###,###,##0.00");
-        return formatter.format(Double.parseDouble(number));
-
-
-    }
 }

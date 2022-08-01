@@ -37,18 +37,30 @@ public class AdaptadorCarrito extends RecyclerView.Adapter<AdaptadorCarrito.View
 
     @Override
     public void onBindViewHolder(ViewHolderCarrito holder, int position) {
+        String NuevoPrecio="",Descuento="";
+        double intNuePrecio=0,intnuevoDescuento=0,semiResultado=0,Resultado=0,DescuentoNivelDocumento=0,DescuentoRestar=0,PrecioNuevo=0,NuevoImporte=0;
+
         holder.Parte.setText(listaCarrito.get(position).getParte());
         holder.Descri.setText("Descripcion:\n" + listaCarrito.get(position).getDescr());
         holder.Cantidad.setText(listaCarrito.get(position).getCantidad());
-        holder.Precio.setText(Html.fromHtml("Precio C/U:$<font color ='#4CAF50'>" +formatNumberCurrency(listaCarrito.get(position).getPrecio())+"</font>"));
+
+        NuevoPrecio= listaCarrito.get(position).getPrecio();
+        Descuento=listaCarrito.get(position).getDesc1();
+        intNuePrecio=Double.parseDouble(NuevoPrecio);
+        intnuevoDescuento=Double.parseDouble(Descuento)/100;
+
+        semiResultado=intNuePrecio*intnuevoDescuento;
+        Resultado = intNuePrecio-semiResultado  ;
+
+        holder.Precio.setText(Html.fromHtml("Precio C/U:$<font color ='#4CAF50'>" +formatNumberCurrency(String.valueOf(Resultado))+"</font>"));
         holder.Monto.setText(Html.fromHtml("Total: $<font color ='#FF0000'>" +formatNumberCurrency(listaCarrito.get(position).getMonto())+"</font>"));
         holder.ID.setText(String.valueOf(listaCarrito.get(position).getID()));
         int Existencia = Integer.parseInt(listaCarrito.get(position).getExistencia());
         int Cantidad = Integer.parseInt((listaCarrito.get(position).getCantidad()));
-        holder.Diponiblidad.setText(Html.fromHtml((Existencia<Cantidad)?"(<font color = #FF0000>NO HAY DISPONIBILIDAD)</font>)":"(<font color = #4CAF50>HAY DISPONIBLES)</font>)"));
+        holder.Diponiblidad.setText(Html.fromHtml((Existencia<Cantidad)?"(<font color = #FF0000>SIN DISPONIBILIDAD EN SU SUCURSAL)</font>)":"(<font color = #4CAF50>HAY DISPONIBLES)</font>)"));
         Picasso.with(context).
-                load("https://vazlo.com.mx/assets/img/productos/chica/jpg/" + listaCarrito.get(position).getParte() + ".jpg")
-                .error(R.drawable.mycedis3)
+        load("https://www.pressa.mx/es-mx/img/products/xl/"+listaCarrito.get(position).getParte()+"/4.webp")
+                .error(R.drawable.ic_baseline_error_24)
                 .fit()
                 .centerInside()
                 .into(holder.imgPro);

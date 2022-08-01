@@ -38,46 +38,39 @@ public class SplashActivity extends AppCompatActivity {
 
         switch (StrServer) {
             case "jacve.dyndns.org:9085":
-                Picasso.with(getApplicationContext()).
-                        load(R.drawable.jacve)
-                        .error(R.drawable.mycedis)
+
+                Picasso.with(getApplicationContext()).load(R.drawable.jacve)
+                        .error(R.drawable.ic_baseline_error_24)
                         .fit()
                         .centerInside()
                         .into(imgVi);
                 break;
             case "sprautomotive.servehttp.com:9085":
-                Picasso.with(getApplicationContext()).
-                        load(R.drawable.vipla)
-                        .error(R.drawable.mycedis3)
+                Picasso.with(getApplicationContext()).load(R.drawable.vipla)
+                        .error(R.drawable.ic_baseline_error_24)
                         .fit()
                         .centerInside()
                         .into(imgVi);
                 break;
             case "cecra.ath.cx:9085":
 
-                Picasso.with(getApplicationContext()).
-                        load(R.drawable.cecra)
-                        .error(R.drawable.mycedis3)
+                Picasso.with(getApplicationContext()).load(R.drawable.cecra)
+                        .error(R.drawable.ic_baseline_error_24)
                         .fit()
                         .centerInside()
                         .into(imgVi);
-
                 break;
             case "guvi.ath.cx:9085":
 
-                Picasso.with(getApplicationContext()).
-                        load(R.drawable.guvi)
-                        .error(R.drawable.mycedis3)
+                Picasso.with(getApplicationContext()).load(R.drawable.guvi)
+                        .error(R.drawable.ic_baseline_error_24)
                         .fit()
                         .centerInside()
                         .into(imgVi);
-
                 break;
             case "cedistabasco.ddns.net:9085":
-
-                Picasso.with(getApplicationContext()).
-                        load(R.drawable.pressa)
-                        .error(R.drawable.mycedis3)
+                Picasso.with(getApplicationContext()).load(R.drawable.pressa)
+                        .error(R.drawable.ic_baseline_error_24)
                         .fit()
                         .centerInside()
                         .into(imgVi);
@@ -85,19 +78,15 @@ public class SplashActivity extends AppCompatActivity {
                 break;
             case "autodis.ath.cx:9085":
 
-                Picasso.with(getApplicationContext()).
-                        load(R.drawable.autodis)
-                        .error(R.drawable.mycedis3)
+                Picasso.with(getApplicationContext()).load(R.drawable.autodis)
+                        .error(R.drawable.ic_baseline_error_24)
                         .fit()
                         .centerInside()
                         .into(imgVi);
-
                 break;
             case "sprautomotive.servehttp.com:9075":
-
-                Picasso.with(getApplicationContext()).
-                        load(R.drawable.spr_logotipo_bordes)
-                        .error(R.drawable.mycedis3)
+                Picasso.with(getApplicationContext()).load(R.drawable.sprimage)
+                        .error(R.drawable.ic_baseline_error_24)
                         .fit()
                         .centerInside()
                         .into(imgVi);
@@ -105,12 +94,6 @@ public class SplashActivity extends AppCompatActivity {
                 break;
 
             default:
-                Picasso.with(getApplicationContext()).
-                        load(R.drawable.spr_logotipo_bordes)
-                        .error(R.drawable.mycedis3)
-                        .fit()
-                        .centerInside()
-                        .into(imgVi);
 
                 break;
         }

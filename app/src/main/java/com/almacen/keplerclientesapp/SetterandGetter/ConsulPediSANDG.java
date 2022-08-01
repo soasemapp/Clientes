@@ -12,9 +12,11 @@ public class ConsulPediSANDG {
     String Cliente;
     String Nombre;
     String Importe;
+    String comentario;
+    String SucursalNombre;
 
 
-    public ConsulPediSANDG(String folio, String pedido, String FLiberacion, String FAduana, String FFactura, String piezas, String sucursal, String fecha, String cliente, String nombre, String importe) {
+    public ConsulPediSANDG(String folio, String pedido, String FLiberacion, String FAduana, String FFactura, String piezas, String sucursal, String fecha, String cliente, String nombre, String importe, String comentario, String sucursalNombre) {
         Folio = folio;
         Pedido = pedido;
         this.FLiberacion = FLiberacion;
@@ -26,6 +28,8 @@ public class ConsulPediSANDG {
         Cliente = cliente;
         Nombre = nombre;
         Importe = importe;
+        this.comentario = comentario;
+        SucursalNombre = sucursalNombre;
     }
 
     public String getFolio() {
@@ -114,5 +118,21 @@ public class ConsulPediSANDG {
 
     public void setImporte(String importe) {
         Importe = importe;
+    }
+
+    public String getComentario() {
+        return comentario;
+    }
+
+    public void setComentario(String comentario) {
+        this.comentario = comentario;
+    }
+
+    public String getSucursalNombre() {
+        return SucursalNombre;
+    }
+
+    public void setSucursalNombre(String sucursalNombre) {
+        SucursalNombre = sucursalNombre;
     }
 }

@@ -11,8 +11,12 @@ public class DetallPediSANDG {
     String Precio;
     String Desc;
     String Importe;
+    String Comentario;
+    String NomSucursal;
+    String Descripcion;
+    String Desc1;
 
-    public DetallPediSANDG(String sucursal, String folio, String claveC, String nombreC, String claveP, String cant, String precio, String desc, String importe) {
+    public DetallPediSANDG(String sucursal, String folio, String claveC, String nombreC, String claveP, String cant, String precio, String desc, String importe, String comentario, String nomSucursal, String descripcion, String desc1) {
         Sucursal = sucursal;
         Folio = folio;
         ClaveC = claveC;
@@ -22,6 +26,10 @@ public class DetallPediSANDG {
         Precio = precio;
         Desc = desc;
         Importe = importe;
+        Comentario = comentario;
+        NomSucursal = nomSucursal;
+        Descripcion = descripcion;
+        Desc1 = desc1;
     }
 
     public String getSucursal() {
@@ -94,5 +102,37 @@ public class DetallPediSANDG {
 
     public void setImporte(String importe) {
         Importe = importe;
+    }
+
+    public String getComentario() {
+        return Comentario;
+    }
+
+    public void setComentario(String comentario) {
+        Comentario = comentario;
+    }
+
+    public String getNomSucursal() {
+        return NomSucursal;
+    }
+
+    public void setNomSucursal(String nomSucursal) {
+        NomSucursal = nomSucursal;
+    }
+
+    public String getDescripcion() {
+        return Descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        Descripcion = descripcion;
+    }
+
+    public String getDesc1() {
+        return Desc1;
+    }
+
+    public void setDesc1(String desc1) {
+        Desc1 = desc1;
     }
 }

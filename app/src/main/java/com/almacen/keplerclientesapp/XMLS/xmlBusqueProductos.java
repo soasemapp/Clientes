@@ -15,12 +15,13 @@ public class xmlBusqueProductos extends SoapSerializationEnvelope {
     String modelo = "";
     String linea = "";
     String check = "";
+    String cliente = "";
 
     public xmlBusqueProductos(int version) {
         super(version);
     }
 
-    public void xmlBusqueProductos(String usuario, String clave, String fechaInicio, String fechaFinal, String marca, String modelo,String linea, String check) {
+    public void xmlBusqueProductos(String usuario, String clave, String fechaInicio, String fechaFinal, String marca, String modelo,String linea, String check , String Cliente) {
         this.usuario = usuario;
         this.clave = clave;
         this.fechaInicio = fechaInicio;
@@ -29,6 +30,7 @@ public class xmlBusqueProductos extends SoapSerializationEnvelope {
         this.modelo = modelo;
         this.linea = linea;
         this.check = check;
+        this.cliente = Cliente;
     }
 
     @Override
@@ -61,23 +63,28 @@ public class xmlBusqueProductos extends SoapSerializationEnvelope {
         writer.endTag(tem, "fechafinal");
 
 
-        writer.startTag(tem, "marca");
+        writer.startTag(tem, "k_marca");
         writer.text(marca);
-        writer.endTag(tem, "marca");
+        writer.endTag(tem, "k_marca");
 
 
-        writer.startTag(tem, "modelo");
+        writer.startTag(tem, "k_modelo");
         writer.text(modelo);
-        writer.endTag(tem, "modelo");
+        writer.endTag(tem, "k_modelo");
 
-        writer.startTag(tem, "linea");
+        writer.startTag(tem, "k_linea");
         writer.text(linea);
-        writer.endTag(tem, "linea");
+        writer.endTag(tem, "k_linea");
 
 
-        writer.startTag(tem, "checkano");
+        writer.startTag(tem, "k_checkano");
         writer.text(check);
-        writer.endTag(tem, "checkano");
+        writer.endTag(tem, "k_checkano");
+
+
+        writer.startTag(tem, "k_cliente");
+        writer.text(cliente);
+        writer.endTag(tem, "k_cliente");
 
         writer.endTag(tem, "busquedaProductos");
 

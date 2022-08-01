@@ -21,6 +21,11 @@ public class ConexionSQLiteHelper extends SQLiteOpenHelper {
             "Monto VARCHAR (20)," +
             "Descri VARCHAR (50))";
 
+    final String CREAR_TABLA_PRODUCTOS = "CREATE TABLE productos (ID INTEGER PRIMARY KEY AUTOINCREMENT," +
+            "Clave VARCHAR (20)," +
+            "Descripcion VARCHAR (50)," +
+            "Tipo VARCHAR (20))";
+
     public ConexionSQLiteHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
     }
@@ -28,11 +33,13 @@ public class ConexionSQLiteHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREAR_TABLA_CARRITO);
+        db.execSQL(CREAR_TABLA_PRODUCTOS);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int versionAntigua, int versionNueva) {
         db.execSQL("DROP TABLE IF EXISTS carrito");
+        db.execSQL("DROP TABLE IF EXISTS productos");
         onCreate(db);
     }
 }

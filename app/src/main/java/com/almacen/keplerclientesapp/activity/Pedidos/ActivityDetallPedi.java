@@ -10,6 +10,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.Gravity;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -39,7 +40,7 @@ public class ActivityDetallPedi extends AppCompatActivity {
     String strusr, strpass, strname, strlname, strtype, strbran, strma, strcode, strcodBra, StrServer;
     ArrayList<DetallPediSANDG> listasearch2 = new ArrayList<>();
     private TableLayout tableLayout;
-    TextView Sucursal, Folio, ClaClient, NomClient;
+    TextView Sucursal, Folio, ClaClient, NomClient,Comentario;
     TableRow fila;
     AlertDialog mDialog;
     TextView txtSucursal, txtFolio, txtClaveC, txtNombreC, txtClavePro, txtCant, txtPrecio, txtDesc, txtImporte;
@@ -49,11 +50,25 @@ public class ActivityDetallPedi extends AppCompatActivity {
     String mensaje = "";
     private SharedPreferences preference;
     private SharedPreferences.Editor editor;
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detall_pedi);
+    TextView txtSubtotal;
+    TextView txtSubtotal2;
+    TextView txtDescuento;
+    TextView txtiva;
+    TextView txtMontototal;
 
+    String SubdescuentoValida;
+    double DescProstr = 0;
+    double Descuento = 0;
+    String DescuentoStr;
+    String ivstr;
+    String MontoStr;
+    String Desc1;
+    double IvaVariado =0;
+
+    @Override
+protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_detall_pedi);
         tableLayout = (TableLayout) findViewById(R.id.table);
 
 
@@ -76,7 +91,15 @@ public class ActivityDetallPedi extends AppCompatActivity {
         Folio = (TextView) findViewById(R.id.txtFolio);
         Sucursal = (TextView) findViewById(R.id.txtSucursal);
         NomClient = (TextView) findViewById(R.id.txtNom);
+        Comentario = (TextView) findViewById(R.id.txtcomentario);
 
+        txtSubtotal = findViewById(R.id.SubTotal);
+        txtDescuento = findViewById(R.id.Descuento);
+        txtiva = findViewById(R.id.iva);
+        txtSubtotal2 = findViewById(R.id.SubTotal2);
+        txtMontototal = (TextView) findViewById(R.id.MontoTotal);
+
+        IvaVariado= ((!StrServer.equals("vazlocolombia.dyndns.org:9085"))?0.16 : 0.19);
 
         MyToolbar.show(this, "Pedido:" + ClaveFolDialog, true);
 
@@ -87,7 +110,7 @@ public class ActivityDetallPedi extends AppCompatActivity {
         if (isOnlineNet()==true) {
 
 
-            AsyncCallWS task = new AsyncCallWS();
+            ActivityDetallPedi.AsyncCallWS task = new ActivityDetallPedi.AsyncCallWS();
             task.execute();
 
         } else {
@@ -125,7 +148,7 @@ public class ActivityDetallPedi extends AppCompatActivity {
     public Boolean isOnlineNet() {
 
         try {
-            Process p = Runtime.getRuntime().exec("ping -c 1 www.google.es");
+            Process p = java.lang.Runtime.getRuntime().exec("ping -c 1 www.google.es");
 
             int val           = p.waitFor();
             boolean reachable = (val == 0);
@@ -155,8 +178,16 @@ public class ActivityDetallPedi extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result) {
             Folio.setText(listasearch2.get(0).getFolio());
-            Sucursal.setText(listasearch2.get(0).getSucursal());
+            Sucursal.setText(listasearch2.get(0).getNomSucursal());
             NomClient.setText(listasearch2.get(0).getNombreC());
+            Comentario.setText(listasearch2.get(0).getComentario());
+            if(StrServer.equals("vazlocolombia.dyndns.org:9085")){
+
+                Desc1 = listasearch2.get(0).getDesc();
+            }else{
+                Desc1 = "0";
+
+            }
 
             TableRow.LayoutParams layaoutFila = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
             TableRow.LayoutParams layaoutDes = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
@@ -175,8 +206,17 @@ public class ActivityDetallPedi extends AppCompatActivity {
                     fila.addView(txtClavePro);
 
 
+                    txtDesc = new TextView(getApplicationContext());
+                    txtDesc.setText("Descuento");
+                    txtDesc.setGravity(Gravity.START);
+                    txtDesc.setBackgroundColor(Color.RED);
+                    txtDesc.setTextColor(Color.WHITE);
+                    txtDesc.setPadding(20, 20, 20, 20);
+                    txtDesc.setLayoutParams(layaoutDes);
+                    fila.addView(txtDesc);
+
                     txtCant = new TextView(getApplicationContext());
-                    txtCant.setText("CANT");
+                    txtCant.setText("Cantidad");
                     txtCant.setGravity(Gravity.START);
                     txtCant.setBackgroundColor(Color.RED);
                     txtCant.setTextColor(Color.WHITE);
@@ -193,16 +233,6 @@ public class ActivityDetallPedi extends AppCompatActivity {
                     txtPrecio.setPadding(20, 20, 20, 20);
                     txtPrecio.setLayoutParams(layaoutDes);
                     fila.addView(txtPrecio);
-
-
-                    txtDesc = new TextView(getApplicationContext());
-                    txtDesc.setText("DESC");
-                    txtDesc.setGravity(Gravity.START);
-                    txtDesc.setBackgroundColor(Color.RED);
-                    txtDesc.setTextColor(Color.WHITE);
-                    txtDesc.setPadding(20, 20, 20, 20);
-                    txtDesc.setLayoutParams(layaoutDes);
-                    fila.addView(txtDesc);
 
 
                     txtImporte = new TextView(getApplicationContext());
@@ -227,32 +257,34 @@ public class ActivityDetallPedi extends AppCompatActivity {
                     txtClavePro.setLayoutParams(layaoutDes);
                     fila.addView(txtClavePro);
 
-                    txtCant = new TextView(getApplicationContext());
-                    txtCant.setBackgroundColor(Color.WHITE);
-                    txtCant.setGravity(Gravity.START);
-                    txtCant.setText(listasearch2.get(i).getCant());
-                    txtCant.setPadding(20, 20, 20, 20);
-                    txtCant.setTextColor(Color.BLACK);
-                    txtCant.setLayoutParams(layaoutDes);
-                    fila.addView(txtCant);
-
-                    txtPrecio = new TextView(getApplicationContext());
-                    txtPrecio.setBackgroundColor(Color.BLACK);
-                    txtPrecio.setGravity(Gravity.START);
-                    txtPrecio.setText("$" + formatNumberCurrency(listasearch2.get(i).getPrecio()));
-                    txtPrecio.setPadding(20, 20, 20, 20);
-                    txtPrecio.setTextColor(Color.WHITE);
-                    txtPrecio.setLayoutParams(layaoutDes);
-                    fila.addView(txtPrecio);
-
                     txtDesc = new TextView(getApplicationContext());
                     txtDesc.setBackgroundColor(Color.WHITE);
                     txtDesc.setGravity(Gravity.START);
-                    txtDesc.setText(listasearch2.get(i).getDesc() + "%");
+                    txtDesc.setText(listasearch2.get(i).getDescripcion());
                     txtDesc.setPadding(20, 20, 20, 20);
                     txtDesc.setTextColor(Color.BLACK);
                     txtDesc.setLayoutParams(layaoutDes);
                     fila.addView(txtDesc);
+
+
+                    txtCant = new TextView(getApplicationContext());
+                    txtCant.setBackgroundColor(Color.BLACK);
+                    txtCant.setGravity(Gravity.START);
+                    txtCant.setText(listasearch2.get(i).getCant());
+                    txtCant.setPadding(20, 20, 20, 20);
+                    txtCant.setTextColor(Color.WHITE);
+                    txtCant.setLayoutParams(layaoutDes);
+                    fila.addView(txtCant);
+
+                    txtPrecio = new TextView(getApplicationContext());
+                    txtPrecio.setBackgroundColor(Color.WHITE);
+                    txtPrecio.setGravity(Gravity.START);
+                    txtPrecio.setText("$" + formatNumberCurrency(listasearch2.get(i).getPrecio()));
+                    txtPrecio.setPadding(20, 20, 20, 20);
+                    txtPrecio.setTextColor(Color.BLACK);
+                    txtPrecio.setLayoutParams(layaoutDes);
+                    fila.addView(txtPrecio);
+
 
 
                     txtImporte = new TextView(getApplicationContext());
@@ -269,6 +301,7 @@ public class ActivityDetallPedi extends AppCompatActivity {
 
                 }
             }
+            Montototal2();
             mDialog.dismiss();
         }
 
@@ -313,7 +346,11 @@ public class ActivityDetallPedi extends AppCompatActivity {
                         (response0.getPropertyAsString("k_Cantidad").equals("anyType{}") ? " " : response0.getPropertyAsString("k_Cantidad")),
                         (response0.getPropertyAsString("k_Precio").equals("anyType{}") ? " " : response0.getPropertyAsString("k_Precio")),
                         (response0.getPropertyAsString("k_Descuento").equals("anyType{}") ? " " : response0.getPropertyAsString("k_Descuento")),
-                        (response0.getPropertyAsString("k_importe").equals("anyType{}") ? " " : response0.getPropertyAsString("k_importe"))));
+                        (response0.getPropertyAsString("k_importe").equals("anyType{}") ? " " : response0.getPropertyAsString("k_importe")),
+                        (response0.getPropertyAsString("k_Comentario").equals("anyType{}") ? " " : response0.getPropertyAsString("k_Comentario")),
+                        (response0.getPropertyAsString("k_nSucursal").equals("anyType{}") ? " " : response0.getPropertyAsString("k_nSucursal")),
+                        (response0.getPropertyAsString("k_descripcion").equals("anyType{}") ? " " : response0.getPropertyAsString("k_descripcion")),
+                        (response0.getPropertyAsString("k_nomvia").equals("anyType{}") ? " " : response0.getPropertyAsString("k_nomvia"))));
 
 
             }
@@ -334,6 +371,41 @@ public class ActivityDetallPedi extends AppCompatActivity {
             mDialog.dismiss();
             mensaje = "Error:" + ex.getMessage();
         }
+    }
+
+    private void Montototal2() {
+
+
+        double Subtotal = 0;
+        String Subtotal1;
+        for (int i = 0; i < listasearch2.size(); i++) {
+            Subtotal = Subtotal + Double.parseDouble(listasearch2.get(i).getImporte());
+        }
+
+
+
+
+        Subtotal1 = String.valueOf(Subtotal);
+        SubdescuentoValida=Subtotal1;
+        txtSubtotal.setText(Html.fromHtml("Subtotal:<font color=#000000>$</font><font color=#000000>" + formatNumberCurrency(Subtotal1) + "</font>"));
+        DescProstr = Double.parseDouble(Desc1) / 100;
+        Descuento = Subtotal * DescProstr;
+        DescuentoStr = String.valueOf(Descuento);
+        txtDescuento.setText(Html.fromHtml("Descuento:<font color=#000000>$</font><font color=#000000>" + formatNumberCurrency(DescuentoStr) + "</font>"));
+
+        double Subtotal2;
+        Subtotal2 = Subtotal - Descuento;
+        double ivaCal;
+        double MontoTotal;
+
+        ivaCal = Subtotal2 * IvaVariado;
+        MontoTotal = Subtotal2 + ivaCal;
+        String SubtotalStr = String.valueOf(Subtotal2);
+        ivstr = String.valueOf(ivaCal);
+        MontoStr = String.valueOf(MontoTotal);
+        txtSubtotal2.setText(Html.fromHtml("SubTotal:<font color=#000000>$</font><font color=#000000>" + formatNumberCurrency(SubtotalStr) + "</font>"));
+        txtiva.setText(Html.fromHtml("Iva:<font color=#000000>$</font><font color=#000000>" + formatNumberCurrency(ivstr) + "</font>"));
+        txtMontototal.setText(Html.fromHtml("Total:<font color=#000000>$</font><font color=#FF0000>" + formatNumberCurrency(MontoStr) + "</font>"));
     }
 
 }

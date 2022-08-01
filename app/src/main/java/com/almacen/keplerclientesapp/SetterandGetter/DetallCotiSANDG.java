@@ -20,17 +20,30 @@ public class DetallCotiSANDG {
     String POBLACION;
     String VIA;
     String Comentario;
+    String Disponible;
+    String BackOrder;
+    String Surtido;
+    String PrecioNuevo;
+    String fecha;
+    String hora;
+    String montoBack;
+    String saldo;
+    String NombreSucursal;
+    String Descripcion;
+    String Unidad;
+    String Vendedor;
+    String MontoPedido;
 
-    public DetallCotiSANDG(String sucursal, String folio, String claveC, String nombreC, String claveP, String cant, String precio, String desc, String importe, String RFC, String PLAZO, String DESCUENTOPP, String DESCUENTO1, String CALLE, String COLONIA, String POBLACION, String VIA, String comentario) {
-        this.Sucursal = sucursal;
-        this.Folio = folio;
-        this.ClaveC = claveC;
-        this.NombreC = nombreC;
-        this.ClaveP = claveP;
-        this.Cant = cant;
-        this.Precio = precio;
-        this.Desc = desc;
-        this.Importe = importe;
+    public DetallCotiSANDG(String sucursal, String folio, String claveC, String nombreC, String claveP, String cant, String precio, String desc, String importe, String RFC, String PLAZO, String DESCUENTOPP, String DESCUENTO1, String CALLE, String COLONIA, String POBLACION, String VIA, String comentario, String disponible, String backOrder, String surtido, String precioNuevo, String fecha, String hora, String montoBack, String saldo, String nombreSucursal, String descripcion, String unidad, String vendedor, String montoPedido) {
+        Sucursal = sucursal;
+        Folio = folio;
+        ClaveC = claveC;
+        NombreC = nombreC;
+        ClaveP = claveP;
+        Cant = cant;
+        Precio = precio;
+        Desc = desc;
+        Importe = importe;
         this.RFC = RFC;
         this.PLAZO = PLAZO;
         this.DESCUENTOPP = DESCUENTOPP;
@@ -39,7 +52,20 @@ public class DetallCotiSANDG {
         this.COLONIA = COLONIA;
         this.POBLACION = POBLACION;
         this.VIA = VIA;
-        this.Comentario = comentario;
+        Comentario = comentario;
+        Disponible = disponible;
+        BackOrder = backOrder;
+        Surtido = surtido;
+        PrecioNuevo = precioNuevo;
+        this.fecha = fecha;
+        this.hora = hora;
+        this.montoBack = montoBack;
+        this.saldo = saldo;
+        NombreSucursal = nombreSucursal;
+        Descripcion = descripcion;
+        Unidad = unidad;
+        Vendedor = vendedor;
+        MontoPedido = montoPedido;
     }
 
     public String getSucursal() {
@@ -184,5 +210,109 @@ public class DetallCotiSANDG {
 
     public void setComentario(String comentario) {
         Comentario = comentario;
+    }
+
+    public String getDisponible() {
+        return Disponible;
+    }
+
+    public void setDisponible(String disponible) {
+        Disponible = disponible;
+    }
+
+    public String getBackOrder() {
+        return BackOrder;
+    }
+
+    public void setBackOrder(String backOrder) {
+        BackOrder = backOrder;
+    }
+
+    public String getSurtido() {
+        return Surtido;
+    }
+
+    public void setSurtido(String surtido) {
+        Surtido = surtido;
+    }
+
+    public String getPrecioNuevo() {
+        return PrecioNuevo;
+    }
+
+    public void setPrecioNuevo(String precioNuevo) {
+        PrecioNuevo = precioNuevo;
+    }
+
+    public String getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(String fecha) {
+        this.fecha = fecha;
+    }
+
+    public String getHora() {
+        return hora;
+    }
+
+    public void setHora(String hora) {
+        this.hora = hora;
+    }
+
+    public String getMontoBack() {
+        return montoBack;
+    }
+
+    public void setMontoBack(String montoBack) {
+        this.montoBack = montoBack;
+    }
+
+    public String getSaldo() {
+        return saldo;
+    }
+
+    public void setSaldo(String saldo) {
+        this.saldo = saldo;
+    }
+
+    public String getNombreSucursal() {
+        return NombreSucursal;
+    }
+
+    public void setNombreSucursal(String nombreSucursal) {
+        NombreSucursal = nombreSucursal;
+    }
+
+    public String getDescripcion() {
+        return Descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        Descripcion = descripcion;
+    }
+
+    public String getUnidad() {
+        return Unidad;
+    }
+
+    public void setUnidad(String unidad) {
+        Unidad = unidad;
+    }
+
+    public String getVendedor() {
+        return Vendedor;
+    }
+
+    public void setVendedor(String vendedor) {
+        Vendedor = vendedor;
+    }
+
+    public String getMontoPedido() {
+        return MontoPedido;
+    }
+
+    public void setMontoPedido(String montoPedido) {
+        MontoPedido = montoPedido;
     }
 }

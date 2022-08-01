@@ -32,8 +32,11 @@ import android.widget.TextView;
 
 import com.almacen.keplerclientesapp.SetandGet.SetGetListProductos;
 import com.almacen.keplerclientesapp.SetandGet.SetGetListProductos2;
+import com.almacen.keplerclientesapp.SetterandGetter.AplicacionesSANDG;
 import com.almacen.keplerclientesapp.SetterandGetter.CarritoBD;
 import com.almacen.keplerclientesapp.SetterandGetter.CarritoVentasSANDG;
+import com.almacen.keplerclientesapp.SetterandGetter.DisponibilidadSANDG;
+import com.almacen.keplerclientesapp.XMLS.xmlAplicaciones;
 import com.almacen.keplerclientesapp.XMLS.xmlCarritoVentas;
 import com.almacen.keplerclientesapp.XMLS.xmlEquiva;
 import com.almacen.keplerclientesapp.XMLS.xmlProductoConsulta;
@@ -62,10 +65,14 @@ public class DetalladoProductosActivity extends AppCompatActivity {
 
 
     String strusr, strpass, strname, strlname, strtype, strtype2, strbran, strma, strco, strcodBra, StrServer;
-    String Producto, Descripcion, Modelo, Marca, Linea, Year;
+    String Producto, Descripcion, PrecioAjustado, PrecioBase;
     private SharedPreferences preference;
+    TextView txtSucursal, txtFolio, txtClaveC, txtNombreC, txtClavePro, txtCant, txtPrecio, txtDesc, txtImporte;
+    TableRow fila;
+    private TableLayout tableLayout;
     private SharedPreferences.Editor editor;
-    ArrayList<SetGetListProductos2> listProdu1 = new ArrayList<>();
+    ArrayList<AplicacionesSANDG> Aplicaciones = new ArrayList<>();
+    ArrayList<DisponibilidadSANDG> Existencias = new ArrayList<>();
     TextView Descripciontxt, ClaveProdcutotxt, Preciotxt, Marcatxt, Modelotxt, Yeartxt;
     String strClave = " ", strDesc = " ", strCodeBar = " ", strPrecio = " ";
     String strCantidad = "1", strscliente, strscliente2, strscliente3;
@@ -85,6 +92,7 @@ public class DetalladoProductosActivity extends AppCompatActivity {
     int ban = 1;
     String rfc;
     String plazo;
+    String Vendedor;
     String Nombre;
     String Calle;
     String Colonia;
@@ -105,7 +113,7 @@ public class DetalladoProductosActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detallado_productos);
 
-        MyToolbar.show(this, " ", true);
+        MyToolbar.show(this, " ", false);
         preference = getSharedPreferences("Login", Context.MODE_PRIVATE);
         editor = preference.edit();
         mDialog = new SpotsDialog.Builder().setContext(DetalladoProductosActivity.this).setMessage("Espere un momento...").build();
@@ -120,27 +128,22 @@ public class DetalladoProductosActivity extends AppCompatActivity {
         strcodBra = preference.getString("codBra", "null");
         strco = preference.getString("code", "null");
         StrServer = preference.getString("Servidor", "null");
+
         Producto = getIntent().getStringExtra("Producto");
-        Descripcion = getIntent().getStringExtra("Descripcion");
-        Modelo = getIntent().getStringExtra("Modelo");
-        Marca = getIntent().getStringExtra("Marca");
-        Year = getIntent().getStringExtra("Year");
+
         RecyclerProductos = findViewById(R.id.listExistencias);
         Descripciontxt = findViewById(R.id.Descr);
         ClaveProdcutotxt = findViewById(R.id.Clave);
         Preciotxt = findViewById(R.id.Precio);
-        Marcatxt = findViewById(R.id.Marca);
-        Modelotxt = findViewById(R.id.Modelo);
-        Yeartxt = findViewById(R.id.Year);
         imageproducto = findViewById(R.id.imageproducto);
         Cantidad = (EditText) findViewById(R.id.Canti);
         btnCarShoping = (Button) findViewById(R.id.Add);
-
+        tableLayout = (TableLayout) findViewById(R.id.table);
 
         preferenceClie = getSharedPreferences("clienteCompra", Context.MODE_PRIVATE);
         editor = preferenceClie.edit();
 
-        listProdu1 = new ArrayList<>();
+        Aplicaciones = new ArrayList<>();
         RecyclerProductos.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
         Cantidad.setText("1");
@@ -157,7 +160,7 @@ public class DetalladoProductosActivity extends AppCompatActivity {
 
                     for (int i = 0; i < listaCarShoping2.size(); i++) {
 
-                        if (listaCarShoping2.get(i).getParte().equals(strClave)) {
+                        if (listaCarShoping2.get(i).getParte().equals(Producto)) {
                             AlertDialog.Builder alerta = new AlertDialog.Builder(DetalladoProductosActivity.this);
                             alerta.setMessage("Ya cuentas con este producto en tu carrito de compras").setCancelable(false).setNegativeButton("Ok", new DialogInterface.OnClickListener() {
                                 @Override
@@ -184,9 +187,9 @@ public class DetalladoProductosActivity extends AppCompatActivity {
 
 
                         if (!strCantidad.isEmpty() && !strCantidad.equals("0")) {
-                            for (int i = 0; i < listProdu1.size(); i++) {
-                                if (strcodBra.equals(listProdu1.get(i).getSucursal())) {
-                                    strExistencia = listProdu1.get(i).getExistencia();
+                            for (int i = 0; i < Existencias.size(); i++) {
+                                if (strcodBra.equals(Existencias.get(i).getClave())) {
+                                    strExistencia = Existencias.get(i).getDisponibilidad();
                                     break;
                                 }
                             }
@@ -267,7 +270,6 @@ public class DetalladoProductosActivity extends AppCompatActivity {
         });
 
 
-
         Consulta();
 
     }
@@ -304,8 +306,8 @@ public class DetalladoProductosActivity extends AppCompatActivity {
         @RequiresApi(api = Build.VERSION_CODES.P)
         @Override
         protected void onPostExecute(Void result) {
-
-        }
+            mDialog.dismiss();
+            }
 
 
     }
@@ -364,7 +366,7 @@ public class DetalladoProductosActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-
+            mDialog.show();
 
         }
 
@@ -377,7 +379,7 @@ public class DetalladoProductosActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result) {
             Picasso.with(context).
-                    load("https://vazlo.com.mx/assets/img/productos/chica/jpg/" + listProdu1.get(0).getProducto() + ".jpg")
+                    load("https://www.pressa.mx/es-mx/img/products/xl/"+Producto+"/4.webp")
                     .error(R.drawable.icons8_error_52)
                     .fit()
                     .centerInside()
@@ -385,14 +387,122 @@ public class DetalladoProductosActivity extends AppCompatActivity {
 
             Descripciontxt.setText(Descripcion);
             ClaveProdcutotxt.setText(Producto);
-            Preciotxt.setText("$" + (Double.valueOf(listProdu1.get(0).getPrecio_ajuste()) == 0 ? formatNumberCurrency(listProdu1.get(0).getPrecio_base()) : formatNumberCurrency(listProdu1.get(0).getPrecio_base())));
-            Marcatxt.setText(Marca);
-            Modelotxt.setText(Modelo);
-            Yeartxt.setText(Year);
+            Preciotxt.setText("$" + (Double.valueOf(PrecioAjustado) == 0 ? formatNumberCurrency(PrecioBase) : formatNumberCurrency(PrecioAjustado)));
 
-
-            AdapterDetalleExistencia adapter = new AdapterDetalleExistencia(listProdu1);
+            AdapterDetalleExistencia adapter = new AdapterDetalleExistencia(Existencias);
             RecyclerProductos.setAdapter(adapter);
+
+            TableRow.LayoutParams layaoutFila = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
+            TableRow.LayoutParams layaoutDes = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
+            for (int i = -1; i < Aplicaciones.size(); i++) {
+                fila = new TableRow(getApplicationContext());
+                fila.setLayoutParams(layaoutFila);
+                if (i == -1) {
+
+                    txtClavePro = new TextView(getApplicationContext());
+                    txtClavePro.setText("Marca");
+                    txtClavePro.setGravity(Gravity.START);
+                    txtClavePro.setBackgroundColor(Color.RED);
+                    txtClavePro.setTextColor(Color.WHITE);
+                    txtClavePro.setPadding(20, 20, 20, 20);
+                    txtClavePro.setLayoutParams(layaoutDes);
+                    fila.addView(txtClavePro);
+
+
+                    txtCant = new TextView(getApplicationContext());
+                    txtCant.setText("Modelo");
+                    txtCant.setGravity(Gravity.START);
+                    txtCant.setBackgroundColor(Color.RED);
+                    txtCant.setTextColor(Color.WHITE);
+                    txtCant.setPadding(20, 20, 20, 20);
+                    txtCant.setLayoutParams(layaoutDes);
+                    fila.addView(txtCant);
+
+
+                    txtPrecio = new TextView(getApplicationContext());
+                    txtPrecio.setText("Año");
+                    txtPrecio.setGravity(Gravity.START);
+                    txtPrecio.setBackgroundColor(Color.RED);
+                    txtPrecio.setTextColor(Color.WHITE);
+                    txtPrecio.setPadding(20, 20, 20, 20);
+                    txtPrecio.setLayoutParams(layaoutDes);
+                    fila.addView(txtPrecio);
+
+
+                    txtDesc = new TextView(getApplicationContext());
+                    txtDesc.setText("Motor");
+                    txtDesc.setGravity(Gravity.START);
+                    txtDesc.setBackgroundColor(Color.RED);
+                    txtDesc.setTextColor(Color.WHITE);
+                    txtDesc.setPadding(20, 20, 20, 20);
+                    txtDesc.setLayoutParams(layaoutDes);
+                    fila.addView(txtDesc);
+
+
+                    txtImporte = new TextView(getApplicationContext());
+                    txtImporte.setText("Posición");
+                    txtImporte.setGravity(Gravity.START);
+                    txtImporte.setBackgroundColor(Color.RED);
+                    txtImporte.setTextColor(Color.WHITE);
+                    txtImporte.setPadding(20, 20, 20, 20);
+                    txtImporte.setLayoutParams(layaoutDes);
+                    fila.addView(txtImporte);
+
+                    tableLayout.addView(fila);
+                } else {
+
+
+                    txtClavePro = new TextView(getApplicationContext());
+                    txtClavePro.setBackgroundColor(Color.BLACK);
+                    txtClavePro.setGravity(Gravity.START);
+                    txtClavePro.setText(Aplicaciones.get(i).getMarca());
+                    txtClavePro.setPadding(20, 20, 20, 20);
+                    txtClavePro.setTextColor(Color.WHITE);
+                    txtClavePro.setLayoutParams(layaoutDes);
+                    fila.addView(txtClavePro);
+
+                    txtCant = new TextView(getApplicationContext());
+                    txtCant.setBackgroundColor(Color.GRAY);
+                    txtCant.setGravity(Gravity.START);
+                    txtCant.setText(Aplicaciones.get(i).getModelo());
+                    txtCant.setPadding(20, 20, 20, 20);
+                    txtCant.setTextColor(Color.WHITE);
+                    txtCant.setLayoutParams(layaoutDes);
+                    fila.addView(txtCant);
+
+                    txtPrecio = new TextView(getApplicationContext());
+                    txtPrecio.setBackgroundColor(Color.BLACK);
+                    txtPrecio.setGravity(Gravity.START);
+                    txtPrecio.setText(Aplicaciones.get(i).getAno());
+                    txtPrecio.setPadding(20, 20, 20, 20);
+                    txtPrecio.setTextColor(Color.WHITE);
+                    txtPrecio.setLayoutParams(layaoutDes);
+                    fila.addView(txtPrecio);
+
+                    txtDesc = new TextView(getApplicationContext());
+                    txtDesc.setBackgroundColor(Color.GRAY);
+                    txtDesc.setGravity(Gravity.START);
+                    txtDesc.setText(Aplicaciones.get(i).getCilindraje() + " " + Aplicaciones.get(i).getLitraje());
+                    txtDesc.setPadding(20, 20, 20, 20);
+                    txtDesc.setTextColor(Color.WHITE);
+                    txtDesc.setLayoutParams(layaoutDes);
+                    fila.addView(txtDesc);
+
+
+                    txtImporte = new TextView(getApplicationContext());
+                    txtImporte.setBackgroundColor(Color.BLACK);
+                    txtImporte.setGravity(Gravity.START);
+                    txtImporte.setText(Aplicaciones.get(i).getPosicion());
+                    txtImporte.setPadding(20, 20, 20, 20);
+                    txtImporte.setTextColor(Color.WHITE);
+                    txtImporte.setLayoutParams(layaoutDes);
+                    fila.addView(txtImporte);
+                    fila.setPadding(2, 2, 2, 2);
+
+                    tableLayout.addView(fila);
+
+                }
+            }
 
             DetalladoProductosActivity.EquivaProdu task1 = new DetalladoProductosActivity.EquivaProdu();
             task1.execute();
@@ -406,16 +516,16 @@ public class DetalladoProductosActivity extends AppCompatActivity {
     }
 
     private void WebServiceListProductoprecios() {
-        String SOAP_ACTION = "ProductoConsulta";
-        String METHOD_NAME = "ProductoConsulta";
+        String SOAP_ACTION = "Aplicaciones";
+        String METHOD_NAME = "Aplicaciones";
         String NAMESPACE = "http://" + StrServer + "/WSk75ClientesSOAP/";
         String URL = "http://" + StrServer + "/WSk75ClientesSOAP";
 
 
         try {
             SoapObject Request = new SoapObject(NAMESPACE, METHOD_NAME);
-            xmlProductoConsulta soapEnvelope = new xmlProductoConsulta(SoapEnvelope.VER11);
-            soapEnvelope.xmlProductoConsulta(strusr, strpass, strco, Producto, " ", " ", " ", " ");
+            xmlAplicaciones soapEnvelope = new xmlAplicaciones(SoapEnvelope.VER11);
+            soapEnvelope.xmlAplicaciones(strusr, strpass, strco, Producto);
             soapEnvelope.dotNet = true;
             soapEnvelope.implicitTypes = true;
             soapEnvelope.setOutputSoapObject(Request);
@@ -424,41 +534,62 @@ public class DetalladoProductosActivity extends AppCompatActivity {
             trasport.call(SOAP_ACTION, soapEnvelope);
             SoapObject response = (SoapObject) soapEnvelope.bodyIn;
 
-            String Producto;
+            String Marca = "";
+            String Modelo = "";
+            String Ano = "";
+            String cilindraje;
+            String litraje;
+            String posicion;
             String precio_base;
             String precio_ajuste;
             String sucursal;
             String existencia;
             String nomSucursal;
 
+
             for (int i = 0; i < response.getPropertyCount(); i++) {
 
                 SoapObject response0 = (SoapObject) soapEnvelope.bodyIn;
                 response0 = (SoapObject) response0.getProperty(i);
+
                 Producto = response0.getPropertyAsString("Producto");
-                response0 = (SoapObject) soapEnvelope.bodyIn;
-                response0 = (SoapObject) response0.getProperty(i);
+                Descripcion = response0.getPropertyAsString("Descripcion");
+                Marca = response0.getPropertyAsString("Marca").equals("anyType{}") ? "" : response0.getPropertyAsString("Marca");
+                Modelo = response0.getPropertyAsString("Modelo").equals("anyType{}") ? "" : response0.getPropertyAsString("Modelo");
+                Ano = response0.getPropertyAsString("carano").equals("anyType{}") ? "" : response0.getPropertyAsString("carano");
+                cilindraje = response0.getPropertyAsString("cilindraje").equals("anyType{}") ? "" : response0.getPropertyAsString("cilindraje");
+                posicion = response0.getPropertyAsString("posicion").equals("anyType{}") ? "" : response0.getPropertyAsString("posicion");
+                litraje = response0.getPropertyAsString("litrage").equals("anyType{}") ? "" : response0.getPropertyAsString("litrage");
                 response0 = (SoapObject) response0.getProperty("precio_base");
-                precio_base = response0.getPropertyAsString("valor");
-                response0.getPropertyAsString("prefijo");
-                response0.getPropertyAsString("sufijo");
+                PrecioBase = response0.getPropertyAsString("valor").equals("anyType{}") ? "0" : response0.getPropertyAsString("valor");
                 response0 = (SoapObject) soapEnvelope.bodyIn;
                 response0 = (SoapObject) response0.getProperty(i);
                 response0 = (SoapObject) response0.getProperty("precio_ajuste");
-                precio_ajuste = response0.getPropertyAsString("valor");
-                response0.getPropertyAsString("prefijo");
-                response0.getPropertyAsString("sufijo");
-                response0 = (SoapObject) soapEnvelope.bodyIn;
-                response0 = (SoapObject) response0.getProperty(i);
-                response0 = (SoapObject) response0.getProperty("existencia");
-                sucursal = response0.getPropertyAsString("sucursal");
-                existencia = response0.getPropertyAsString("existencia");
-                nomSucursal = response0.getPropertyAsString("nomSucursal");
+                PrecioAjustado = response0.getPropertyAsString("valor").equals("anyType{}") ? "0" : response0.getPropertyAsString("valor");
 
-                listProdu1.add(new SetGetListProductos2(Producto, precio_base, precio_ajuste, sucursal, existencia, nomSucursal, "0"));
+                if (i <= 0) {
+                    response0 = (SoapObject) soapEnvelope.bodyIn;
+                    response0 = (SoapObject) response0.getProperty(i);
+                    response0 = (SoapObject) response0.getProperty("existencia");
+                    for (int j = 0; j < response0.getPropertyCount(); j++) {
+                        response0 = (SoapObject) soapEnvelope.bodyIn;
+                        response0 = (SoapObject) response0.getProperty(i);
+                        response0 = (SoapObject) response0.getProperty("existencia");
+                        response0 = (SoapObject) response0.getProperty(j);
+                        String Clave, Disponibilidad, Nombre;
+                        Clave = response0.getPropertyAsString("clavesuc");
+                        Disponibilidad = response0.getPropertyAsString("existencia");
+                        Nombre = response0.getPropertyAsString("nomSucursal");
+
+                        Existencias.add(new DisponibilidadSANDG(Clave, Disponibilidad, Nombre));
+                    }
+
+                }
+                Aplicaciones.add(new AplicacionesSANDG(Marca, Modelo, Ano, cilindraje, litraje, posicion));
 
 
             }
+
 
         } catch (SoapFault soapFault) {
             soapFault.printStackTrace();
@@ -489,7 +620,7 @@ public class DetalladoProductosActivity extends AppCompatActivity {
             if (preferenceClie.contains("RFC") && preferenceClie.contains("PLAZO")) {
 
             } else {
-                Nombre =listaCarShoping.get(0).getNombre();
+                Nombre = listaCarShoping.get(0).getNombre();
                 rfc = listaCarShoping.get(0).getRfc();
                 plazo = listaCarShoping.get(0).getPlazo();
                 Calle = listaCarShoping.get(0).getCalle();
@@ -501,6 +632,8 @@ public class DetalladoProductosActivity extends AppCompatActivity {
                 Comentario1 = listaCarShoping.get(0).getComentario1();
                 Comentario2 = listaCarShoping.get(0).getComentario2();
                 Comentario3 = listaCarShoping.get(0).getComentario3();
+                Vendedor = listaCarShoping.get(0).getVendedor();
+
 
                 guardarDatos2();
             }
@@ -527,7 +660,7 @@ public class DetalladoProductosActivity extends AppCompatActivity {
                 db.close();
                 Intent carrito = new Intent(DetalladoProductosActivity.this, CarritoComprasActivity.class);
                 startActivity(carrito);
-                } catch (Exception e) {
+            } catch (Exception e) {
 
             }
         }
@@ -580,7 +713,8 @@ public class DetalladoProductosActivity extends AppCompatActivity {
                         (response0.getPropertyAsString("k_comentario1").equals("anyType{}") ? "" : response0.getPropertyAsString("k_comentario1")),
                         (response0.getPropertyAsString("k_comentario2").equals("anyType{}") ? "" : response0.getPropertyAsString("k_comentario2")),
                         (response0.getPropertyAsString("k_comentario3").equals("anyType{}") ? "" : response0.getPropertyAsString("k_comentario3")),
-                (response0.getPropertyAsString("k_nombre").equals("anyType{}") ? "" : response0.getPropertyAsString("k_nombre"))));
+                        (response0.getPropertyAsString("k_nombre").equals("anyType{}") ? "" : response0.getPropertyAsString("k_nombre")),
+                        (response0.getPropertyAsString("k_agent").equals("anyType{}") ? "" : response0.getPropertyAsString("k_agent"))));
 
 
             }
@@ -601,7 +735,7 @@ public class DetalladoProductosActivity extends AppCompatActivity {
         } catch (Exception ex) {
             mDialog.dismiss();
 
-             mensaje = "Error:" + ex.getMessage();
+            mensaje = "Error:" + ex.getMessage();
         }
     }
 
@@ -620,6 +754,8 @@ public class DetalladoProductosActivity extends AppCompatActivity {
         editor.putString("Comentario1", Comentario1);
         editor.putString("Comentario2", Comentario2);
         editor.putString("Comentario3", Comentario3);
+        editor.putString("Vendedor", Vendedor);
+
 
         editor.commit();
     }
@@ -648,11 +784,23 @@ public class DetalladoProductosActivity extends AppCompatActivity {
         db.close();
 
     }
+    @Override
+    public void onBackPressed() {
 
+        int count = getFragmentManager().getBackStackEntryCount();
 
+        if (count == 0) {
+            super.onBackPressed();
+            getFragmentManager().popBackStack();
+        } else {
+            getFragmentManager().popBackStack();//No se porqué puse lo mismo O.o
+        }
+
+    }
+/*
 public void eliminar(View view){
         editor.clear().commit();
-}
+}*/
 
 /*
     public void subirCantidad(View view) {

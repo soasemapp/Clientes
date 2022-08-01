@@ -9,19 +9,19 @@ public class xmlBusqueGeneral extends SoapSerializationEnvelope {
 
     String usuario = "";
     String clave = "";
-    String ClaveProdcuto = "";
-    String DescripcionProdcuto = "";
+    String clientes = "";
+    String busqueda = "";
 
 
     public xmlBusqueGeneral(int version) {
         super(version);
     }
 
-    public void xmlBusqueGeneral(String usuario, String clave, String claveProdcuto, String descripcionProdcuto) {
+    public void xmlBusqueGeneral(String usuario, String clave, String clientes, String busqueda) {
         this.usuario = usuario;
         this.clave = clave;
-        ClaveProdcuto = claveProdcuto;
-        DescripcionProdcuto = descripcionProdcuto;
+        this.clientes = clientes;
+        this.busqueda = busqueda;
     }
 
     @Override
@@ -33,7 +33,7 @@ public class xmlBusqueGeneral extends SoapSerializationEnvelope {
         writer.setPrefix("", tem);
         writer.startTag(env, "Envelope");
         writer.startTag(env, "Body");
-        writer.startTag(tem, "BusquedaGeneralRequest");
+        writer.startTag(tem, "ProductoConsultaAppRequest");
         writer.startTag(tem, "Login");
         writer.startTag(tem, "user");
         writer.text(usuario);
@@ -44,20 +44,20 @@ public class xmlBusqueGeneral extends SoapSerializationEnvelope {
         writer.endTag(tem, "Login");
 
 
-        writer.startTag(tem, "BusquedaGeneral");
-        writer.startTag(tem, "k_clave");
-        writer.text(ClaveProdcuto);
-        writer.endTag(tem, "k_clave");
+        writer.startTag(tem, "ProdConsu");
+        writer.startTag(tem, "client");
+        writer.text(clientes);
+        writer.endTag(tem, "client");
 
-        writer.startTag(tem, "k_descripcion");
-        writer.text(DescripcionProdcuto);
-        writer.endTag(tem, "k_descripcion");
-
-
-        writer.endTag(tem, "BusquedaGeneral");
+        writer.startTag(tem, "eagle");
+        writer.text(busqueda);
+        writer.endTag(tem, "eagle");
 
 
-        writer.endTag(tem, "BusquedaGeneralRequest");
+        writer.endTag(tem, "ProdConsu");
+
+
+        writer.endTag(tem, "ProductoConsultaAppRequest");
         writer.endTag(env, "Body");
         writer.endTag(env, "Envelope");
         writer.endDocument();

@@ -17,12 +17,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.almacen.keplerclientesapp.R;
 import com.almacen.keplerclientesapp.SetandGet.Login;
 import com.almacen.keplerclientesapp.activity.SplashActivity;
 import com.almacen.keplerclientesapp.XMLS.xmlLogin;
+import com.squareup.picasso.Picasso;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.SoapFault;
@@ -66,6 +68,8 @@ public class loginFragment extends Fragment {
     int result1=0;
     String mensaje;
     Login loginSave = new Login();
+
+    private ImageView imgEmpresa;
     Fragment framentLogin, fragmentReUser, fragmenSelect;
     public loginFragment() {
         // Required empty public constructor
@@ -103,7 +107,7 @@ public class loginFragment extends Fragment {
                              Bundle savedInstanceState) {
         mDialog = new SpotsDialog.Builder().setContext(getActivity()).setMessage("Espere un momento...").build();
 
-        int Empresa = 0;
+        int Empresa = -1;
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_login, container, false);
 
@@ -116,6 +120,7 @@ public class loginFragment extends Fragment {
         editUsuario = view.findViewById(R.id.ediUser);
         editContraseña = view.findViewById(R.id.editContraseña);
         btnEntrar = view.findViewById(R.id.btnEntrar);
+        imgEmpresa = view.findViewById(R.id.imagEmpresa);
 
 
         framentLogin = new loginFragment();
@@ -142,30 +147,72 @@ public class loginFragment extends Fragment {
         }else{
             if(Empresa==0){
                 strEmpresa =  "jacve.dyndns.org:9085";
+                Picasso.with(getActivity()).
+                        load(R.drawable.jacve)
+                        .error(R.drawable.ic_baseline_error_24)
+                        .fit()
+                        .centerInside()
+                        .into(imgEmpresa);
                 editor.putString("Servidor", strEmpresa);
                 editor.commit();
             }else if(Empresa==1){
                 strEmpresa =  "autodis.ath.cx:9085";
+                Picasso.with(getActivity()).
+                        load(R.drawable.autodis)
+                        .error(R.drawable.ic_baseline_error_24)
+                        .fit()
+                        .centerInside()
+                        .into(imgEmpresa);
                 editor.putString("Servidor", strEmpresa);
                 editor.commit();
             }else if(Empresa==2){
                 strEmpresa =  "cecra.ath.cx:9085";
+                Picasso.with(getActivity()).
+                        load(R.drawable.cecra)
+                        .error(R.drawable.ic_baseline_error_24)
+                        .fit()
+                        .centerInside()
+                        .into(imgEmpresa);
                 editor.putString("Servidor", strEmpresa);
                 editor.commit();
             }else if(Empresa==3){
+                Picasso.with(getActivity()).
+                        load(R.drawable.guvi)
+                        .error(R.drawable.ic_baseline_error_24)
+                        .fit()
+                        .centerInside()
+                        .into(imgEmpresa);
                 strEmpresa =  "guvi.ath.cx:9085";
                 editor.putString("Servidor", strEmpresa);
                 editor.commit();
             }else if(Empresa==4){
+                Picasso.with(getActivity()).
+                        load(R.drawable.vipla)
+                        .error(R.drawable.ic_baseline_error_24)
+                        .fit()
+                        .centerInside()
+                        .into(imgEmpresa);
                 strEmpresa =  "sprautomotive.servehttp.com:9085";
                 editor.putString("Servidor", strEmpresa);
                 editor.commit();
             }else if(Empresa==5){
+                Picasso.with(getActivity()).
+                        load(R.drawable.pressa)
+                        .error(R.drawable.ic_baseline_error_24)
+                        .fit()
+                        .centerInside()
+                        .into(imgEmpresa);
                 strEmpresa =  "cedistabasco.ddns.net:9085";
                 editor.putString("Servidor", strEmpresa);
                 editor.commit();
             }else if(Empresa==6){
-                strEmpresa =  "sprautomotive.servehttp.com:9075";
+                Picasso.with(getActivity()).
+                        load(R.drawable.sprimage)
+                        .error(R.drawable.ic_baseline_error_24)
+                        .fit()
+                        .centerInside()
+                        .into(imgEmpresa);
+                strEmpresa =  "sprautomotive.servehttp.com:9090";
                 editor.putString("Servidor", strEmpresa);
                 editor.commit();
             }
