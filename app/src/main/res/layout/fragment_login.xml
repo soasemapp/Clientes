@@ -89,6 +89,7 @@
                         android:linksClickable="true"
                         android:text="@string/olvidaste_tu_contrase_a"
                         android:textColor="@color/red_700"
+                        android:visibility="gone"
                         android:textStyle="bold" />
 
                     <com.google.android.material.textview.MaterialTextView
@@ -99,6 +100,7 @@
                         android:text="@string/tienes_cuenta"
                         android:linksClickable="true"
                         android:textStyle="bold"
+                        android:visibility="gone"
                         android:textColor="@color/red_700" />
 
                     <com.google.android.material.textview.MaterialTextView

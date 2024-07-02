@@ -53,7 +53,7 @@
                     android:layout_margin="10dp"
                     android:background="@drawable/desingimage"
                     android:backgroundTint="#EFE9E9"
-                    android:src="@drawable/mycedis3" />
+                    android:src="@drawable/aboutlogo" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -69,6 +69,17 @@
                         android:layout_marginStart="5dp"
                         android:layout_marginBottom="5dp"
                         android:text="Descripcion"
+                        android:textSize="9sp"
+                        android:maxLines="4"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/Linea"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="3dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:text="Linea"
                         android:textSize="9sp"
                         android:maxLines="4"
                         android:textStyle="bold" />

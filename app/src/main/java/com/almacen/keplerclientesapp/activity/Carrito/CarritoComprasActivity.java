@@ -61,6 +61,7 @@ public class CarritoComprasActivity extends AppCompatActivity {
     double DescProstr = 0;
     double Descuento = 0;
     double IvaVariado = 0;
+    String Clave = "";
 
 
     TextView txtSubtotal;
@@ -142,6 +143,11 @@ public class CarritoComprasActivity extends AppCompatActivity {
     String Folio;
     String DescuentoStr;
 
+    String descuEagle;
+    String descuRodatech;
+    String descuPartec;
+    String descuShark;
+    String descuTrackone;
     private SharedPreferences preference;
     private SharedPreferences.Editor editor;
 
@@ -205,6 +211,13 @@ public class CarritoComprasActivity extends AppCompatActivity {
         Comentario2 = preferenceClie.getString("Comentario2", "");
         Comentario3 = preferenceClie.getString("Comentario3", "");
         Vendedor = preferenceClie.getString("Vendedor", "");
+
+        descuEagle = preferenceClie.getString("Eagle", "");
+        descuRodatech = preferenceClie.getString("Rodatech", "");
+        descuPartec = preferenceClie.getString("Partech", "");
+        descuShark = preferenceClie.getString("Shark", "");
+        descuTrackone = preferenceClie.getString("Trackone", "");
+
 
 
 
@@ -421,7 +434,7 @@ public class CarritoComprasActivity extends AppCompatActivity {
 
             SoapObject Request = new SoapObject(NAMESPACE, METHOD_NAME);
             xmlCarritoCompras soapEnvelope = new xmlCarritoCompras(SoapEnvelope.VER11);
-            soapEnvelope.xmlCarritoCompras(Comentario, Nombre, strcode, StrFechaActaul, StrFechaVencimiento, strcodBra, strusr, strpass, rfc, plazo, MontoStr, ivstr, DescuentoStr, DescPro, Desc1, Calle, Colonia, Poblacion, listaCarShoping, StrServer,Vendedor);
+            soapEnvelope.xmlCarritoCompras(Comentario, Nombre, strcode, StrFechaActaul, StrFechaVencimiento, strcodBra, strusr, strpass, rfc, plazo, MontoStr, ivstr, DescuentoStr, DescPro, Desc1, Calle, Colonia, Poblacion, listaCarShoping, StrServer,Clave,Vendedor, descuEagle, descuRodatech, descuPartec, descuShark, descuTrackone);
             soapEnvelope.dotNet = true;
             soapEnvelope.implicitTypes = true;
             soapEnvelope.setOutputSoapObject(Request);

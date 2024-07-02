@@ -21,8 +21,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Version 0.5"
-                android:textSize="20sp"
+                android:text="Version 1.0"                android:textSize="20sp"
                 android:layout_margin="10dp"></TextView>
 
             <LinearLayout
@@ -68,6 +67,7 @@
                     android:layout_margin="10dp"
                     android:backgroundTint="@color/black"
                     android:text="@string/solicitar_tu_usuario"
+                    android:visibility="gone"
                     android:background="@color/black"
                     tools:targetApi="lollipop" />
             </LinearLayout>

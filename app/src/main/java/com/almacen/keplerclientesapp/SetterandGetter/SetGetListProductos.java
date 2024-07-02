@@ -1,11 +1,12 @@
-package com.almacen.keplerclientesapp.SetandGet;
+package com.almacen.keplerclientesapp.SetterandGetter;
 
 
-public class SetGetListProductos {String Productos;
-    String Descripcion;
-    String linea;
-    String PrecioBase;
-    String PrecioAjuste;
+public class SetGetListProductos {
+String Productos;
+String Descripcion;
+String linea;
+String PrecioBase;
+String PrecioAjuste;
 
     public SetGetListProductos(String productos, String descripcion, String linea, String precioBase, String precioAjuste) {
         Productos = productos;

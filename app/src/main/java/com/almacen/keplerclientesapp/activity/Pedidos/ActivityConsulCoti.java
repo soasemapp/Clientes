@@ -232,30 +232,104 @@ public class ActivityConsulCoti extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.inicio, menu);
+
+        switch (StrServer) {
+            case "sprautomotive.servehttp.com:9090": {
+                MenuItem item = menu.findItem(R.id.MenuSPR);
+                MenuItem itemRod = menu.findItem(R.id.RodatechMenu);
+                MenuItem itemPartech = menu.findItem(R.id.PartechMenu);
+                MenuItem itemSharck = menu.findItem(R.id.SharkMenu);
+                itemRod.setVisible(false);
+                itemPartech.setVisible(true);
+                itemSharck.setVisible(true);
+                item.setVisible(true);
+                break;
+            }
+            case "sprautomotive.servehttp.com:9095": {
+                MenuItem item = menu.findItem(R.id.MenuSPR);
+
+                MenuItem itemRod = menu.findItem(R.id.RodatechMenu);
+                MenuItem itemPartech = menu.findItem(R.id.PartechMenu);
+                MenuItem itemSharck = menu.findItem(R.id.SharkMenu);
+                itemRod.setVisible(true);
+                itemPartech.setVisible(false);
+                itemSharck.setVisible(true);
+
+                item.setVisible(true);
+                break;
+            }
+            case "sprautomotive.servehttp.com:9080": {
+                MenuItem item = menu.findItem(R.id.MenuSPR);
+
+
+                MenuItem itemRod = menu.findItem(R.id.RodatechMenu);
+                MenuItem itemPartech = menu.findItem(R.id.PartechMenu);
+                MenuItem itemSharck = menu.findItem(R.id.SharkMenu);
+                itemRod.setVisible(true);
+                itemPartech.setVisible(true);
+                itemSharck.setVisible(false);
+
+
+                item.setVisible(true);
+                break;
+            }
+            default: {
+                MenuItem item = menu.findItem(R.id.MenuSPR);
+                item.setVisible(false);
+                break;
+            }
+        }
+
         return true;
     }
 
+
+
+
+
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         if (id == R.id.cerrarSe) {
             editor.clear().commit();
-            editor.apply();
             Intent cerrar = new Intent(this, MainActivity.class);
             startActivity(cerrar);
             System.exit(0);
             finish();
+
         }else if (id == R.id.CarrComp){
             Intent Shoping = new Intent(this, CarritoComprasActivity.class);
             startActivity(Shoping);
 
 
+        }else if (id == R.id.RodatechMenu){
+            StrServer = "sprautomotive.servehttp.com:9090";
+            editor.putString("Servidor", StrServer);
+            editor.commit();
+            overridePendingTransition(0, 0);
+            startActivity(getIntent());
+            overridePendingTransition(0, 0);
+            finish();
+        }else if (id == R.id.PartechMenu){
+            StrServer = "sprautomotive.servehttp.com:9095";
+            editor.putString("Servidor", StrServer);
+            editor.commit();
+            overridePendingTransition(0, 0);
+            startActivity(getIntent());
+            overridePendingTransition(0, 0);
+            finish();
+        }else if (id == R.id.SharkMenu){
+            StrServer = "sprautomotive.servehttp.com:9080";
+            editor.putString("Servidor", StrServer);
+            editor.commit();
+            overridePendingTransition(0, 0);
+            startActivity(getIntent());
+            overridePendingTransition(0, 0);
+            finish();
         }
+
 
 
         return super.onOptionsItemSelected(item);
     }
-
 
 }

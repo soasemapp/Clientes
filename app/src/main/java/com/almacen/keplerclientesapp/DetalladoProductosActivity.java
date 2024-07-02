@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
@@ -26,6 +27,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -35,6 +37,7 @@ import com.almacen.keplerclientesapp.SetandGet.SetGetListProductos2;
 import com.almacen.keplerclientesapp.SetterandGetter.AplicacionesSANDG;
 import com.almacen.keplerclientesapp.SetterandGetter.CarritoBD;
 import com.almacen.keplerclientesapp.SetterandGetter.CarritoVentasSANDG;
+import com.almacen.keplerclientesapp.SetterandGetter.ConversionesSANDG;
 import com.almacen.keplerclientesapp.SetterandGetter.DisponibilidadSANDG;
 import com.almacen.keplerclientesapp.XMLS.xmlAplicaciones;
 import com.almacen.keplerclientesapp.XMLS.xmlCarritoVentas;
@@ -43,10 +46,13 @@ import com.almacen.keplerclientesapp.XMLS.xmlProductoConsulta;
 import com.almacen.keplerclientesapp.activity.Carrito.CarritoComprasActivity;
 import com.almacen.keplerclientesapp.adapter.AdapterDetalleExistencia;
 import com.almacen.keplerclientesapp.adapter.AdapterSearchProduct;
+import com.almacen.keplerclientesapp.includes.HttpHandler;
 import com.almacen.keplerclientesapp.includes.MyToolbar;
 import com.almacen.keplerclientesapp.ui.home.HomeFragment;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.SoapFault;
 import org.ksoap2.serialization.SoapObject;
@@ -62,20 +68,31 @@ import java.util.Calendar;
 import dmax.dialog.SpotsDialog;
 
 public class DetalladoProductosActivity extends AppCompatActivity {
+    String strusr, strpass, strname, strlname, strtype, strbran, strma, strco, strcodBra, StrServer;
+    String Producto="", claveVentana = null, Descripcion="", PrecioAjustado="0", PrecioBase="0",Linea="";
+    TextView  txtClavePro, txtCant, txtPrecio, txtDesc, txtImporte;
+    TextView txtClave, txtClavecompetencia, txtnombreCompetencia;
+    LinearLayout TableProd;
 
 
-    String strusr, strpass, strname, strlname, strtype, strtype2, strbran, strma, strco, strcodBra, StrServer;
-    String Producto, Descripcion, PrecioAjustado, PrecioBase;
-    private SharedPreferences preference;
-    TextView txtSucursal, txtFolio, txtClaveC, txtNombreC, txtClavePro, txtCant, txtPrecio, txtDesc, txtImporte;
+    String descuEagle;
+    String descuRodatech;
+    String descuPartec;
+    String descuShark;
+    String descuTrackone;
+    private boolean multicolor = true;
     TableRow fila;
     private TableLayout tableLayout;
+    private TableLayout tableLayout2;
+
+    ArrayList<ConversionesSANDG> listaconversiones = new ArrayList<>();
+
     private SharedPreferences.Editor editor;
     ArrayList<AplicacionesSANDG> Aplicaciones = new ArrayList<>();
     ArrayList<DisponibilidadSANDG> Existencias = new ArrayList<>();
-    TextView Descripciontxt, ClaveProdcutotxt, Preciotxt, Marcatxt, Modelotxt, Yeartxt;
-    String strClave = " ", strDesc = " ", strCodeBar = " ", strPrecio = " ";
-    String strCantidad = "1", strscliente, strscliente2, strscliente3;
+    TextView Descripciontxt, ClaveProdcutotxt, Preciotxt,Lineatxt;
+    String strClave = null;
+    String strCantidad = "1";
     EditText Cantidad;
     RecyclerView RecyclerProductos;
     Context context = this;
@@ -104,7 +121,10 @@ public class DetalladoProductosActivity extends AppCompatActivity {
     String Comentario1;
     String Comentario2;
     String Comentario3;
-    String StrFechaVencimiento;
+    String Cliente = "";
+    String DescPro;
+    String Desc1;
+    String Empresa;
 
 
     @Override
@@ -113,11 +133,13 @@ public class DetalladoProductosActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detallado_productos);
 
-        MyToolbar.show(this, " ", false);
-        preference = getSharedPreferences("Login", Context.MODE_PRIVATE);
+        MyToolbar.show(this, " ", true);
+        SharedPreferences preference = getSharedPreferences("Login", Context.MODE_PRIVATE);
         editor = preference.edit();
+        preferenceClie = getSharedPreferences("clienteCompra", Context.MODE_PRIVATE);
+        editor = preferenceClie.edit();
         mDialog = new SpotsDialog.Builder().setContext(DetalladoProductosActivity.this).setMessage("Espere un momento...").build();
-
+        mDialog.setCancelable(false);
         strusr = preference.getString("user", "null");
         strpass = preference.getString("pass", "null");
         strname = preference.getString("name", "null");
@@ -129,16 +151,86 @@ public class DetalladoProductosActivity extends AppCompatActivity {
         strco = preference.getString("code", "null");
         StrServer = preference.getString("Servidor", "null");
 
+
+
+
+        switch (StrServer) {
+            case "jacve.dyndns.org:9085":
+                Empresa = "https://www.jacve.mx/es-mx/img/products/xl/";
+                break;
+            case "autodis.ath.cx:9085":
+                Empresa = "https://www.autodis.mx/es-mx/img/products/xl/";
+                break;
+            case "cecra.ath.cx:9085":
+                Empresa = "https://www.cecra.mx/es-mx/img/products/xl/";
+                break;
+            case "guvi.ath.cx:9085":
+                Empresa = "https://www.guvi.mx/es-mx/img/products/xl/";
+                break;
+            case "cedistabasco.ddns.net:9085":
+                Empresa = "https://www.pressa.mx/es-mx/img/products/xl/";
+                break;
+            case "sprautomotive.servehttp.com:9090":
+                Empresa = "https://www.vipla.mx/es-mx/img/products/xl/";
+                break;
+            case "sprautomotive.servehttp.com:9095":
+                Empresa = "https://www.vipla.mx/es-mx/img/products/xl/";
+                break;
+            case "sprautomotive.servehttp.com:9080":
+                Empresa = "https://www.vipla.mx/es-mx/img/products/xl/";
+                break;
+            case "sprautomotive.servehttp.com:9085":
+                Empresa = "https://www.vipla.mx/es-mx/img/products/xl/";
+                break;
+            case "vazlocolombia.dyndns.org:9085":
+                Empresa = "https://vazlo.com.mx/assets/img/productos/chica/jpg/";
+                break;
+            default:
+                Empresa = "https://www.pressa.mx/es-mx/img/products/xl/";
+                break;
+        }
+
+        Cliente = preferenceClie.getString("CodeClien", "null");
+        Nombre = preferenceClie.getString("NomClien", "null");
+        rfc = preferenceClie.getString("RFC", "null");
+        plazo = preferenceClie.getString("PLAZO", "null");
+        Calle = preferenceClie.getString("Calle", "null");
+        Colonia = preferenceClie.getString("Colonia", "null");
+        Poblacion = preferenceClie.getString("Poblacion", "null");
+        Via = preferenceClie.getString("Via", "null");
+        DescPro = preferenceClie.getString("DescPro", "0");
+        Desc1 = preferenceClie.getString("Desc1", "0");
+        Comentario1 = preferenceClie.getString("Comentario1", "");
+        Comentario2 = preferenceClie.getString("Comentario2", "");
+        Comentario3 = preferenceClie.getString("Comentario3", "");
+
+
+        descuEagle = preferenceClie.getString("Eagle", "");
+        descuRodatech = preferenceClie.getString("Rodatech", "");
+        descuPartec = preferenceClie.getString("Partech", "");
+        descuShark = preferenceClie.getString("Shark", "");
+        descuTrackone = preferenceClie.getString("Trackone", "");
+
+        TableProd = findViewById(R.id.ProTable);
+
+
         Producto = getIntent().getStringExtra("Producto");
 
+        claveVentana = getIntent().getStringExtra("claveVentana");
+        strCantidad = getIntent().getStringExtra("Cantidad");
+        if (claveVentana == null) {
+            strClave = Producto;
+        }
         RecyclerProductos = findViewById(R.id.listExistencias);
         Descripciontxt = findViewById(R.id.Descr);
+        Lineatxt = findViewById(R.id.Linea);
         ClaveProdcutotxt = findViewById(R.id.Clave);
         Preciotxt = findViewById(R.id.Precio);
         imageproducto = findViewById(R.id.imageproducto);
-        Cantidad = (EditText) findViewById(R.id.Canti);
-        btnCarShoping = (Button) findViewById(R.id.Add);
-        tableLayout = (TableLayout) findViewById(R.id.table);
+        Cantidad =  findViewById(R.id.Canti);
+        btnCarShoping =  findViewById(R.id.Add);
+        tableLayout =  findViewById(R.id.table);
+        tableLayout2 =  findViewById(R.id.table2);
 
         preferenceClie = getSharedPreferences("clienteCompra", Context.MODE_PRIVATE);
         editor = preferenceClie.edit();
@@ -146,126 +238,135 @@ public class DetalladoProductosActivity extends AppCompatActivity {
         Aplicaciones = new ArrayList<>();
         RecyclerProductos.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
-        Cantidad.setText("1");
+        if (strClave == null && strCantidad == null) {
+            ListProductosPrecios task = new ListProductosPrecios();
+            task.execute();
+            Cantidad.setText((strCantidad == null) ? "1" : strCantidad);
+        } else if (strClave != null && strCantidad.equals("1")) {
+            Producto = strClave;
+            ListProductosPrecios task = new ListProductosPrecios();
+            task.execute();
+            Cantidad.setText((strCantidad == null) ? "1" : strCantidad);
+        } else if (strClave != null) {
+            Producto = strClave;
+            ListProductosPrecios task = new ListProductosPrecios();
+            task.execute();
+            Cantidad.setText((strCantidad == null) ? "1" : strCantidad);
 
-        DetalladoProductosActivity.ListProductosPrecios task = new DetalladoProductosActivity.ListProductosPrecios();
-        task.execute();
+        } else {
+            ListProductosPrecios task = new ListProductosPrecios();
+            task.execute();
+        }
 
 
         btnCarShoping.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isOnlineNet() == true) {
+                btnCarShoping.setEnabled(false);
+                mDialog.show();
 
+                for (int i = 0; i < listaCarShoping2.size(); i++) {
 
-                    for (int i = 0; i < listaCarShoping2.size(); i++) {
-
-                        if (listaCarShoping2.get(i).getParte().equals(Producto)) {
-                            AlertDialog.Builder alerta = new AlertDialog.Builder(DetalladoProductosActivity.this);
-                            alerta.setMessage("Ya cuentas con este producto en tu carrito de compras").setCancelable(false).setNegativeButton("Ok", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    dialogInterface.cancel();
-                                }
-                            });
-
-                            AlertDialog titulo = alerta.create();
-                            titulo.setTitle(Producto);
-                            titulo.show();
-                            ban = 0;
-                            break;
-                        } else {
-                            ban = 1;
-                        }
-                    }
-                    if (ban == 1) {
-
-                        String strExistencia = "";
-                        int Existencia;
-                        listaCarShoping.clear();
-                        strCantidad = Cantidad.getText().toString();
-
-
-                        if (!strCantidad.isEmpty() && !strCantidad.equals("0")) {
-                            for (int i = 0; i < Existencias.size(); i++) {
-                                if (strcodBra.equals(Existencias.get(i).getClave())) {
-                                    strExistencia = Existencias.get(i).getDisponibilidad();
-                                    break;
-                                }
+                    if (listaCarShoping2.get(i).getParte().equals(Producto)) {
+                        mDialog.dismiss();
+                        AlertDialog.Builder alerta = new AlertDialog.Builder(DetalladoProductosActivity.this);
+                        alerta.setMessage("Ya cuentas con este producto en tu carrito de compras").setCancelable(false).setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.cancel();
+                                mDialog.dismiss();
+                                btnCarShoping.setEnabled(true);
                             }
-                            Existencia = Integer.parseInt(strExistencia);
-                            if (Existencia == 0 && ValidaEqui.equals("0")) {
+                        });
 
-                                AlertDialog.Builder builder = new AlertDialog.Builder(DetalladoProductosActivity.this);
-
-                                builder.setTitle("Confirma");
-                                builder.setMessage("El " + Producto + " tiene una equivalencia  con el producto " + ProductoEqui + "\n" +
-                                        "Deseas utilizar este producto equivalente o deseas conservar el producto sin disponibilidad");
-
-                                builder.setPositiveButton("SI", new DialogInterface.OnClickListener() {
-
-                                    public void onClick(DialogInterface dialog, int which) {
-
-                                        Producto = ProductoEqui;
-
-                                        DetalladoProductosActivity.AsyncCallWS4 task4 = new DetalladoProductosActivity.AsyncCallWS4();
-                                        task4.execute();
-
-                                    }
-                                });
-
-                                builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-
-                                        DetalladoProductosActivity.AsyncCallWS4 task4 = new DetalladoProductosActivity.AsyncCallWS4();
-                                        task4.execute();
-
-                                    }
-                                });
-
-                                AlertDialog alert = builder.create();
-                                alert.show();
-
-
-                            } else {
-
-                                DetalladoProductosActivity.AsyncCallWS4 task4 = new DetalladoProductosActivity.AsyncCallWS4();
-                                task4.execute();
-
-                            }
-
-
-                        } else {
-                            AlertDialog.Builder alerta = new AlertDialog.Builder(DetalladoProductosActivity.this);
-                            alerta.setMessage("No has ingresado una cantidad").setCancelable(false).setIcon(R.drawable.ic_baseline_error_24).setNegativeButton("Ok", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    dialogInterface.cancel();
-                                }
-                            });
-
-                            AlertDialog titulo = alerta.create();
-                            titulo.setTitle("¡Error datos!");
-                            titulo.show();
-                        }
-
+                        AlertDialog titulo = alerta.create();
+                        titulo.setTitle(Producto);
+                        titulo.show();
+                        ban = 0;
+                        break;
+                    } else {
+                        ban = 1;
                     }
-
-                } else {
-                    AlertDialog.Builder alerta = new AlertDialog.Builder(DetalladoProductosActivity.this);
-                    alerta.setMessage("Problemas de conexion verifique su red").setCancelable(false).setIcon(R.drawable.ic_baseline_signal_wifi_statusbar_connected_no_internet_4_24).setNegativeButton("Ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.cancel();
-                        }
-                    });
-
-                    AlertDialog titulo = alerta.create();
-                    titulo.setTitle("¡Error de Conexion!");
-                    titulo.show();
                 }
+                if (ban == 1) {
+
+                    String strExistencia = "";
+                    int Existencia;
+                    listaCarShoping.clear();
+                    strCantidad = Cantidad.getText().toString();
+
+
+                    if (!strCantidad.isEmpty() && !strCantidad.equals("0")) {
+                        for (int i = 0; i < Existencias.size(); i++) {
+                            if (strcodBra.equals(Existencias.get(i).getClave())) {
+                                strExistencia = Existencias.get(i).getDisponibilidad();
+                                break;
+                            }
+                        }
+                        Existencia = Integer.parseInt(strExistencia);
+                        if (Existencia == 0 && ValidaEqui.equals("0")) {
+
+                            AlertDialog.Builder builder = new AlertDialog.Builder(DetalladoProductosActivity.this);
+
+                            builder.setTitle("Confirma");
+                            builder.setMessage("El " + Producto + " tiene una equivalencia  con el producto " + ProductoEqui + "\n" +
+                                    "Deseas utilizar este producto equivalente o deseas conservar el producto sin disponibilidad");
+
+                            builder.setPositiveButton("SI", new DialogInterface.OnClickListener() {
+
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    Producto = ProductoEqui;
+
+
+
+                                    new DetalladoProductosActivity.AsyncBackOrder().execute();
+
+                                }
+                            });
+
+                            builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    new DetalladoProductosActivity.AsyncBackOrder().execute();
+
+
+                                }
+                            });
+
+                            AlertDialog alert = builder.create();
+                            alert.show();
+
+
+                        } else {
+
+                            new DetalladoProductosActivity.AsyncBackOrder().execute();
+
+
+                        }
+
+
+                    } else {
+                        AlertDialog.Builder alerta = new AlertDialog.Builder(DetalladoProductosActivity.this);
+                        alerta.setMessage("No has ingresado una cantidad").setCancelable(false).setIcon(R.drawable.ic_baseline_error_24).setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.cancel();
+                                btnCarShoping.setEnabled(true);
+                                mDialog.dismiss();
+                            }
+                        });
+
+                        AlertDialog titulo = alerta.create();
+                        titulo.setTitle("¡Error datos!");
+                        titulo.show();
+                    }
+
+                }
+
+
             }
         });
 
@@ -274,23 +375,269 @@ public class DetalladoProductosActivity extends AppCompatActivity {
 
     }
 
-    public Boolean isOnlineNet() {
 
-        try {
-            Process p = java.lang.Runtime.getRuntime().exec("ping -c 1 www.google.es");
 
-            int val = p.waitFor();
-            boolean reachable = (val == 0);
-            return reachable;
+    private class AsyncBackOrder extends AsyncTask<Void, Void, Void> {
 
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+
+        private boolean conn;
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mDialog.show();
+        }//onPreExecute
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+
+            HttpHandler sh = new HttpHandler();
+            String parametros = "cliente=" + strco  + "&sucursal=" + strcodBra + "&producto=" + Producto;
+            String url = "http://" + StrServer + "/backorder?" + parametros;
+            String jsonStr = sh.makeServiceCall(url, strusr, strpass);
+            if (jsonStr != null) {
+                try {
+                    JSONObject jfacturas;
+                    JSONObject jitems;
+                    JSONObject jsonObject = new JSONObject(jsonStr);
+                    if(jsonObject.length()!=0) {
+                        jfacturas = jsonObject.getJSONObject("Response");
+                        jitems = jfacturas.getJSONObject("Back");
+                        mensaje = jitems.getString("Valida");
+                    }
+                } catch (final JSONException e) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mensaje = "Problemas al cambiar caja";
+                        }//run
+                    });
+                }//catch JSON EXCEPTION
+            } else {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mensaje = "Problemas con el servidor";
+                    }//run
+                });//runUniTthread
+            }//else
+            return null;
+
+
+        }//doInBackground
+
+        @Override
+        protected void onPostExecute(Void aBoolean) {
+            super.onPostExecute(aBoolean);
+            if (mensaje.equals("0")) {
+
+                Carrito task4 = new Carrito();
+                task4.execute();
+            } else if(mensaje.equals("1")) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(DetalladoProductosActivity.this);
+
+                builder.setTitle("Confirma");
+                builder.setMessage("El producto ya cuenta  con BackOrder,¿Deseas agregar este producto a tu pedido?");
+
+                builder.setPositiveButton("SI", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int which) {
+                        Carrito task4 = new Carrito();
+                        task4.execute();
+                        dialog.dismiss();
+
+                    }
+                });
+
+                builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        btnCarShoping.setEnabled(true);
+                        mDialog.dismiss();
+                        dialog.dismiss();
+                    }
+                });
+
+                AlertDialog alert = builder.create();
+                alert.show();
+            }else{
+                mDialog.dismiss();
+                btnCarShoping.setEnabled(true);
+            }
+
+        }//onPost
+    }//CambiarCajas
+
+    public boolean firtMet() {//firtMet
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {//si hay conexion a internet
+            return true;
+        } else {
+            return false;
+        }//else
+    }//FirtMet saber si hay conexio
+    @SuppressWarnings("deprecation")
+    @SuppressLint("StaticFieldLeak")
+    private class Converciones extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            mDialog.show();
         }
-        return false;
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            HttpHandler sh = new HttpHandler();
+            String parametros = "producto=" + Producto;
+            String url = "http://" + StrServer + "/conversionesapp?" + parametros;
+            String jsonStr = sh.makeServiceCall(url, strusr, strpass);
+            if (jsonStr != null) {
+                try {
+                    JSONObject jitems, Numero;
+                    JSONObject jsonObject = new JSONObject(jsonStr);
+                    if(jsonObject.length()>0){
+                        jitems = jsonObject.getJSONObject("Item");
+
+                        for (int i = 0; i < jitems.length(); i++) {
+                            Numero = jitems.getJSONObject("" + i + "");
+
+                            listaconversiones.add(new ConversionesSANDG(
+                                    (Numero.getString("k_ClavePro").equals("") ? "" : Numero.getString("k_ClavePro")),
+                                    (Numero.getString("k_ClaveCompe").equals("") ? "" : Numero.getString("k_ClaveCompe")),
+                                    (Numero.getString("k_NomCompetencia").equals("") ? "" : Numero.getString("k_NomCompetencia"))));
+
+
+                        }
+                    }
+
+                } catch (final JSONException e) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            AlertDialog.Builder alerta1 = new AlertDialog.Builder(DetalladoProductosActivity.this);
+                            alerta1.setMessage("El Json tiene un problema").setCancelable(false).setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.cancel();
+
+                                }
+                            });
+                            AlertDialog titulo1 = alerta1.create();
+                            titulo1.setTitle("Hubo un problema");
+                            titulo1.show();
+
+                        }//run
+                    });
+                }//catch JSON EXCEPTION
+            } else {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        AlertDialog.Builder alerta1 = new AlertDialog.Builder(DetalladoProductosActivity.this);
+                        alerta1.setMessage("Upss hubo un problema verifica tu conexion a internet").setCancelable(false).setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.cancel();
+
+                            }
+                        });
+                        AlertDialog titulo1 = alerta1.create();
+                        titulo1.setTitle("Hubo un problema");
+                        titulo1.show();
+
+                    }//run
+                });//runUniTthread
+            }//else
+            return null;
+        }
+
+        @SuppressLint("SetTextI18n")
+        @RequiresApi(api = Build.VERSION_CODES.P)
+        @Override
+        protected void onPostExecute(Void result) {
+            TableProd.setVisibility(View.VISIBLE);
+            TableRow.LayoutParams layaoutFila = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
+            TableRow.LayoutParams layaoutDes = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
+            for (int i = -1; i < listaconversiones.size(); i++) {
+                fila = new TableRow(getApplicationContext());
+                fila.setLayoutParams(layaoutFila);
+                if (i == -1) {
+                    txtClave = new TextView(getApplicationContext());
+                    txtClave.setText("Clave");
+                    txtClave.setGravity(Gravity.START);
+                    txtClave.setBackgroundColor(Color.RED);
+                    txtClave.setTextColor(Color.WHITE);
+                    txtClave.setPadding(20, 20, 20, 20);
+                    txtClave.setLayoutParams(layaoutDes);
+                    fila.addView(txtClave);
+
+                    txtClavecompetencia = new TextView(getApplicationContext());
+                    txtClavecompetencia.setText("Clave de la Competencia");
+                    txtClavecompetencia.setGravity(Gravity.START);
+                    txtClavecompetencia.setBackgroundColor(Color.RED);
+                    txtClavecompetencia.setTextColor(Color.WHITE);
+                    txtClavecompetencia.setPadding(20, 20, 20, 20);
+                    txtClavecompetencia.setLayoutParams(layaoutDes);
+                    fila.addView(txtClavecompetencia);
+
+                    txtnombreCompetencia = new TextView(getApplicationContext());
+                    txtnombreCompetencia.setText("Nombre de la Competencia");
+                    txtnombreCompetencia.setGravity(Gravity.START);
+                    txtnombreCompetencia.setBackgroundColor(Color.RED);
+                    txtnombreCompetencia.setTextColor(Color.WHITE);
+                    txtnombreCompetencia.setPadding(20, 20, 20, 20);
+                    txtnombreCompetencia.setLayoutParams(layaoutDes);
+                    fila.addView(txtnombreCompetencia);
+
+                } else {
+                    multicolor = !multicolor;
+                    txtClave = new TextView(getApplicationContext());
+                    txtClave.setGravity(Gravity.START);
+                    txtClave.setBackgroundColor((multicolor) ? Color.GRAY : Color.BLACK);
+                    txtClave.setText(listaconversiones.get(i).getClave());
+                    txtClave.setPadding(20, 20, 20, 20);
+                    txtClave.setTextColor(Color.WHITE);
+                    txtClave.setLayoutParams(layaoutDes);
+                    fila.addView(txtClave);
+
+                    txtClavecompetencia = new TextView(getApplicationContext());
+                    txtClavecompetencia.setBackgroundColor((multicolor) ? Color.GRAY : Color.BLACK);
+                    txtClavecompetencia.setGravity(Gravity.START);
+                    txtClavecompetencia.setText(listaconversiones.get(i).getClaveCompetencia());
+                    txtClavecompetencia.setPadding(20, 20, 20, 20);
+                    txtClavecompetencia.setTextColor(Color.WHITE);
+                    txtClavecompetencia.setLayoutParams(layaoutDes);
+                    fila.addView(txtClavecompetencia);
+
+                    txtnombreCompetencia = new TextView(getApplicationContext());
+                    txtnombreCompetencia.setBackgroundColor((multicolor) ? Color.GRAY : Color.BLACK);
+                    txtnombreCompetencia.setGravity(Gravity.START);
+                    txtnombreCompetencia.setText(listaconversiones.get(i).getNombreCompetencia());
+                    txtnombreCompetencia.setPadding(20, 20, 20, 20);
+                    txtnombreCompetencia.setTextColor(Color.WHITE);
+                    txtnombreCompetencia.setLayoutParams(layaoutDes);
+                    fila.addView(txtnombreCompetencia);
+
+
+                    fila.setPadding(2, 2, 2, 2);
+
+                }
+                tableLayout2.addView(fila);
+
+            }
+            mDialog.dismiss();
+
+
+        }
     }
 
-
+    @SuppressWarnings("deprecation")
+    @SuppressLint("StaticFieldLeak")
     private class EquivaProdu extends AsyncTask<Void, Void, Void> {
 
         @Override
@@ -299,69 +646,79 @@ public class DetalladoProductosActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
-            Equiva();
+            HttpHandler sh = new HttpHandler();
+            String parametros = "producto="+Producto+"&sucursal="+strcodBra;
+            String url = "http://" + StrServer + "/equivalenciaapp?" + parametros;
+            String jsonStr = sh.makeServiceCall(url, strusr, strpass);
+            if (jsonStr != null) {
+                try {
+
+
+                    JSONObject jitems;
+                    JSONObject jsonObject = new JSONObject(jsonStr);
+                    jitems = jsonObject.getJSONObject("MENSAJE");
+                    MensajePro = jitems.getString("k_mensaje");
+                    ProductoEqui = jitems.getString("k_Producto");
+                    ValidaEqui = jitems.getString("k_Val");
+
+
+                } catch (final JSONException e) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            AlertDialog.Builder alerta1 = new AlertDialog.Builder(DetalladoProductosActivity.this);
+                            alerta1.setMessage("El Json tiene un problema").setCancelable(false).setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.cancel();
+
+                                }
+                            });
+                            AlertDialog titulo1 = alerta1.create();
+                            titulo1.setTitle("Hubo un problema");
+                            titulo1.show();
+
+                        }//run
+                    });
+                }//catch JSON EXCEPTION
+            } else {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        AlertDialog.Builder alerta1 = new AlertDialog.Builder(DetalladoProductosActivity.this);
+                        alerta1.setMessage("Upss hubo un problema verifica tu conexion a internet").setCancelable(false).setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.cancel();
+
+                            }
+                        });
+                        AlertDialog titulo1 = alerta1.create();
+                        titulo1.setTitle("Hubo un problema");
+                        titulo1.show();
+
+                    }//run
+                });//runUniTthread
+            }//else
             return null;
         }
 
         @RequiresApi(api = Build.VERSION_CODES.P)
         @Override
         protected void onPostExecute(Void result) {
+
+
+            Converciones task1 = new Converciones();
+            task1.execute();
             mDialog.dismiss();
-            }
 
-
-    }
-
-
-    private void Equiva() {
-        String SOAP_ACTION = "Equiva";
-        String METHOD_NAME = "Equiva";
-        String NAMESPACE = "http://" + StrServer + "/WSk75Branch/";
-        String URL = "http://" + StrServer + "/WSk75Branch";
-
-
-        try {
-
-            SoapObject Request = new SoapObject(NAMESPACE, METHOD_NAME);
-            xmlEquiva soapEnvelope = new xmlEquiva(SoapEnvelope.VER11);
-            soapEnvelope.xmlEquiva(strusr, strpass, Producto, strcodBra);
-            soapEnvelope.dotNet = true;
-            soapEnvelope.implicitTypes = true;
-            soapEnvelope.setOutputSoapObject(Request);
-            HttpTransportSE trasport = new HttpTransportSE(URL);
-            trasport.debug = true;
-            trasport.call(SOAP_ACTION, soapEnvelope);
-            SoapObject response = (SoapObject) soapEnvelope.bodyIn;
-            for (int i = 0; i < response.getPropertyCount(); i++) {
-
-                SoapObject response0 = (SoapObject) soapEnvelope.bodyIn;
-                response0 = (SoapObject) response0.getProperty("MENSAJE");
-                MensajePro = response0.getPropertyAsString("k_mensaje");
-                ProductoEqui = response0.getPropertyAsString("k_Producto");
-                ValidaEqui = response0.getPropertyAsString("k_Val");
-
-            }
-
-
-        } catch (SoapFault soapFault) {
-            mDialog.dismiss();
-            mensaje = "Error:" + soapFault.getMessage();
-            soapFault.printStackTrace();
-        } catch (XmlPullParserException e) {
-            mDialog.dismiss();
-            mensaje = "Error:" + e.getMessage();
-            e.printStackTrace();
-        } catch (IOException e) {
-            mDialog.dismiss();
-            mensaje = "No se encontro servidor";
-            e.printStackTrace();
-        } catch (Exception ex) {
-            mDialog.dismiss();
-            mensaje = "Error:" + ex.getMessage();
         }
+
+
     }
 
-
+    @SuppressWarnings("deprecation")
+    @SuppressLint("StaticFieldLeak")
     private class ListProductosPrecios extends AsyncTask<Void, Void, Void> {
 
         @Override
@@ -372,22 +729,121 @@ public class DetalladoProductosActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
-            WebServiceListProductoprecios();
+            String Marca;
+            String Modelo;
+            String Ano;
+            String Motor;
+            String Posicion;
+
+            String clavesuc;
+            String existencia;
+            String nomsucursal;
+
+            HttpHandler sh = new HttpHandler();
+            String parametros = "producto="+Producto+"&cliente="+strco;
+            String url = "http://" + StrServer + "/aplicacionesapp?" + parametros;
+            String jsonStr = sh.makeServiceCall(url, strusr, strpass);
+            if (jsonStr != null) {
+                try {
+                    JSONObject itemjson, Aplicacionesjson,Disponibilidadjson,Precios,Numerojson,Numero2json;
+                    JSONObject jsonObject = new JSONObject(jsonStr);
+                    itemjson = jsonObject.getJSONObject("Item");
+                    Aplicacionesjson= itemjson .getJSONObject("Aplicaciones");
+
+                    for (int i = 0; i < Aplicacionesjson.length(); i++) {
+                        Numerojson = Aplicacionesjson.getJSONObject("" + i + "");
+                        Marca=(Numerojson.getString("Marca").equals("") ? "" : Numerojson.getString("Marca"));
+                        Modelo=(Numerojson.getString("Modelo").equals("") ? "" : Numerojson.getString("Modelo"));
+                        Motor=(Numerojson.getString("Motor").equals("") ? "" : Numerojson.getString("Motor"));
+                        Ano=(Numerojson.getString("Ano").equals("") ? "" : Numerojson.getString("Ano"));
+                        Posicion=(Numerojson.getString("Posicion").equals("") ? "" : Numerojson.getString("Posicion"));
+                        Aplicaciones.add(new AplicacionesSANDG(Marca, Modelo, Ano,Motor, Posicion));
+                    }
+                    Disponibilidadjson= itemjson .getJSONObject("Disponibilidad");
+
+                    for (int i = 0; i < Disponibilidadjson.length(); i++) {
+                        Numero2json = Disponibilidadjson.getJSONObject("" + i + "");
+
+                        clavesuc=(Numero2json.getString("clavesuc").equals("") ? " " : Numero2json.getString("clavesuc"));
+                        existencia=(Numero2json.getString("existencia").equals("") ? " " : Numero2json.getString("existencia"));
+                        nomsucursal=(Numero2json.getString("nomSucursal").equals("") ? " " : Numero2json.getString("nomSucursal"));
+                        Existencias.add(new DisponibilidadSANDG(clavesuc, existencia, nomsucursal));
+                    }
+                    Precios= itemjson .getJSONObject("Precios");
+                    PrecioAjustado=(Precios.getString("precio_ajuste").equals("") ? " " : Precios.getString("precio_ajuste"));
+                    PrecioBase=(Precios.getString("precio_base").equals("") ? " " : Precios.getString("precio_base"));
+                    Descripcion=(Precios.getString("Descripcion").equals("") ? " " : Precios.getString("Descripcion"));
+                    Linea=(Precios.getString("Linea").equals("") ? " " : Precios.getString("Linea"));
+
+
+
+
+
+                } catch (final JSONException e) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            AlertDialog.Builder alerta1 = new AlertDialog.Builder(DetalladoProductosActivity.this);
+                            alerta1.setMessage("El Json tiene un problema").setCancelable(false).setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.cancel();
+
+                                }
+                            });
+                            AlertDialog titulo1 = alerta1.create();
+                            titulo1.setTitle("Hubo un problema");
+                            titulo1.show();
+
+                        }//run
+                    });
+                }//catch JSON EXCEPTION
+            } else {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        AlertDialog.Builder alerta1 = new AlertDialog.Builder(DetalladoProductosActivity.this);
+                        alerta1.setMessage("Upss hubo un problema verifica tu conexion a internet").setCancelable(false).setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.cancel();
+
+                            }
+                        });
+                        AlertDialog titulo1 = alerta1.create();
+                        titulo1.setTitle("Hubo un problema");
+                        titulo1.show();
+
+                    }//run
+                });//runUniTthread
+            }//else
             return null;
         }
 
+        @SuppressLint("SetTextI18n")
         @Override
         protected void onPostExecute(Void result) {
+
+
+            if (!Empresa.equals("https://vazlo.com.mx/assets/img/productos/chica/jpg/")){
+                Empresa=Empresa+Producto+"/4.webp";
+            }else{
+                Empresa=Empresa+Producto+".jpg";
+
+            }
+
+
             Picasso.with(context).
-                    load("https://www.pressa.mx/es-mx/img/products/xl/"+Producto+"/4.webp")
-                    .error(R.drawable.icons8_error_52)
+                    load(Empresa)
+                    .error(R.drawable.ic_baseline_error_24)
                     .fit()
                     .centerInside()
                     .into(imageproducto);
 
             Descripciontxt.setText(Descripcion);
+            Lineatxt.setText(Linea);
             ClaveProdcutotxt.setText(Producto);
-            Preciotxt.setText("$" + (Double.valueOf(PrecioAjustado) == 0 ? formatNumberCurrency(PrecioBase) : formatNumberCurrency(PrecioAjustado)));
+            Preciotxt.setText("$" + (Double.parseDouble(PrecioAjustado) == 0 ? formatNumberCurrency(PrecioBase) : formatNumberCurrency(PrecioAjustado)));
 
             AdapterDetalleExistencia adapter = new AdapterDetalleExistencia(Existencias);
             RecyclerProductos.setAdapter(adapter);
@@ -397,9 +853,9 @@ public class DetalladoProductosActivity extends AppCompatActivity {
             for (int i = -1; i < Aplicaciones.size(); i++) {
                 fila = new TableRow(getApplicationContext());
                 fila.setLayoutParams(layaoutFila);
+                txtClavePro = new TextView(getApplicationContext());
                 if (i == -1) {
 
-                    txtClavePro = new TextView(getApplicationContext());
                     txtClavePro.setText("Marca");
                     txtClavePro.setGravity(Gravity.START);
                     txtClavePro.setBackgroundColor(Color.RED);
@@ -448,11 +904,9 @@ public class DetalladoProductosActivity extends AppCompatActivity {
                     txtImporte.setLayoutParams(layaoutDes);
                     fila.addView(txtImporte);
 
-                    tableLayout.addView(fila);
                 } else {
 
 
-                    txtClavePro = new TextView(getApplicationContext());
                     txtClavePro.setBackgroundColor(Color.BLACK);
                     txtClavePro.setGravity(Gravity.START);
                     txtClavePro.setText(Aplicaciones.get(i).getMarca());
@@ -482,7 +936,7 @@ public class DetalladoProductosActivity extends AppCompatActivity {
                     txtDesc = new TextView(getApplicationContext());
                     txtDesc.setBackgroundColor(Color.GRAY);
                     txtDesc.setGravity(Gravity.START);
-                    txtDesc.setText(Aplicaciones.get(i).getCilindraje() + " " + Aplicaciones.get(i).getLitraje());
+                    txtDesc.setText(Aplicaciones.get(i).getMotor());
                     txtDesc.setPadding(20, 20, 20, 20);
                     txtDesc.setTextColor(Color.WHITE);
                     txtDesc.setLayoutParams(layaoutDes);
@@ -499,12 +953,11 @@ public class DetalladoProductosActivity extends AppCompatActivity {
                     fila.addView(txtImporte);
                     fila.setPadding(2, 2, 2, 2);
 
-                    tableLayout.addView(fila);
-
                 }
+                tableLayout.addView(fila);
             }
 
-            DetalladoProductosActivity.EquivaProdu task1 = new DetalladoProductosActivity.EquivaProdu();
+            EquivaProdu task1 = new EquivaProdu();
             task1.execute();
         }
 
@@ -515,103 +968,105 @@ public class DetalladoProductosActivity extends AppCompatActivity {
         return formatter.format(Double.parseDouble(number));
     }
 
-    private void WebServiceListProductoprecios() {
-        String SOAP_ACTION = "Aplicaciones";
-        String METHOD_NAME = "Aplicaciones";
-        String NAMESPACE = "http://" + StrServer + "/WSk75ClientesSOAP/";
-        String URL = "http://" + StrServer + "/WSk75ClientesSOAP";
 
-
-        try {
-            SoapObject Request = new SoapObject(NAMESPACE, METHOD_NAME);
-            xmlAplicaciones soapEnvelope = new xmlAplicaciones(SoapEnvelope.VER11);
-            soapEnvelope.xmlAplicaciones(strusr, strpass, strco, Producto);
-            soapEnvelope.dotNet = true;
-            soapEnvelope.implicitTypes = true;
-            soapEnvelope.setOutputSoapObject(Request);
-            HttpTransportSE trasport = new HttpTransportSE(URL);
-            trasport.debug = true;
-            trasport.call(SOAP_ACTION, soapEnvelope);
-            SoapObject response = (SoapObject) soapEnvelope.bodyIn;
-
-            String Marca = "";
-            String Modelo = "";
-            String Ano = "";
-            String cilindraje;
-            String litraje;
-            String posicion;
-            String precio_base;
-            String precio_ajuste;
-            String sucursal;
-            String existencia;
-            String nomSucursal;
-
-
-            for (int i = 0; i < response.getPropertyCount(); i++) {
-
-                SoapObject response0 = (SoapObject) soapEnvelope.bodyIn;
-                response0 = (SoapObject) response0.getProperty(i);
-
-                Producto = response0.getPropertyAsString("Producto");
-                Descripcion = response0.getPropertyAsString("Descripcion");
-                Marca = response0.getPropertyAsString("Marca").equals("anyType{}") ? "" : response0.getPropertyAsString("Marca");
-                Modelo = response0.getPropertyAsString("Modelo").equals("anyType{}") ? "" : response0.getPropertyAsString("Modelo");
-                Ano = response0.getPropertyAsString("carano").equals("anyType{}") ? "" : response0.getPropertyAsString("carano");
-                cilindraje = response0.getPropertyAsString("cilindraje").equals("anyType{}") ? "" : response0.getPropertyAsString("cilindraje");
-                posicion = response0.getPropertyAsString("posicion").equals("anyType{}") ? "" : response0.getPropertyAsString("posicion");
-                litraje = response0.getPropertyAsString("litrage").equals("anyType{}") ? "" : response0.getPropertyAsString("litrage");
-                response0 = (SoapObject) response0.getProperty("precio_base");
-                PrecioBase = response0.getPropertyAsString("valor").equals("anyType{}") ? "0" : response0.getPropertyAsString("valor");
-                response0 = (SoapObject) soapEnvelope.bodyIn;
-                response0 = (SoapObject) response0.getProperty(i);
-                response0 = (SoapObject) response0.getProperty("precio_ajuste");
-                PrecioAjustado = response0.getPropertyAsString("valor").equals("anyType{}") ? "0" : response0.getPropertyAsString("valor");
-
-                if (i <= 0) {
-                    response0 = (SoapObject) soapEnvelope.bodyIn;
-                    response0 = (SoapObject) response0.getProperty(i);
-                    response0 = (SoapObject) response0.getProperty("existencia");
-                    for (int j = 0; j < response0.getPropertyCount(); j++) {
-                        response0 = (SoapObject) soapEnvelope.bodyIn;
-                        response0 = (SoapObject) response0.getProperty(i);
-                        response0 = (SoapObject) response0.getProperty("existencia");
-                        response0 = (SoapObject) response0.getProperty(j);
-                        String Clave, Disponibilidad, Nombre;
-                        Clave = response0.getPropertyAsString("clavesuc");
-                        Disponibilidad = response0.getPropertyAsString("existencia");
-                        Nombre = response0.getPropertyAsString("nomSucursal");
-
-                        Existencias.add(new DisponibilidadSANDG(Clave, Disponibilidad, Nombre));
-                    }
-
-                }
-                Aplicaciones.add(new AplicacionesSANDG(Marca, Modelo, Ano, cilindraje, litraje, posicion));
-
-
-            }
-
-
-        } catch (SoapFault soapFault) {
-            soapFault.printStackTrace();
-        } catch (XmlPullParserException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception ex) {
-            ex.getMessage();
-        }
-    }
-
-    private class AsyncCallWS4 extends AsyncTask<Void, Void, Void> {
+    @SuppressWarnings("deprecation")
+    @SuppressLint("StaticFieldLeak")
+    private class Carrito extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPreExecute() {
+
         }
 
         @Override
         protected Void doInBackground(Void... params) {
-            conectar4();
+            HttpHandler sh = new HttpHandler();
+            String parametros = "cliente=" + strco+"&producto="+Producto+"&cantidad="+strCantidad+"&existencia=0&sucursal="+strcodBra;
+            String url = "http://" + StrServer + "/carritoapp?" + parametros;
+            String jsonStr = sh.makeServiceCall(url, strusr, strpass);
+            if (jsonStr != null) {
+                try {
+                    JSONObject json = new JSONObject(jsonStr);
+
+
+                    JSONObject jitems, Numero, Clave, Nombre;
+                    JSONObject jsonObject = new JSONObject(jsonStr);
+                    jitems = jsonObject.getJSONObject("Cotizacion");
+
+                    for (int i = 0; i < jitems.length(); i++) {
+                        jitems = jsonObject.getJSONObject("Cotizacion");
+                        Numero = jitems.getJSONObject("" + i + "");
+                        listaCarShoping.add(new CarritoVentasSANDG(
+                                (Numero.getString("k_Cliente").equals("")?"":Numero.getString("k_Cliente")),
+                                (Numero.getString("k_parte").equals("")?"":Numero.getString("k_parte")),
+                                (Numero.getString("k_exis").equals("")?"":Numero.getString("k_exis")),
+                                (Numero.getString("k_Q").equals("")?"":Numero.getString("k_Q")),
+                                (Numero.getString("k_unidad").equals("")?"":Numero.getString("k_unidad")),
+                                (Numero.getString("k_precio").equals("")?"":Numero.getString("k_precio")),
+                                (Numero.getString("k_desc1").equals("")?"0":Numero.getString("k_desc1")),
+                                (Numero.getString("k_desc2").equals("")?"0":Numero.getString("k_desc2")),
+                                (Numero.getString("k_desc3").equals("")?"0":Numero.getString("k_desc3")),
+                                (Numero.getString("k_monto").equals("")?"0":Numero.getString("k_monto")),
+                                (Numero.getString("k_descr").equals("")?"":Numero.getString("k_descr")),
+                                (Numero.getString("k_rfc").equals("")?"":Numero.getString("k_rfc")),
+                                (Numero.getString("k_plazo").equals("")?"0":Numero.getString("k_plazo")),
+                                (Numero.getString("k_calle").equals("")?"":Numero.getString("k_calle")),
+                                (Numero.getString("k_colo").equals("")?"":Numero.getString("k_colo")),
+                                (Numero.getString("k_pobla").equals("")?"":Numero.getString("k_pobla")),
+                                (Numero.getString("k_via").equals("")?"":Numero.getString("k_via")),
+                                (Numero.getString("k_87").equals("")?"":Numero.getString("k_87")),
+                                (Numero.getString("k_desc1fac").equals("")?"0":Numero.getString("k_desc1fac")),
+                                (Numero.getString("k_comentario1").equals("")?"":Numero.getString("k_comentario1")),
+                                (Numero.getString("k_comentario2").equals("")?"":Numero.getString("k_comentario2")),
+                                (Numero.getString("k_comentario3").equals("")?"":Numero.getString("k_comentario3")),
+                                (Numero.getString("k_descEAGLE").equals("")?"0":Numero.getString("k_descEAGLE")),
+                                (Numero.getString("k_descRODATECH").equals("")?"0":Numero.getString("k_descRODATECH")),
+                                (Numero.getString("k_descPARTECH").equals("")?"0":Numero.getString("k_descPARTECH")),
+                                (Numero.getString("k_descSHARK").equals("")?"0":Numero.getString("k_descSHARK")),
+                                (Numero.getString("k_descTRACKONE").equals("")?"0":Numero.getString("k_descTRACKONE")),
+                                (Numero.getString("k_nombre").equals("")?"0":Numero.getString("k_nombre")),
+                                (Numero.getString("k_agent").equals("")?"0":Numero.getString("k_agent"))));
+                    }
+                } catch (final JSONException e) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            AlertDialog.Builder alerta1 = new AlertDialog.Builder(DetalladoProductosActivity.this);
+                            alerta1.setMessage("El Json tiene un problema").setCancelable(false).setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.cancel();
+                                    btnCarShoping.setEnabled(true);
+                                }
+                            });
+                            AlertDialog titulo1 = alerta1.create();
+                            titulo1.setTitle("Hubo un problema");
+                            titulo1.show();
+
+                        }//run
+                    });
+                }//catch JSON EXCEPTION
+            } else {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        AlertDialog.Builder alerta1 = new AlertDialog.Builder(DetalladoProductosActivity.this);
+                        alerta1.setMessage("Upss hubo un problema verifica tu conexion a internet").setCancelable(false).setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.cancel();
+                                btnCarShoping.setEnabled(true);
+                            }
+                        });
+                        AlertDialog titulo1 = alerta1.create();
+                        titulo1.setTitle("Hubo un problema");
+                        titulo1.show();
+
+                    }//run
+                });//runUniTthread
+            }//else
             return null;
+
         }
 
         @RequiresApi(api = Build.VERSION_CODES.P)
@@ -620,7 +1075,6 @@ public class DetalladoProductosActivity extends AppCompatActivity {
             if (preferenceClie.contains("RFC") && preferenceClie.contains("PLAZO")) {
 
             } else {
-                Nombre = listaCarShoping.get(0).getNombre();
                 rfc = listaCarShoping.get(0).getRfc();
                 plazo = listaCarShoping.get(0).getPlazo();
                 Calle = listaCarShoping.get(0).getCalle();
@@ -632,7 +1086,14 @@ public class DetalladoProductosActivity extends AppCompatActivity {
                 Comentario1 = listaCarShoping.get(0).getComentario1();
                 Comentario2 = listaCarShoping.get(0).getComentario2();
                 Comentario3 = listaCarShoping.get(0).getComentario3();
-                Vendedor = listaCarShoping.get(0).getVendedor();
+                Nombre= listaCarShoping.get(0).getNombre();
+                Vendedor=listaCarShoping.get(0).getAgente();
+
+                descuEagle = listaCarShoping.get(0).getEagle();
+                descuRodatech = listaCarShoping.get(0).getRodatech();
+                descuPartec = listaCarShoping.get(0).getPartech();
+                descuShark = listaCarShoping.get(0).getShark();
+                descuTrackone = listaCarShoping.get(0).getTrackoone();
 
 
                 guardarDatos2();
@@ -640,7 +1101,6 @@ public class DetalladoProductosActivity extends AppCompatActivity {
             try {
                 ConexionSQLiteHelper conn = new ConexionSQLiteHelper(DetalladoProductosActivity.this, "bd_Carrito", null, 1);
                 SQLiteDatabase db = conn.getWritableDatabase();
-                ContentValues values = new ContentValues();
                 for (int i = 0; i < listaCarShoping.size(); i++) {
 
                     String Cli = listaCarShoping.get(i).getCliente();
@@ -660,83 +1120,14 @@ public class DetalladoProductosActivity extends AppCompatActivity {
                 db.close();
                 Intent carrito = new Intent(DetalladoProductosActivity.this, CarritoComprasActivity.class);
                 startActivity(carrito);
+                finish();
+                mDialog.dismiss();
             } catch (Exception e) {
 
             }
         }
 
 
-    }
-
-    private void conectar4() {
-        String SOAP_ACTION = "CarShop";
-        String METHOD_NAME = "CarShop";
-        String NAMESPACE = "http://" + StrServer + "/WSk75Branch/";
-        String URL = "http://" + StrServer + "/WSk75Branch";
-
-
-        try {
-
-            SoapObject Request = new SoapObject(NAMESPACE, METHOD_NAME);
-            xmlCarritoVentas soapEnvelope = new xmlCarritoVentas(SoapEnvelope.VER11);
-            soapEnvelope.xmlCarritoVen(strusr, strpass, strco, Producto, strCantidad, "0", strcodBra);
-            soapEnvelope.dotNet = true;
-            soapEnvelope.implicitTypes = true;
-            soapEnvelope.setOutputSoapObject(Request);
-            HttpTransportSE trasport = new HttpTransportSE(URL);
-            trasport.debug = true;
-            trasport.call(SOAP_ACTION, soapEnvelope);
-            SoapObject response = (SoapObject) soapEnvelope.bodyIn;
-            for (int i = 0; i < response.getPropertyCount(); i++) {
-                SoapObject response0 = (SoapObject) soapEnvelope.bodyIn;
-                response0 = (SoapObject) response0.getProperty(i);
-                listaCarShoping.add(new CarritoVentasSANDG(
-                        (response0.getPropertyAsString("k_Cliente").equals("anyType{}") ? " " : response0.getPropertyAsString("k_Cliente")),
-                        (response0.getPropertyAsString("k_parte").equals("anyType{}") ? " " : response0.getPropertyAsString("k_parte")),
-                        (response0.getPropertyAsString("k_exis").equals("anyType{}") ? "0" : response0.getPropertyAsString("k_exis")),
-                        (response0.getPropertyAsString("k_Q").equals("anyType{}") ? " " : response0.getPropertyAsString("k_Q")),
-                        (response0.getPropertyAsString("k_unidad").equals("anyType{}") ? " " : response0.getPropertyAsString("k_unidad")),
-                        (response0.getPropertyAsString("k_precio").equals("anyType{}") ? "" : response0.getPropertyAsString("k_precio")),
-                        (response0.getPropertyAsString("k_desc1").equals("anyType{}") ? " " : response0.getPropertyAsString("k_desc1")),
-                        (response0.getPropertyAsString("k_desc2").equals("anyType{}") ? " " : response0.getPropertyAsString("k_desc2")),
-                        (response0.getPropertyAsString("k_desc3").equals("anyType{}") ? " " : response0.getPropertyAsString("k_desc3")),
-                        (response0.getPropertyAsString("k_monto").equals("anyType{}") ? " " : response0.getPropertyAsString("k_monto")),
-                        (response0.getPropertyAsString("k_descr").equals("anyType{}") ? " " : response0.getPropertyAsString("k_descr")),
-                        (response0.getPropertyAsString("k_rfc").equals("anyType{}") ? " " : response0.getPropertyAsString("k_rfc")),
-                        (response0.getPropertyAsString("k_plazo").equals("anyType{}") ? " " : response0.getPropertyAsString("k_plazo")),
-                        (response0.getPropertyAsString("k_calle").equals("anyType{}") ? " " : response0.getPropertyAsString("k_calle")),
-                        (response0.getPropertyAsString("k_colo").equals("anyType{}") ? " " : response0.getPropertyAsString("k_colo")),
-                        (response0.getPropertyAsString("k_pobla").equals("anyType{}") ? " " : response0.getPropertyAsString("k_pobla")),
-                        (response0.getPropertyAsString("k_via").equals("anyType{}") ? " " : response0.getPropertyAsString("k_via")),
-                        (response0.getPropertyAsString("k_87").equals("anyType{}") ? "0" : response0.getPropertyAsString("k_87")),
-                        (response0.getPropertyAsString("k_desc1fac").equals("anyType{}") ? "0" : response0.getPropertyAsString("k_desc1fac")),
-                        (response0.getPropertyAsString("k_comentario1").equals("anyType{}") ? "" : response0.getPropertyAsString("k_comentario1")),
-                        (response0.getPropertyAsString("k_comentario2").equals("anyType{}") ? "" : response0.getPropertyAsString("k_comentario2")),
-                        (response0.getPropertyAsString("k_comentario3").equals("anyType{}") ? "" : response0.getPropertyAsString("k_comentario3")),
-                        (response0.getPropertyAsString("k_nombre").equals("anyType{}") ? "" : response0.getPropertyAsString("k_nombre")),
-                        (response0.getPropertyAsString("k_agent").equals("anyType{}") ? "" : response0.getPropertyAsString("k_agent"))));
-
-
-            }
-
-
-        } catch (SoapFault soapFault) {
-            mDialog.dismiss();
-            mensaje = "Error:" + soapFault.getMessage();
-            soapFault.printStackTrace();
-        } catch (XmlPullParserException e) {
-            mDialog.dismiss();
-            mensaje = "Error:" + e.getMessage();
-            e.printStackTrace();
-        } catch (IOException e) {
-            mDialog.dismiss();
-            mensaje = "No se encontro servidor";
-            e.printStackTrace();
-        } catch (Exception ex) {
-            mDialog.dismiss();
-
-            mensaje = "Error:" + ex.getMessage();
-        }
     }
 
 
@@ -755,6 +1146,11 @@ public class DetalladoProductosActivity extends AppCompatActivity {
         editor.putString("Comentario2", Comentario2);
         editor.putString("Comentario3", Comentario3);
         editor.putString("Vendedor", Vendedor);
+        editor.putString("Eagle", descuEagle);
+        editor.putString("Rodatech", descuRodatech);
+        editor.putString("Partech", descuPartec);
+        editor.putString("Shark", descuShark);
+        editor.putString("Trackone", descuTrackone);
 
 
         editor.commit();
@@ -764,7 +1160,7 @@ public class DetalladoProductosActivity extends AppCompatActivity {
         listaCarShoping2 = new ArrayList<>();
         conect = new ConexionSQLiteHelper(DetalladoProductosActivity.this, "bd_Carrito", null, 1);
         SQLiteDatabase db = conect.getReadableDatabase();
-        Cursor fila = db.rawQuery("select * from carrito", null);
+        @SuppressLint("Recycle") Cursor fila = db.rawQuery("select * from carrito", null);
         if (fila != null && fila.moveToFirst()) {
             do {
                 listaCarShoping2.add(new CarritoBD(fila.getInt(0),
@@ -784,57 +1180,17 @@ public class DetalladoProductosActivity extends AppCompatActivity {
         db.close();
 
     }
+
     @Override
     public void onBackPressed() {
 
         int count = getFragmentManager().getBackStackEntryCount();
 
+        //No se porqué puse lo mismo O.o
         if (count == 0) {
             super.onBackPressed();
-            getFragmentManager().popBackStack();
-        } else {
-            getFragmentManager().popBackStack();//No se porqué puse lo mismo O.o
         }
+        getFragmentManager().popBackStack();
 
     }
-/*
-public void eliminar(View view){
-        editor.clear().commit();
-}*/
-
-/*
-    public void subirCantidad(View view) {
-        int position = RecyclerProductos.getChildAdapterPosition(RecyclerProductos.findContainingItemView(view));
-        int valor = Integer.parseInt(listProdu1.get(position).getExistencia());
-        int nuevovalor = Integer.parseInt(listProdu1.get(position).getCantidad());
-
-        if (valor == nuevovalor) {
-
-        } else {
-            nuevovalor = Integer.parseInt(listProdu1.get(position).getCantidad()) + 1 ;
-            listProdu1.get(position).setCantidad(String.valueOf(nuevovalor));
-            AdapterDetalleExistencia adapter = new AdapterDetalleExistencia(listProdu1);
-            RecyclerProductos.setAdapter(adapter);
-            RecyclerProductos.scrollToPosition(position);
-
-        }
-    }
-
-    public void bajarCantidad(View view) {
-        int position = RecyclerProductos.getChildAdapterPosition(RecyclerProductos.findContainingItemView(view));
-        int valor = Integer.parseInt(listProdu1.get(position).getCantidad());
-
-        if (valor == 0) {
-
-        } else {
-            int nuevovalor = Integer.parseInt(listProdu1.get(position).getCantidad()) - 1;
-            listProdu1.get(position).setCantidad(String.valueOf(nuevovalor));
-            AdapterDetalleExistencia adapter = new AdapterDetalleExistencia(listProdu1);
-            RecyclerProductos.setAdapter(adapter);
-            RecyclerProductos.scrollToPosition(position);
-
-        }
-    }
-*/
-
 }

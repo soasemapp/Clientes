@@ -1,5 +1,6 @@
 package com.almacen.keplerclientesapp.ui.home;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
@@ -38,6 +39,7 @@ import com.almacen.keplerclientesapp.BusquedaActivity;
 import com.almacen.keplerclientesapp.ConexionSQLiteHelper;
 import com.almacen.keplerclientesapp.DetalladoProductosActivity;
 import com.almacen.keplerclientesapp.R;
+import com.almacen.keplerclientesapp.SetterandGetter.BannersSANDG;
 import com.almacen.keplerclientesapp.SetterandGetter.ProductosNuevosSANDG;
 import com.almacen.keplerclientesapp.SliderAdapter;
 import com.almacen.keplerclientesapp.SliderData;
@@ -47,8 +49,11 @@ import com.almacen.keplerclientesapp.adapter.AdaptadorProductosPartech;
 import com.almacen.keplerclientesapp.adapter.AdaptadorProductosRodatech;
 import com.almacen.keplerclientesapp.adapter.AdaptadorProductosShark;
 import com.almacen.keplerclientesapp.adapter.AdaptadorProductostrackone;
+import com.almacen.keplerclientesapp.includes.HttpHandler;
 import com.smarteist.autoimageslider.SliderView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.SoapFault;
 import org.ksoap2.serialization.SoapObject;
@@ -59,6 +64,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 
 import dmax.dialog.SpotsDialog;
 
@@ -66,33 +72,59 @@ public class HomeFragment extends Fragment {
 
     RecyclerView recyclerViewEagle, recyclerViewTrackone, recyclerViewRodatech, recyclerViewPartech, recyclerViewShark;
 
-    int  datos;
-    String strusr, strpass, strname, strlname, strtype, strtype2, strbran, strma, strco, strcodBra, StrServer;
-    private SharedPreferences preference;
-    private SharedPreferences.Editor editor;
+    String strusr, strpass, strname, strlname, strtype, strbran, strma, strco, strcodBra, StrServer;
+
+    String ProductosNuevos;
+    String  strscliente = "",  strscliente3 = "";
+    String K87;
+    String Desc1fa;
+    String mensaje = "";
+    String Cliente = "";
+    String Nombre;
+    String rfc;
+    String plazo;
+    String Calle;
+    String Colonia;
+    String Poblacion;
+    String Via;
+    String DescPro;
+    String Desc1;
+    String Comentario1;
+    String Comentario2;
+    String Comentario3;
+    int dato = 0;
+    ConexionSQLiteHelper conn;
+    int datos;
+
+    private String version;
+    int  Resultado=0;
+
+
+
+    private SharedPreferences preferenceClie;
+    private SharedPreferences.Editor editor2;
     View view;
 
-    ConexionSQLiteHelper conn;
     AlertDialog mDialog;
     Context context = this.getActivity();
 
     ArrayList<ProductosNuevosSANDG> ListaProductosGeneral = new ArrayList<>();
+
+    ArrayList<BannersSANDG> ListaBanners = new ArrayList<>();
     ArrayList<ProductosNuevosSANDG> ListaProductosEagle = new ArrayList<>();
     ArrayList<ProductosNuevosSANDG> ListaProductosTrackone = new ArrayList<>();
     ArrayList<ProductosNuevosSANDG> ListaProductosRodatech = new ArrayList<>();
     ArrayList<ProductosNuevosSANDG> ListaProductosPartech = new ArrayList<>();
     ArrayList<ProductosNuevosSANDG> ListaProductosShark = new ArrayList<>();
+    // Urls of our images.
 
+
+    SliderView sliderView;
+    String url;
+    EditText BusquedaProducto;
+    String ProductosNuevosStr,Empresa;
     LinearLayout EagleOcultar, TrackOneOcultar, RodatechOcultar, PartechOcultar, SharkOcultar;
 
-    EditText BusquedaProducto;
-    // Urls of our images.
-    String url1 = "https://www.jacve.mx/images/index/display/display_mx.webp";
-    String url2 = "https://www.jacve.mx/images/index/display/trkdir%20y%20susp2.webp";
-    String url3 = "https://www.jacve.mx/images/index/display/eaglesopcubr3.webp";
-
-    String ProductosNuevosStr ;
-    SliderView sliderView;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -114,42 +146,12 @@ public class HomeFragment extends Fragment {
         PartechOcultar = view.findViewById(R.id.PartechOcultar);
         SharkOcultar = view.findViewById(R.id.SharkOcultar);
 
-
-        sliderView = view.findViewById(R.id.image_slider);
-
-
-        ArrayList<SliderData> sliderDataArrayList = new ArrayList<>();
-        // adding the urls inside array list
-        sliderDataArrayList.add(new SliderData(url1));
-        sliderDataArrayList.add(new SliderData(url2));
-        sliderDataArrayList.add(new SliderData(url3));
-
-        // passing this array list inside our adapter class.
-        SliderAdapter adapter = new SliderAdapter(getActivity(), sliderDataArrayList);
-
-        // below method is used to set auto cycle direction in left to
-        // right direction you can change according to requirement.
-        sliderView.setAutoCycleDirection(SliderView.LAYOUT_DIRECTION_LTR);
-
-        // below method is used to
-        // setadapter to sliderview.
-        sliderView.setSliderAdapter(adapter);
-
-        // below method is use to set
-        // scroll time in seconds.
-        sliderView.setScrollTimeInSec(3);
-
-        // to set it scrollable automatically
-        // we use below method.
-        sliderView.setAutoCycle(true);
-
-        // to start autocycle below method is used.
-        sliderView.startAutoCycle();
-
         //Preference
-        preference = getActivity().getSharedPreferences("Login", Context.MODE_PRIVATE);
-        editor = preference.edit();
+        SharedPreferences preference = requireActivity().getSharedPreferences("Login", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preference.edit();
 
+        preferenceClie = requireActivity().getSharedPreferences("clienteCompra", Context.MODE_PRIVATE);
+        editor2 = preferenceClie.edit();
 
 
         strusr = preference.getString("user", "null");
@@ -162,9 +164,71 @@ public class HomeFragment extends Fragment {
         strcodBra = preference.getString("codBra", "null");
         strco = preference.getString("code", "null");
         StrServer = preference.getString("Servidor", "null");
-        ProductosNuevosStr=preference.getString("Productosnuevos", "0");
+        ProductosNuevosStr= preference.getString("Productosnuevos", "0");
 
 
+        sliderView = view.findViewById(R.id.image_slider);
+
+
+        switch (StrServer) {
+            case "jacve.dyndns.org:9085":
+                Empresa = "https://www.jacve.mx/es-mx/img/products/xl/";
+                url="https://www.jacve.mx/images/index/display/";
+                break;
+            case "autodis.ath.cx:9085":
+                Empresa = "https://www.autodis.mx/es-mx/img/products/xl/";
+                url="https://www.autodis.mx/images/index/display/";
+                break;
+            case "cecra.ath.cx:9085":
+                Empresa = "https://www.cecra.mx/es-mx/img/products/xl/";
+                url="https://www.cecra.mx/images/index/display/";
+                break;
+            case "guvi.ath.cx:9085":
+                Empresa = "https://www.guvi.mx/es-mx/img/products/xl/";
+                url="https://www.guvi.mx/images/index/display/";
+                break;
+            case "cedistabasco.ddns.net:9085":
+                Empresa = "https://www.pressa.mx/es-mx/img/products/xl/";
+                url="https://www.pressa.mx/images/index/display/";
+                break;
+            case "sprautomotive.servehttp.com:9090":
+                Empresa = "https://www.vipla.mx/es-mx/img/products/xl/";
+                url="https://www.spr.mx/images/index/display/";
+                break;
+            case "sprautomotive.servehttp.com:9095":
+                Empresa = "https://www.vipla.mx/es-mx/img/products/xl/";
+                url="https://www.spr.mx/images/index/display/";
+                break;
+            case "sprautomotive.servehttp.com:9080":
+                Empresa = "https://www.vipla.mx/es-mx/img/products/xl/";
+                url="https://www.spr.mx/images/index/display/";
+                break;
+            case "sprautomotive.servehttp.com:9085":
+                Empresa = "https://www.vipla.mx/es-mx/img/products/xl/";
+                url="https://www.vipla.mx/images/index/display/";
+                break;
+            case "vazlocolombia.dyndns.org:9085":
+                Empresa = "https://www.pressa.mx/es-mx/img/products/xl/";
+                url="https://www.colombia.mx/images/index/display/";
+                break;
+            default:
+                Empresa = "https://www.pressa.mx/es-mx/img/products/xl/";
+                break;
+        }
+
+        Cliente = preferenceClie.getString("CodeClien", "null");
+        Nombre = preferenceClie.getString("NomClien", "null");
+        rfc = preferenceClie.getString("RFC", "null");
+        plazo = preferenceClie.getString("PLAZO", "null");
+        Calle = preferenceClie.getString("Calle", "null");
+        Colonia = preferenceClie.getString("Colonia", "null");
+        Poblacion = preferenceClie.getString("Poblacion", "null");
+        Via = preferenceClie.getString("Via", "null");
+        DescPro = preferenceClie.getString("DescPro", "0");
+        Desc1 = preferenceClie.getString("Desc1", "0");
+        Comentario1 = preferenceClie.getString("Comentario1", "");
+        Comentario2 = preferenceClie.getString("Comentario2", "");
+        Comentario3 = preferenceClie.getString("Comentario3", "");
 
 
 
@@ -190,19 +254,18 @@ public class HomeFragment extends Fragment {
 
 
         Calendar calendar = Calendar.getInstance();
-        final int year = calendar.get(Calendar.YEAR);
-        final int month = calendar.get(Calendar.MONTH);
         final int day = calendar.get(Calendar.DAY_OF_MONTH);
         ConsultaComprobacion();
 
+        Versiones task1 = new Versiones();
+        task1.execute();
 
         if(datos>0){
             if( day==15 || day==1){
                 if (ProductosNuevosStr.equals("0")) {
                     editor.putString("Productosnuevos", "1");
-                    editor.commit();
-                    HomeFragment.ProductosNuevos task = new HomeFragment.ProductosNuevos();
-                    task.execute();
+                    editor.apply();
+                    ProductosNuevosAscy();
                 } else {
                     Consulta();
                 }
@@ -210,18 +273,16 @@ public class HomeFragment extends Fragment {
             }else{
 
                 editor.putString("Productosnuevos", "0");
-                editor.commit();
+                editor.apply();
                 Consulta();
 
             }
 
 
         }else{
-            HomeFragment.ProductosNuevos task = new HomeFragment.ProductosNuevos();
-            task.execute();
+            ProductosNuevosAscy();
 
         }
-
 
 
 
@@ -231,11 +292,14 @@ public class HomeFragment extends Fragment {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) { //Do Something } return false; } });
 
                     // Check if no view has focus:
-                    String BusquedaProductoString = "";
+
+
+                    String BusquedaProductoString;
                     BusquedaProductoString = BusquedaProducto.getText().toString();
                     Intent BusquedaProdcuto = new Intent(getActivity(), BusquedaActivity.class);
                     BusquedaProdcuto.putExtra("Producto", BusquedaProductoString);
                     startActivity(BusquedaProdcuto);
+
 
 
                 }
@@ -243,43 +307,66 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        if (StrServer.equals("sprautomotive.servehttp.com:9090")) {
-            EagleOcultar.setVisibility(View.GONE);
-            TrackOneOcultar.setVisibility(View.GONE);
-            RodatechOcultar.setVisibility(View.VISIBLE);
-            PartechOcultar.setVisibility(View.GONE);
-            SharkOcultar.setVisibility(View.GONE);
+        switch (StrServer) {
+            case "sprautomotive.servehttp.com:9090":
+                EagleOcultar.setVisibility(View.GONE);
+                TrackOneOcultar.setVisibility(View.GONE);
+                RodatechOcultar.setVisibility(View.VISIBLE);
+                PartechOcultar.setVisibility(View.GONE);
+                SharkOcultar.setVisibility(View.GONE);
 
 
-        } else if (StrServer.equals("sprautomotive.servehttp.com:9095")) {
-            EagleOcultar.setVisibility(View.GONE);
-            TrackOneOcultar.setVisibility(View.GONE);
-            RodatechOcultar.setVisibility(View.GONE);
-            PartechOcultar.setVisibility(View.VISIBLE);
-            SharkOcultar.setVisibility(View.GONE);
-        } else if (StrServer.equals("sprautomotive.servehttp.com:9080")) {
-            EagleOcultar.setVisibility(View.GONE);
-            TrackOneOcultar.setVisibility(View.GONE);
-            RodatechOcultar.setVisibility(View.GONE);
-            PartechOcultar.setVisibility(View.GONE);
-            SharkOcultar.setVisibility(View.VISIBLE);
-        } else if (StrServer.equals("vazlocolombia.dyndns.org:9085")) {
-            EagleOcultar.setVisibility(View.VISIBLE);
-            TrackOneOcultar.setVisibility(View.GONE);
-            RodatechOcultar.setVisibility(View.GONE);
-            PartechOcultar.setVisibility(View.GONE);
-            SharkOcultar.setVisibility(View.GONE);
-        } else {
-            EagleOcultar.setVisibility(View.VISIBLE);
-            TrackOneOcultar.setVisibility(View.VISIBLE);
-            RodatechOcultar.setVisibility(View.VISIBLE);
-            PartechOcultar.setVisibility(View.VISIBLE);
-            SharkOcultar.setVisibility(View.VISIBLE);
+                break;
+            case "sprautomotive.servehttp.com:9095":
+                EagleOcultar.setVisibility(View.GONE);
+                TrackOneOcultar.setVisibility(View.GONE);
+                RodatechOcultar.setVisibility(View.GONE);
+                PartechOcultar.setVisibility(View.VISIBLE);
+                SharkOcultar.setVisibility(View.GONE);
+                break;
+            case "sprautomotive.servehttp.com:9080":
+                EagleOcultar.setVisibility(View.GONE);
+                TrackOneOcultar.setVisibility(View.GONE);
+                RodatechOcultar.setVisibility(View.GONE);
+                PartechOcultar.setVisibility(View.GONE);
+                SharkOcultar.setVisibility(View.VISIBLE);
+                break;
+            case "vazlocolombia.dyndns.org:9085":
+                EagleOcultar.setVisibility(View.VISIBLE);
+                TrackOneOcultar.setVisibility(View.GONE);
+                RodatechOcultar.setVisibility(View.GONE);
+                PartechOcultar.setVisibility(View.GONE);
+                SharkOcultar.setVisibility(View.GONE);
+                break;
+            default:
+                EagleOcultar.setVisibility(View.VISIBLE);
+                TrackOneOcultar.setVisibility(View.VISIBLE);
+                RodatechOcultar.setVisibility(View.VISIBLE);
+                PartechOcultar.setVisibility(View.VISIBLE);
+                SharkOcultar.setVisibility(View.VISIBLE);
 
+                break;
         }
+
+        BannersAsy();
 
 
         return view;
+    }
+
+
+    private void ConsultaComprobacion() {
+
+        conn = new ConexionSQLiteHelper(getActivity(), "bd_Carrito", null, 1);
+        SQLiteDatabase db = conn.getReadableDatabase();
+        @SuppressLint("Recycle") Cursor fila = db.rawQuery("SELECT COUNT(*) FROM productos", null);
+        if (fila != null && fila.moveToFirst()) {
+            do {
+                datos=fila.getInt(0);
+            } while (fila.moveToNext());
+        }
+        db.close();
+
     }
     private void BorrarCarrito() {
         conn = new ConexionSQLiteHelper(getActivity(), "bd_Carrito", null, 1);
@@ -289,19 +376,8 @@ public class HomeFragment extends Fragment {
         db.execSQL("DELETE FROM sqlite_sequence WHERE name='productos'");
         db.close();
     }
-    private void ConsultaComprobacion() {
 
-        conn = new ConexionSQLiteHelper(getActivity(), "bd_Carrito", null, 1);
-        SQLiteDatabase db = conn.getReadableDatabase();
-        Cursor fila = db.rawQuery("SELECT COUNT(*) FROM productos", null);
-        if (fila != null && fila.moveToFirst()) {
-            do {
-               datos=fila.getInt(0);
-            } while (fila.moveToNext());
-        }
-        db.close();
 
-    }
 
 
     private void Consulta() {
@@ -312,7 +388,7 @@ public class HomeFragment extends Fragment {
         ListaProductosTrackone = new ArrayList<>();
         conn = new ConexionSQLiteHelper(getActivity(), "bd_Carrito", null, 1);
         SQLiteDatabase db = conn.getReadableDatabase();
-        Cursor fila = db.rawQuery("select * from productos", null);
+        @SuppressLint("Recycle") Cursor fila = db.rawQuery("select * from productos ", null);
         if (fila != null && fila.moveToFirst()) {
             do {
 
@@ -354,15 +430,15 @@ public class HomeFragment extends Fragment {
 
             if (ListaProductosGeneral.size() > 0) {
 
-                AdaptadorProductosNuevos adapter = new AdaptadorProductosNuevos(ListaProductosEagle, context);
+                AdaptadorProductosNuevos adapter = new AdaptadorProductosNuevos(ListaProductosEagle, context,Empresa);
                 recyclerViewEagle.setAdapter(adapter);
-                AdaptadorProductostrackone adapter1 = new AdaptadorProductostrackone(ListaProductosTrackone, context);
+                AdaptadorProductostrackone adapter1 = new AdaptadorProductostrackone(ListaProductosTrackone, context,Empresa);
                 recyclerViewTrackone.setAdapter(adapter1);
-                AdaptadorProductosRodatech adapter2 = new AdaptadorProductosRodatech(ListaProductosRodatech, context);
+                AdaptadorProductosRodatech adapter2 = new AdaptadorProductosRodatech(ListaProductosRodatech, context,Empresa);
                 recyclerViewRodatech.setAdapter(adapter2);
-                AdaptadorProductosPartech adapter3 = new AdaptadorProductosPartech(ListaProductosPartech, context);
+                AdaptadorProductosPartech adapter3 = new AdaptadorProductosPartech(ListaProductosPartech, context,Empresa);
                 recyclerViewPartech.setAdapter(adapter3);
-                AdaptadorProductosShark adapter4 = new AdaptadorProductosShark(ListaProductosShark, context);
+                AdaptadorProductosShark adapter4 = new AdaptadorProductosShark(ListaProductosShark, context,Empresa);
                 recyclerViewShark.setAdapter(adapter4);
 
 
@@ -371,11 +447,14 @@ public class HomeFragment extends Fragment {
                     public void onClick(View view) {
 
 
-                        int position = recyclerViewEagle.getChildAdapterPosition(recyclerViewEagle.findContainingItemView(view));
+
+                        int position = recyclerViewEagle.getChildAdapterPosition(Objects.requireNonNull(recyclerViewEagle.findContainingItemView(view)));
                         Intent ProductosDetallados = new Intent(getActivity(), DetalladoProductosActivity.class);
                         String Producto = ListaProductosEagle.get(position).getClave();
                         ProductosDetallados.putExtra("Producto", Producto);
+                        ProductosDetallados.putExtra("claveVentana", "1");
                         startActivity(ProductosDetallados);
+
 
 
                     }
@@ -386,11 +465,14 @@ public class HomeFragment extends Fragment {
                     public void onClick(View view) {
 
 
-                        int position = recyclerViewTrackone.getChildAdapterPosition(recyclerViewTrackone.findContainingItemView(view));
+                        int position = recyclerViewTrackone.getChildAdapterPosition(Objects.requireNonNull(recyclerViewTrackone.findContainingItemView(view)));
                         Intent ProductosDetallados = new Intent(getActivity(), DetalladoProductosActivity.class);
                         String Producto = ListaProductosTrackone.get(position).getClave();
                         ProductosDetallados.putExtra("Producto", Producto);
+                        ProductosDetallados.putExtra("claveVentana", "1");
                         startActivity(ProductosDetallados);
+
+
 
                     }
                 });
@@ -398,32 +480,41 @@ public class HomeFragment extends Fragment {
                 adapter2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        int position = recyclerViewRodatech.getChildAdapterPosition(recyclerViewRodatech.findContainingItemView(view));
+
+
+                        int position = recyclerViewRodatech.getChildAdapterPosition(Objects.requireNonNull(recyclerViewRodatech.findContainingItemView(view)));
                         Intent ProductosDetallados = new Intent(getActivity(), DetalladoProductosActivity.class);
                         String Producto = ListaProductosRodatech.get(position).getClave();
                         ProductosDetallados.putExtra("Producto", Producto);
+                        ProductosDetallados.putExtra("claveVentana", "1");
                         startActivity(ProductosDetallados);
+
                     }
                 });
 
                 adapter3.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        int position = recyclerViewPartech.getChildAdapterPosition(recyclerViewPartech.findContainingItemView(view));
+
+                        int position = recyclerViewPartech.getChildAdapterPosition(Objects.requireNonNull(recyclerViewPartech.findContainingItemView(view)));
                         Intent ProductosDetallados = new Intent(getActivity(), DetalladoProductosActivity.class);
                         String Producto = ListaProductosPartech.get(position).getClave();
                         ProductosDetallados.putExtra("Producto", Producto);
+                        ProductosDetallados.putExtra("claveVentana", "1");
                         startActivity(ProductosDetallados);
+
+
                     }
                 });
 
                 adapter4.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        int position = recyclerViewShark.getChildAdapterPosition(recyclerViewShark.findContainingItemView(view));
+                        int position = recyclerViewShark.getChildAdapterPosition(Objects.requireNonNull(recyclerViewShark.findContainingItemView(view)));
                         Intent ProductosDetallados = new Intent(getActivity(), DetalladoProductosActivity.class);
                         String Producto = ListaProductosShark.get(position).getClave();
                         ProductosDetallados.putExtra("Producto", Producto);
+                        ProductosDetallados.putExtra("claveVentana", "1");
                         startActivity(ProductosDetallados);
 
 
@@ -439,7 +530,18 @@ public class HomeFragment extends Fragment {
     }
 
 
-    private class ProductosNuevos extends AsyncTask<Void, Void, Void> {
+
+
+
+
+
+    public void BannersAsy() {
+        new HomeFragment.Banners().execute();
+    }
+
+    @SuppressWarnings("deprecation")
+    @SuppressLint("StaticFieldLeak")
+    private class Banners extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPreExecute() {
@@ -448,7 +550,123 @@ public class HomeFragment extends Fragment {
 
         @Override
         protected Void doInBackground(Void... params) {
-            conectar3();
+            HttpHandler sh = new HttpHandler();
+            String url = "http://" + StrServer + "/banners";
+            String jsonStr = sh.makeServiceCall(url, "jared", "jared");
+            if (jsonStr != null) {
+                try {
+
+
+
+                    JSONObject jitems, Numero;
+                    JSONObject jsonObject = new JSONObject(jsonStr);
+                    if(jsonObject.length()!=0) {
+                        jitems = jsonObject.getJSONObject("Item");
+
+                        for (int i = 0; i < jitems.length(); i++) {
+                            jitems = jsonObject.getJSONObject("Item");
+                            Numero = jitems.getJSONObject("" + i + "");
+
+                            ListaBanners.add(new BannersSANDG((Numero.getString("nombre").equals("") ? "" : Numero.getString("nombre"))));
+                        }
+                    }
+                } catch (final JSONException e) {
+                    String mensaje =e.getMessage().toString();
+                }//catch JSON EXCEPTION
+            } else {
+
+            }//else
+            return null;
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.P)
+        @Override
+        protected void onPostExecute(Void result) {
+
+            ArrayList<SliderData> sliderDataArrayList = new ArrayList<>();
+            // adding the urls inside array list
+            for (int i = 0; i < ListaBanners.size(); i++) {
+                sliderDataArrayList.add(new SliderData(url+"/"+ListaBanners.get(i).getNombre()));
+            }
+
+
+            // passing this array list inside our adapter class.
+            SliderAdapter adapter = new SliderAdapter(getActivity(), sliderDataArrayList);
+
+            // below method is used to set auto cycle direction in left to
+            // right direction you can change according to requirement.
+            sliderView.setAutoCycleDirection(SliderView.LAYOUT_DIRECTION_LTR);
+
+            // below method is used to
+            // setadapter to sliderview.
+            sliderView.setSliderAdapter(adapter);
+
+            // below method is use to set
+            // scroll time in seconds.
+            sliderView.setScrollTimeInSec(3);
+
+            // to set it scrollable automatically
+            // we use below method.
+            sliderView.setAutoCycle(true);
+
+            // to start autocycle below method is used.
+            sliderView.startAutoCycle();
+
+            mDialog.dismiss();
+        }
+
+
+    }
+
+
+
+
+
+
+    public void ProductosNuevosAscy() {
+        new HomeFragment.ProductosNuevosa().execute();
+    }
+
+
+    @SuppressWarnings("deprecation")
+    @SuppressLint("StaticFieldLeak")
+    private class ProductosNuevosa extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            mDialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            HttpHandler sh = new HttpHandler();
+            String url = "http://" + StrServer + "/listapronuevosapp";
+            String jsonStr = sh.makeServiceCall(url, strusr, strpass);
+            if (jsonStr != null) {
+                try {
+
+
+
+                    JSONObject jitems, Numero;
+                    JSONObject jsonObject = new JSONObject(jsonStr);
+                    if(jsonObject.length()!=0) {
+                        jitems = jsonObject.getJSONObject("Item");
+
+                        for (int i = 0; i < jitems.length(); i++) {
+                            jitems = jsonObject.getJSONObject("Item");
+                            Numero = jitems.getJSONObject("" + i + "");
+
+                            ListaProductosGeneral.add(new ProductosNuevosSANDG((Numero.getString("k_Producto").equals("") ? "" : Numero.getString("k_Producto")),
+                                    (Numero.getString("k_Descripcion").equals("") ? "" : Numero.getString("k_Descripcion")),
+                                    (Numero.getString("k_Tipo").equals("") ? "" : Numero.getString("k_Tipo"))));
+                        }
+                    }
+                } catch (final JSONException e) {
+                    String mensaje =e.getMessage().toString();
+                }//catch JSON EXCEPTION
+            } else {
+
+            }//else
             return null;
         }
 
@@ -459,7 +677,6 @@ public class HomeFragment extends Fragment {
 
             ConexionSQLiteHelper conn = new ConexionSQLiteHelper(getActivity(), "bd_Carrito", null, 1);
             SQLiteDatabase db = conn.getWritableDatabase();
-
             for (int i = 0; i < ListaProductosGeneral.size(); i++) {
 
                 String Clave = ListaProductosGeneral.get(i).getClave();
@@ -499,15 +716,15 @@ public class HomeFragment extends Fragment {
             }
 
 
-            AdaptadorProductosNuevos adapter = new AdaptadorProductosNuevos(ListaProductosEagle, context);
+            AdaptadorProductosNuevos adapter = new AdaptadorProductosNuevos(ListaProductosEagle, context,Empresa);
             recyclerViewEagle.setAdapter(adapter);
-            AdaptadorProductostrackone adapter1 = new AdaptadorProductostrackone(ListaProductosTrackone, context);
+            AdaptadorProductostrackone adapter1 = new AdaptadorProductostrackone(ListaProductosTrackone, context,Empresa);
             recyclerViewTrackone.setAdapter(adapter1);
-            AdaptadorProductosRodatech adapter2 = new AdaptadorProductosRodatech(ListaProductosRodatech, context);
+            AdaptadorProductosRodatech adapter2 = new AdaptadorProductosRodatech(ListaProductosRodatech, context,Empresa);
             recyclerViewRodatech.setAdapter(adapter2);
-            AdaptadorProductosPartech adapter3 = new AdaptadorProductosPartech(ListaProductosPartech, context);
+            AdaptadorProductosPartech adapter3 = new AdaptadorProductosPartech(ListaProductosPartech, context,Empresa);
             recyclerViewPartech.setAdapter(adapter3);
-            AdaptadorProductosShark adapter4 = new AdaptadorProductosShark(ListaProductosShark, context);
+            AdaptadorProductosShark adapter4 = new AdaptadorProductosShark(ListaProductosShark, context,Empresa);
             recyclerViewShark.setAdapter(adapter4);
 
 
@@ -515,11 +732,14 @@ public class HomeFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
 
-                    int position = recyclerViewEagle.getChildAdapterPosition(recyclerViewEagle.findContainingItemView(view));
+
+                    int position = recyclerViewEagle.getChildAdapterPosition(Objects.requireNonNull(recyclerViewEagle.findContainingItemView(view)));
                     Intent ProductosDetallados = new Intent(getActivity(), DetalladoProductosActivity.class);
                     String Producto = ListaProductosEagle.get(position).getClave();
                     ProductosDetallados.putExtra("Producto", Producto);
                     startActivity(ProductosDetallados);
+
+
                 }
             });
 
@@ -527,11 +747,13 @@ public class HomeFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
 
-                    int position = recyclerViewTrackone.getChildAdapterPosition(recyclerViewTrackone.findContainingItemView(view));
+                    int position = recyclerViewTrackone.getChildAdapterPosition(Objects.requireNonNull(recyclerViewTrackone.findContainingItemView(view)));
                     Intent ProductosDetallados = new Intent(getActivity(), DetalladoProductosActivity.class);
                     String Producto = ListaProductosTrackone.get(position).getClave();
                     ProductosDetallados.putExtra("Producto", Producto);
                     startActivity(ProductosDetallados);
+
+
                 }
             });
 
@@ -539,38 +761,43 @@ public class HomeFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
 
-                    int position = recyclerViewRodatech.getChildAdapterPosition(recyclerViewRodatech.findContainingItemView(view));
+                    int position = recyclerViewRodatech.getChildAdapterPosition(Objects.requireNonNull(recyclerViewRodatech.findContainingItemView(view)));
                     Intent ProductosDetallados = new Intent(getActivity(), DetalladoProductosActivity.class);
                     String Producto = ListaProductosRodatech.get(position).getClave();
                     ProductosDetallados.putExtra("Producto", Producto);
                     startActivity(ProductosDetallados);
+
                 }
             });
 
             adapter3.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-                    int position = recyclerViewPartech.getChildAdapterPosition(recyclerViewPartech.findContainingItemView(view));
+                    int position = recyclerViewPartech.getChildAdapterPosition(Objects.requireNonNull(recyclerViewPartech.findContainingItemView(view)));
                     Intent ProductosDetallados = new Intent(getActivity(), DetalladoProductosActivity.class);
                     String Producto = ListaProductosPartech.get(position).getClave();
                     ProductosDetallados.putExtra("Producto", Producto);
                     startActivity(ProductosDetallados);
+
+
                 }
             });
 
             adapter4.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-                    int position = recyclerViewShark.getChildAdapterPosition(recyclerViewShark.findContainingItemView(view));
+                    int position = recyclerViewShark.getChildAdapterPosition(Objects.requireNonNull(recyclerViewShark.findContainingItemView(view)));
                     Intent ProductosDetallados = new Intent(getActivity(), DetalladoProductosActivity.class);
                     String Producto = ListaProductosShark.get(position).getClave();
                     ProductosDetallados.putExtra("Producto", Producto);
                     startActivity(ProductosDetallados);
+
+
+
                 }
             });
 
+
             mDialog.dismiss();
 
         }
@@ -579,49 +806,68 @@ public class HomeFragment extends Fragment {
     }
 
 
-    private void conectar3() {
-        String SOAP_ACTION = "ProdcutosNuevos";
-        String METHOD_NAME = "ProdcutosNuevos";
-        String NAMESPACE = "http://" + StrServer + "/WSk75ClientesSOAP/";
-        String URL = "http://" + StrServer + "/WSk75ClientesSOAP";
 
 
-        try {
 
-            SoapObject Request = new SoapObject(NAMESPACE, METHOD_NAME);
-            xmlProductosNuevos soapEnvelope = new xmlProductosNuevos(SoapEnvelope.VER11);
-            soapEnvelope.xmlProductosNuevos(strusr, strpass);
-            soapEnvelope.dotNet = true;
-            soapEnvelope.implicitTypes = true;
-            soapEnvelope.setOutputSoapObject(Request);
-            HttpTransportSE trasport = new HttpTransportSE(URL);
-            trasport.debug = true;
-            trasport.call(SOAP_ACTION, soapEnvelope);
-            SoapObject response = (SoapObject) soapEnvelope.bodyIn;
-            for (int i = 0; i < response.getPropertyCount(); i++) {
-                SoapObject response0 = (SoapObject) soapEnvelope.bodyIn;
-                response0 = (SoapObject) response0.getProperty(i);
+    @SuppressWarnings("deprecation")
+    @SuppressLint("StaticFieldLeak")
+    private class Versiones extends AsyncTask<Void, Void, Void> {
 
-                ListaProductosGeneral.add(new ProductosNuevosSANDG((response0.getPropertyAsString("k_Producto").equals("anyType{}") ? "" : response0.getPropertyAsString("k_Producto")),
-                        (response0.getPropertyAsString("k_Descripcion").equals("anyType{}") ? "" : response0.getPropertyAsString("k_Descripcion")),
-                        (response0.getPropertyAsString("k_Tipo").equals("anyType{}") ? "" : response0.getPropertyAsString("k_Tipo"))));
+        @Override
+        protected void onPreExecute() {
+
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            HttpHandler sh = new HttpHandler();
+            String url = "http://jacve.dyndns.org:9085/versionesapp?Clave=1";
+            String jsonStr = sh.makeServiceCall(url, "WEBPETI", "W3B3P3T1");
+            if (jsonStr != null) {
+                try {
+                    JSONObject jsonObject = new JSONObject(jsonStr);
+                    if(jsonObject.length()!=0) {
+                        version = jsonObject.getString("Version");
+
+
+                        Resultado = 1;
+                    }
+                } catch (final JSONException e) {
+
+                }//catch JSON EXCEPTION
+            } else {
+
+            }//else
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            if (Resultado==1){
+                if (version.equals("2.8")) {
+
+                }else{
+                    AlertDialog.Builder alerta = new AlertDialog.Builder(getActivity());
+                    alerta.setMessage("La versión instalada no está actualizada por favor comuníquese con su proveedor para actualizar.").setCancelable(false).setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.cancel();
+                            System.exit(0);
+                            getActivity().finish();
+                        }
+                    });
+
+                    AlertDialog titulo = alerta.create();
+                    titulo.setTitle("Version desactualizada");
+                    titulo.show();
+                }
+            }else{
 
             }
 
-
-        } catch (SoapFault soapFault) {
-            mDialog.dismiss();
-            soapFault.printStackTrace();
-        } catch (XmlPullParserException e) {
-            mDialog.dismiss();
-            e.printStackTrace();
-        } catch (IOException e) {
-            mDialog.dismiss();
-            e.printStackTrace();
-        } catch (Exception ex) {
-            mDialog.dismiss();
         }
-    }
 
+    }
 
 }

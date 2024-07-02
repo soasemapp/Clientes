@@ -1,5 +1,4 @@
 package com.almacen.keplerclientesapp.SetterandGetter;
-
 public class CarritoVentasSANDG {
     String cliente;
     String parte;
@@ -23,11 +22,16 @@ public class CarritoVentasSANDG {
     String Comentario1;
     String Comentario2;
     String Comentario3;
+
+    String Eagle;
+    String Rodatech;
+    String Partech;
+    String Shark;
+    String Trackoone;
     String Nombre;
-    String Vendedor;
+    String agente;
 
-
-    public CarritoVentasSANDG(String cliente, String parte, String existencia, String cantidad, String unidad, String precio, String desc1, String desc2, String desc3, String monto, String descr, String rfc, String plazo, String calle, String colonia, String poblacion, String via, String descPro, String desc1Fac, String comentario1, String comentario2, String comentario3, String nombre, String vendedor) {
+    public CarritoVentasSANDG(String cliente, String parte, String existencia, String cantidad, String unidad, String precio, String desc1, String desc2, String desc3, String monto, String descr, String rfc, String plazo, String calle, String colonia, String poblacion, String via, String descPro, String desc1Fac, String comentario1, String comentario2, String comentario3, String eagle, String rodatech, String partech, String shark, String trackoone, String nombre, String agente) {
         this.cliente = cliente;
         this.parte = parte;
         this.existencia = existencia;
@@ -50,8 +54,13 @@ public class CarritoVentasSANDG {
         Comentario1 = comentario1;
         Comentario2 = comentario2;
         Comentario3 = comentario3;
+        Eagle = eagle;
+        Rodatech = rodatech;
+        Partech = partech;
+        Shark = shark;
+        Trackoone = trackoone;
         Nombre = nombre;
-        Vendedor = vendedor;
+        this.agente = agente;
     }
 
     public String getCliente() {
@@ -230,6 +239,46 @@ public class CarritoVentasSANDG {
         Comentario3 = comentario3;
     }
 
+    public String getEagle() {
+        return Eagle;
+    }
+
+    public void setEagle(String eagle) {
+        Eagle = eagle;
+    }
+
+    public String getRodatech() {
+        return Rodatech;
+    }
+
+    public void setRodatech(String rodatech) {
+        Rodatech = rodatech;
+    }
+
+    public String getPartech() {
+        return Partech;
+    }
+
+    public void setPartech(String partech) {
+        Partech = partech;
+    }
+
+    public String getShark() {
+        return Shark;
+    }
+
+    public void setShark(String shark) {
+        Shark = shark;
+    }
+
+    public String getTrackoone() {
+        return Trackoone;
+    }
+
+    public void setTrackoone(String trackoone) {
+        Trackoone = trackoone;
+    }
+
     public String getNombre() {
         return Nombre;
     }
@@ -238,11 +287,11 @@ public class CarritoVentasSANDG {
         Nombre = nombre;
     }
 
-    public String getVendedor() {
-        return Vendedor;
+    public String getAgente() {
+        return agente;
     }
 
-    public void setVendedor(String vendedor) {
-        Vendedor = vendedor;
+    public void setAgente(String agente) {
+        this.agente = agente;
     }
 }
