@@ -13,8 +13,10 @@ public class CarritoBD {
     String desc3;
     String monto;
     String descr;
+    String FotosTipo;
+    String FotosLinea;
 
-    public CarritoBD(int ID, String cliente, String parte, String existencia, String cantidad, String unidad, String precio, String desc1, String desc2, String desc3, String monto, String descr) {
+    public CarritoBD(int ID, String cliente, String parte, String existencia, String cantidad, String unidad, String precio, String desc1, String desc2, String desc3, String monto, String descr, String fotosTipo, String fotosLinea) {
         this.ID = ID;
         this.cliente = cliente;
         this.parte = parte;
@@ -27,6 +29,8 @@ public class CarritoBD {
         this.desc3 = desc3;
         this.monto = monto;
         this.descr = descr;
+        FotosTipo = fotosTipo;
+        FotosLinea = fotosLinea;
     }
 
     public int getID() {
@@ -123,5 +127,21 @@ public class CarritoBD {
 
     public void setDescr(String descr) {
         this.descr = descr;
+    }
+
+    public String getFotosTipo() {
+        return FotosTipo;
+    }
+
+    public void setFotosTipo(String fotosTipo) {
+        FotosTipo = fotosTipo;
+    }
+
+    public String getFotosLinea() {
+        return FotosLinea;
+    }
+
+    public void setFotosLinea(String fotosLinea) {
+        FotosLinea = fotosLinea;
     }
 }

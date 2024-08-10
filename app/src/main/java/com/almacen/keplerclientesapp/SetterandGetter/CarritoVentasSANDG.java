@@ -30,8 +30,10 @@ public class CarritoVentasSANDG {
     String Trackoone;
     String Nombre;
     String agente;
+    String TipoFotos;
+    String LineaFotos;
 
-    public CarritoVentasSANDG(String cliente, String parte, String existencia, String cantidad, String unidad, String precio, String desc1, String desc2, String desc3, String monto, String descr, String rfc, String plazo, String calle, String colonia, String poblacion, String via, String descPro, String desc1Fac, String comentario1, String comentario2, String comentario3, String eagle, String rodatech, String partech, String shark, String trackoone, String nombre, String agente) {
+    public CarritoVentasSANDG(String cliente, String parte, String existencia, String cantidad, String unidad, String precio, String desc1, String desc2, String desc3, String monto, String descr, String rfc, String plazo, String calle, String colonia, String poblacion, String via, String descPro, String desc1Fac, String comentario1, String comentario2, String comentario3, String eagle, String rodatech, String partech, String shark, String trackoone, String nombre, String agente, String tipoFotos, String lineaFotos) {
         this.cliente = cliente;
         this.parte = parte;
         this.existencia = existencia;
@@ -61,6 +63,8 @@ public class CarritoVentasSANDG {
         Trackoone = trackoone;
         Nombre = nombre;
         this.agente = agente;
+        TipoFotos = tipoFotos;
+        LineaFotos = lineaFotos;
     }
 
     public String getCliente() {
@@ -293,5 +297,21 @@ public class CarritoVentasSANDG {
 
     public void setAgente(String agente) {
         this.agente = agente;
+    }
+
+    public String getTipoFotos() {
+        return TipoFotos;
+    }
+
+    public void setTipoFotos(String tipoFotos) {
+        TipoFotos = tipoFotos;
+    }
+
+    public String getLineaFotos() {
+        return LineaFotos;
+    }
+
+    public void setLineaFotos(String lineaFotos) {
+        LineaFotos = lineaFotos;
     }
 }

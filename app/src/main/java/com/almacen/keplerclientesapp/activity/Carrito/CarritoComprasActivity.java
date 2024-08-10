@@ -62,7 +62,8 @@ public class CarritoComprasActivity extends AppCompatActivity {
     double Descuento = 0;
     double IvaVariado = 0;
     String Clave = "";
-
+    Context context = this;
+    String Desc1="0";
 
     TextView txtSubtotal;
     TextView txtSubtotal2;
@@ -120,7 +121,7 @@ public class CarritoComprasActivity extends AppCompatActivity {
     String Descripcion;
     String Cantidad;
 
-
+    String Empresa = "";
     String ivstr;
     String MontoStr;
     String Comentario="";
@@ -134,7 +135,7 @@ public class CarritoComprasActivity extends AppCompatActivity {
     String Poblacion;
     String Via;
     String DescPro;
-    String Desc1;
+
     String StrFechaActaul;
     String StrFechaVencimiento;
     String SubdescuentoValida;
@@ -153,7 +154,7 @@ public class CarritoComprasActivity extends AppCompatActivity {
 
     Spinner spinerClie;
 
-    Context context = this;
+
 
     LinearLayout CliOcul;
     AlertDialog.Builder builder6;
@@ -217,6 +218,37 @@ public class CarritoComprasActivity extends AppCompatActivity {
         descuPartec = preferenceClie.getString("Partech", "");
         descuShark = preferenceClie.getString("Shark", "");
         descuTrackone = preferenceClie.getString("Trackone", "");
+
+
+        switch (StrServer) {
+            case "jacve.dyndns.org:9085":
+                Empresa = "https://www.jacve.mx/imagenes/";
+                break;
+            case "autodis.ath.cx:9085":
+                Empresa = "https://www.autodis.mx/es-mx/img/products/xl/";
+                break;
+            case "cecra.ath.cx:9085":
+                Empresa = "https://www.cecra.mx/es-mx/img/products/xl/";
+                break;
+            case "guvi.ath.cx:9085":
+                Empresa = "https://www.guvi.mx/es-mx/img/products/xl/";
+                break;
+            case "cedistabasco.ddns.net:9085":
+                Empresa = "https://www.pressa.mx/es-mx/img/products/xl/";
+                break;
+            case "sprautomotive.servehttp.com:9090":
+            case "sprautomotive.servehttp.com:9095":
+            case "sprautomotive.servehttp.com:9080":
+            case "sprautomotive.servehttp.com:9085":
+                Empresa = "https://www.vipla.mx/es-mx/img/products/xl/";
+                break;
+            case "vazlocolombia.dyndns.org:9085":
+                Empresa = "https://vazlo.com.mx/assets/img/productos/chica/jpg/";
+                break;
+            default:
+                Empresa = "https://www.pressa.mx/es-mx/img/products/xl/";
+                break;
+        }
 
 
 
@@ -907,10 +939,12 @@ public class CarritoComprasActivity extends AppCompatActivity {
                         fila.getString(8),
                         fila.getString(9),
                         fila.getString(10),
-                        fila.getString(11)));
+                        fila.getString(11),
+                        fila.getString(12),
+                        fila.getString(13)));
             } while (fila.moveToNext());
         }
-        AdaptadorCarrito adapter = new AdaptadorCarrito(listaCarShoping, context);
+        AdaptadorCarrito adapter = new AdaptadorCarrito(listaCarShoping, Desc1, StrServer, context, Empresa);
         recyclerCarrtio.setAdapter(adapter);
         db.close();
 

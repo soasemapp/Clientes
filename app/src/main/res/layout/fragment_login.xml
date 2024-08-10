@@ -23,7 +23,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
                         android:layout_margin="10dp"
-                        android:src="@drawable/aboutlogo" />
+                        android:src="@drawable/mycedis3" />
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"

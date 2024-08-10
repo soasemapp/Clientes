@@ -187,11 +187,12 @@
                                 />
 
                         </LinearLayout>
+
                         <ImageView
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/trackone"
+                            android:layout_height="79dp"
                             android:layout_weight="1.5"
+                            android:src="@drawable/trackone"
 
                             />
                     </LinearLayout>
@@ -413,8 +414,217 @@
 
                 </LinearLayout>
 
+                <LinearLayout
+
+                    android:id="@+id/VazloOcultar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="7dp"
+                    android:background="@drawable/rodatechfondoinicio">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp"
+                        android:gravity="center"
+                        >
+
+                        <View
+                            android:layout_width="5dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/blue_200"
+                            />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_margin="5dp"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Vazlo"
+                                android:textStyle="bold"
+                                android:autoSizeMinTextSize="15sp"
+                                android:autoSizeMaxTextSize="20sp"
+                                android:textColor="@color/white"
+                                />
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:autoSizeMinTextSize="10sp"
+                                android:autoSizeMaxTextSize="13sp"
+                                android:text="Amortiguadores"
+                                android:textColor="@color/white"
+                                />
+
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="99dp"
+                            android:layout_weight="1.5"
+                            android:src="@drawable/vazlo"
+
+                            />
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/listProductosVazlo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                    </androidx.recyclerview.widget.RecyclerView>
 
 
+
+
+                </LinearLayout>
+
+
+
+                <LinearLayout
+
+                    android:id="@+id/MechanicOcultar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="7dp"
+                    android:background="@drawable/partechfondoinicio">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp"
+                        android:gravity="center"
+                        >
+
+                        <View
+                            android:layout_width="5dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/blue_200"
+                            />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_margin="5dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:autoSizeMaxTextSize="20sp"
+                                android:autoSizeMinTextSize="15sp"
+                                android:text="MECHANIC CHOICE"
+                                android:textColor="@color/white"
+                                android:textStyle="bold" />
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:autoSizeMinTextSize="10sp"
+                                android:autoSizeMaxTextSize="13sp"
+                                android:text="Balatas de Freno y Poleas"
+                                android:textColor="@color/white"
+                                />
+
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="110dp"
+                            android:layout_weight="1.5"
+                            android:src="@drawable/mnchlogo"
+
+                            />
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/listProductosMechanic"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                    </androidx.recyclerview.widget.RecyclerView>
+
+
+
+
+                </LinearLayout>
+
+                <LinearLayout
+
+                    android:id="@+id/GSPOcultar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="7dp"
+                    android:background="@drawable/trackonefondoinicio">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp"
+                        android:gravity="center"
+                        >
+
+                        <View
+                            android:layout_width="5dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/blue_200"
+                            />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_margin="5dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:autoSizeMaxTextSize="20sp"
+                                android:autoSizeMinTextSize="15sp"
+                                android:text="GSP"
+                                android:textColor="@color/white"
+                                android:textStyle="bold" />
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:autoSizeMinTextSize="10sp"
+                                android:autoSizeMaxTextSize="13sp"
+                                android:text="AMORTIGUADORES,BRAZOS,CUBRE POLVOS Y MAS ..."
+                                android:textColor="@color/white"
+                                />
+
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="110dp"
+                            android:layout_weight="1.5"
+                            android:src="@drawable/gsplogo"
+
+                            />
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/listProductosGSP"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                    </androidx.recyclerview.widget.RecyclerView>
+
+
+
+
+                </LinearLayout>
 
 
 

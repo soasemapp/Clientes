@@ -1,18 +1,23 @@
 package com.almacen.keplerclientesapp.SetandGet;
 
 
-public class SetGetListProductos {String Productos;
+public class SetGetListProductos {
+    String Productos;
     String Descripcion;
     String linea;
     String PrecioBase;
     String PrecioAjuste;
+    String TipoFotos;
+    String LineaFotos;
 
-    public SetGetListProductos(String productos, String descripcion, String linea, String precioBase, String precioAjuste) {
+    public SetGetListProductos(String productos, String descripcion, String linea, String precioBase, String precioAjuste, String tipoFotos, String lineaFotos) {
         Productos = productos;
         Descripcion = descripcion;
         this.linea = linea;
         PrecioBase = precioBase;
         PrecioAjuste = precioAjuste;
+        TipoFotos = tipoFotos;
+        LineaFotos = lineaFotos;
     }
 
     public String getProductos() {
@@ -53,5 +58,21 @@ public class SetGetListProductos {String Productos;
 
     public void setPrecioAjuste(String precioAjuste) {
         PrecioAjuste = precioAjuste;
+    }
+
+    public String getTipoFotos() {
+        return TipoFotos;
+    }
+
+    public void setTipoFotos(String tipoFotos) {
+        TipoFotos = tipoFotos;
+    }
+
+    public String getLineaFotos() {
+        return LineaFotos;
+    }
+
+    public void setLineaFotos(String lineaFotos) {
+        LineaFotos = lineaFotos;
     }
 }

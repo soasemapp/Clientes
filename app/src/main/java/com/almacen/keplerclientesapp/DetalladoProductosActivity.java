@@ -69,7 +69,7 @@ import dmax.dialog.SpotsDialog;
 
 public class DetalladoProductosActivity extends AppCompatActivity {
     String strusr, strpass, strname, strlname, strtype, strbran, strma, strco, strcodBra, StrServer;
-    String Producto="", claveVentana = null, Descripcion="", PrecioAjustado="0", PrecioBase="0",Linea="";
+    String Producto="", claveVentana = null, Descripcion="", PrecioAjustado="0", PrecioBase="0",Linea="",TipoFotos="",LineaFotos="";
     TextView  txtClavePro, txtCant, txtPrecio, txtDesc, txtImporte;
     TextView txtClave, txtClavecompetencia, txtnombreCompetencia;
     LinearLayout TableProd;
@@ -156,7 +156,7 @@ public class DetalladoProductosActivity extends AppCompatActivity {
 
         switch (StrServer) {
             case "jacve.dyndns.org:9085":
-                Empresa = "https://www.jacve.mx/es-mx/img/products/xl/";
+                Empresa = "https://www.jacve.mx/imagenes/";
                 break;
             case "autodis.ath.cx:9085":
                 Empresa = "https://www.autodis.mx/es-mx/img/products/xl/";
@@ -774,7 +774,10 @@ public class DetalladoProductosActivity extends AppCompatActivity {
                     PrecioBase=(Precios.getString("precio_base").equals("") ? " " : Precios.getString("precio_base"));
                     Descripcion=(Precios.getString("Descripcion").equals("") ? " " : Precios.getString("Descripcion"));
                     Linea=(Precios.getString("Linea").equals("") ? " " : Precios.getString("Linea"));
-
+                    if(StrServer.equals("jacve.dyndns.org:9085")) {
+                        TipoFotos = (Precios.getString("TipoFotos").equals("") ? " " : Precios.getString("TipoFotos"));
+                        LineaFotos = (Precios.getString("LineaFotos").equals("") ? " " : Precios.getString("LineaFotos"));
+                    }
 
 
 
@@ -825,16 +828,19 @@ public class DetalladoProductosActivity extends AppCompatActivity {
         protected void onPostExecute(Void result) {
 
 
-            if (!Empresa.equals("https://vazlo.com.mx/assets/img/productos/chica/jpg/")){
-                Empresa=Empresa+Producto+"/4.webp";
+            String EmpresaFotos="";
+            if(Empresa.equals("https://www.jacve.mx/imagenes/")){
+                EmpresaFotos=Empresa+TipoFotos+"/"+LineaFotos+"/"+Producto+"/2.jpg";
+            }else  if (!Empresa.equals("https://vazlo.com.mx/assets/img/productos/chica/jpg/")){
+                EmpresaFotos=Empresa+Producto+"/4.webp";
             }else{
-                Empresa=Empresa+Producto+".jpg";
+                EmpresaFotos=Empresa+Producto+".jpg";
 
             }
 
 
             Picasso.with(context).
-                    load(Empresa)
+                    load(EmpresaFotos)
                     .error(R.drawable.ic_baseline_error_24)
                     .fit()
                     .centerInside()
@@ -1025,7 +1031,9 @@ public class DetalladoProductosActivity extends AppCompatActivity {
                                 (Numero.getString("k_descSHARK").equals("")?"0":Numero.getString("k_descSHARK")),
                                 (Numero.getString("k_descTRACKONE").equals("")?"0":Numero.getString("k_descTRACKONE")),
                                 (Numero.getString("k_nombre").equals("")?"0":Numero.getString("k_nombre")),
-                                (Numero.getString("k_agent").equals("")?"0":Numero.getString("k_agent"))));
+                                (Numero.getString("k_agent").equals("")?"0":Numero.getString("k_agent")),
+                                 (Numero.getString("TipoFotos").equals("") ? "0" : Numero.getString("TipoFotos")),
+                                (Numero.getString("LineaFotos").equals("") ? "0" : Numero.getString("LineaFotos"))));
                     }
                 } catch (final JSONException e) {
                     runOnUiThread(new Runnable() {
@@ -1114,8 +1122,10 @@ public class DetalladoProductosActivity extends AppCompatActivity {
                     String Des3 = listaCarShoping.get(i).getDesc3();
                     String Monto = listaCarShoping.get(i).getMonto();
                     String Des = listaCarShoping.get(i).getDescr();
+                    String FotoTipo = listaCarShoping.get(i).getTipoFotos();
+                    String FotoLinea = listaCarShoping.get(i).getLineaFotos();
 
-                    db.execSQL("INSERT INTO  carrito (Cliente,Parte,Existencia,Cantidad,Unidad,Precio,Desc1,Desc2,Desc3,Monto,Descri) values ('" + Cli + "','" + Par + "','" + Exi + "','" + Can + "','" + Uni + "','" + Pre + "','" + Des1 + "','" + Des2 + "','" + Des3 + "','" + Monto + "','" + Des + "')");
+                    db.execSQL("INSERT INTO  carrito (Cliente,Parte,Existencia,Cantidad,Unidad,Precio,Desc1,Desc2,Desc3,Monto,Descri,FotosTipo,FotosLinea) values ('" + Cli + "','" + Par + "','" + Exi + "','" + Can + "','" + Uni + "','" + Pre + "','" + Des1 + "','" + Des2 + "','" + Des3 + "','" + Monto + "','" + Des + "','"+FotoTipo+"','"+FotoLinea+"')");
                 }
                 db.close();
                 Intent carrito = new Intent(DetalladoProductosActivity.this, CarritoComprasActivity.class);
@@ -1174,7 +1184,9 @@ public class DetalladoProductosActivity extends AppCompatActivity {
                         fila.getString(8),
                         fila.getString(9),
                         fila.getString(10),
-                        fila.getString(11)));
+                        fila.getString(11),
+                        fila.getString(12),
+                        fila.getString(13)));
             } while (fila.moveToNext());
         }
         db.close();

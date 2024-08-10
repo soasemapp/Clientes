@@ -21,10 +21,18 @@ public class AdaptadorCarrito extends RecyclerView.Adapter<AdaptadorCarrito.View
 
     ArrayList<CarritoBD> listaCarrito;
     Context context;
+    String Empresa;
+    String EmpresaAd="";
+    String Desc1;
+    String StrServer;
     private View.OnClickListener listener;
 
-    public AdaptadorCarrito(ArrayList<CarritoBD> listaConsulCoti, Context context) {
+    public AdaptadorCarrito(ArrayList<CarritoBD> listaConsulCoti,String Desc1,String StrServer,Context context,String Empresa) {
         this.listaCarrito = listaConsulCoti;
+        this.Desc1 =Desc1;
+        this.StrServer=StrServer;
+        this.EmpresaAd=Empresa;
+        this.Empresa =Empresa;
         this.context = context;
     }
 
@@ -37,34 +45,64 @@ public class AdaptadorCarrito extends RecyclerView.Adapter<AdaptadorCarrito.View
 
     @Override
     public void onBindViewHolder(ViewHolderCarrito holder, int position) {
-        String NuevoPrecio="",Descuento="";
-        double intNuePrecio=0,intnuevoDescuento=0,semiResultado=0,Resultado=0,DescuentoNivelDocumento=0,DescuentoRestar=0,PrecioNuevo=0,NuevoImporte=0;
+        String Precio;
+        String Descuento;
+        double precio;
+        double descuento;
+        double descuento1;
+        double cantidad;
+        double monto;
+
 
         holder.Parte.setText(listaCarrito.get(position).getParte());
         holder.Descri.setText("Descripcion:\n" + listaCarrito.get(position).getDescr());
         holder.Cantidad.setText(listaCarrito.get(position).getCantidad());
 
-        NuevoPrecio= listaCarrito.get(position).getPrecio();
-        Descuento=listaCarrito.get(position).getDesc1();
-        intNuePrecio=Double.parseDouble(NuevoPrecio);
-        intnuevoDescuento=Double.parseDouble(Descuento)/100;
+        if(!StrServer.equals("vazlocolombia.dyndns.org:9085")){
 
-        semiResultado=intNuePrecio*intnuevoDescuento;
-        Resultado = intNuePrecio-semiResultado  ;
+            Precio = listaCarrito.get(position).getPrecio();
+            Descuento=listaCarrito.get(position).getDesc1();
+            precio= Double.parseDouble(Precio);
+            descuento=Double.parseDouble(Descuento);
+            descuento1=Double.parseDouble(Desc1);
+            cantidad = Double.parseDouble(listaCarrito.get(position).getCantidad());
+            precio = (precio-((precio*descuento)/100));
+            precio = (precio-((precio*descuento1)/100));
+            monto= precio* cantidad;
+            holder.Precio.setText(Html.fromHtml("Precio C/U:$<font color ='#4CAF50'>" +formatNumberCurrency(String.valueOf(precio))+"</font>"));
+            holder.Monto.setText(Html.fromHtml("Total: $<font color ='#FF0000'>" +formatNumberCurrency(String.valueOf(monto))+"</font>"));
 
-        holder.Precio.setText(Html.fromHtml("Precio C/U:$<font color ='#4CAF50'>" +formatNumberCurrency(String.valueOf(Resultado))+"</font>"));
-        holder.Monto.setText(Html.fromHtml("Total: $<font color ='#FF0000'>" +formatNumberCurrency(listaCarrito.get(position).getMonto())+"</font>"));
+        }else{
+            holder.Precio.setText(Html.fromHtml("Precio C/U:$<font color ='#4CAF50'>" +formatNumberCurrency(listaCarrito.get(position).getPrecio())+"</font>"));
+            holder.Monto.setText(Html.fromHtml("Total: $<font color ='#FF0000'>" +formatNumberCurrency(listaCarrito.get(position).getMonto())+"</font>"));
+
+        }
         holder.ID.setText(String.valueOf(listaCarrito.get(position).getID()));
         int Existencia = Integer.parseInt(listaCarrito.get(position).getExistencia());
         int Cantidad = Integer.parseInt((listaCarrito.get(position).getCantidad()));
+
+
+
+        if(Empresa.equals("https://www.jacve.mx/imagenes/")){
+            EmpresaAd = "";
+            EmpresaAd=Empresa+listaCarrito.get(position).getFotosTipo()+"/"+listaCarrito.get(position).getFotosLinea()+"/"+listaCarrito.get(position).getParte()+"/2.jpg";
+        }else  if (!Empresa.equals("https://vazlo.com.mx/assets/img/productos/chica/jpg/")){
+            EmpresaAd="";
+            EmpresaAd=Empresa+listaCarrito.get(position).getParte()+"/4.webp";
+
+        }else {
+            EmpresaAd = "";
+            EmpresaAd = Empresa + listaCarrito.get(position).getParte() + ".jpg";
+        }
+
         holder.Diponiblidad.setText(Html.fromHtml((Existencia<Cantidad)?"(<font color = #FF0000>SIN DISPONIBILIDAD EN SU SUCURSAL)</font>)":"(<font color = #4CAF50>HAY DISPONIBLES)</font>)"));
         Picasso.with(context).
-        load("https://www.pressa.mx/es-mx/img/products/xl/"+listaCarrito.get(position).getParte()+"/4.webp")
+                load(EmpresaAd)
+                .placeholder(R.drawable.loadingpro)
                 .error(R.drawable.ic_baseline_error_24)
                 .fit()
                 .centerInside()
                 .into(holder.imgPro);
-
     }
 
     private static String formatNumberCurrency(String number) {
