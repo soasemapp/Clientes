@@ -830,7 +830,7 @@ public class DetalladoProductosActivity extends AppCompatActivity {
 
             String EmpresaFotos="";
             if(Empresa.equals("https://www.jacve.mx/imagenes/")){
-                EmpresaFotos=Empresa+TipoFotos+"/"+LineaFotos+"/"+Producto+"/2.jpg";
+                EmpresaFotos=Empresa+TipoFotos+"/"+LineaFotos+"/"+Producto+"/1.jpg";
             }else  if (!Empresa.equals("https://vazlo.com.mx/assets/img/productos/chica/jpg/")){
                 EmpresaFotos=Empresa+Producto+"/4.webp";
             }else{

@@ -251,12 +251,13 @@ public class xmlCarritoCompras extends SoapSerializationEnvelope {
         writer.text(DescuentoPro);
         writer.endTag(tem, "k_87");
 
+        writer.startTag(tem, "k_81");
+        writer.text("C");
+        writer.endTag(tem, "k_81");
 
         writer.startTag(tem, "k_63");
         writer.text("UD3501-");
         writer.endTag(tem, "k_63");
-
-
 
 
         writer.startTag(tem, "k_97");

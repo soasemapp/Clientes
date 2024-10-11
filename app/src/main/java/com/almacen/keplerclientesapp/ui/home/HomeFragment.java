@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -45,13 +46,17 @@ import com.almacen.keplerclientesapp.SliderAdapter;
 import com.almacen.keplerclientesapp.SliderData;
 import com.almacen.keplerclientesapp.XMLS.xmlProductosNuevos;
 import com.almacen.keplerclientesapp.adapter.AdaptadorProductosGSP;
+import com.almacen.keplerclientesapp.adapter.AdaptadorProductosKFF;
 import com.almacen.keplerclientesapp.adapter.AdaptadorProductosMechanic;
 import com.almacen.keplerclientesapp.adapter.AdaptadorProductosNuevos;
 import com.almacen.keplerclientesapp.adapter.AdaptadorProductosPartech;
 import com.almacen.keplerclientesapp.adapter.AdaptadorProductosRodatech;
 import com.almacen.keplerclientesapp.adapter.AdaptadorProductosShark;
+import com.almacen.keplerclientesapp.adapter.AdaptadorProductosVazlo;
+import com.almacen.keplerclientesapp.adapter.AdaptadorProductosZoms;
 import com.almacen.keplerclientesapp.adapter.AdaptadorProductostrackone;
 import com.almacen.keplerclientesapp.includes.HttpHandler;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.smarteist.autoimageslider.SliderView;
 
 import org.json.JSONArray;
@@ -72,7 +77,7 @@ import java.util.Objects;
 import dmax.dialog.SpotsDialog;
 public class HomeFragment extends Fragment {
 
-    RecyclerView recyclerViewEagle, recyclerViewTrackone, recyclerViewRodatech, recyclerViewPartech, recyclerViewShark,recyclerViewMechanic,recyclerViewGSP,recyclerViewVazlo;
+    RecyclerView recyclerViewEagle, recyclerViewTrackone, recyclerViewRodatech, recyclerViewPartech, recyclerViewShark,recyclerViewMechanic,recyclerViewGSP,recyclerViewVazlo,recyclerViewZoms,recyclerViewKFF;
 
     String strusr, strpass, strname, strlname, strtype, strbran, strma, strco, strcodBra, StrServer;
 
@@ -81,6 +86,7 @@ public class HomeFragment extends Fragment {
     String K87;
     String Desc1fa;
     String mensaje = "";
+    FloatingActionButton Whatssap;
     String Cliente = "";
     String Nombre;
     String rfc;
@@ -120,6 +126,8 @@ public class HomeFragment extends Fragment {
     ArrayList<ProductosNuevosSANDG> ListaProductosMechanic = new ArrayList<>();
     ArrayList<ProductosNuevosSANDG> ListaProductosGSP = new ArrayList<>();
     ArrayList<ProductosNuevosSANDG> ListaProductosVazlo = new ArrayList<>();
+    ArrayList<ProductosNuevosSANDG> ListaProductoszoms = new ArrayList<>();
+    ArrayList<ProductosNuevosSANDG> ListaProductoskff = new ArrayList<>();
 
     ArrayList<BannersSANDG> ListaBanners = new ArrayList<>();
     // Urls of our images.
@@ -130,7 +138,7 @@ public class HomeFragment extends Fragment {
     String Banners;
     EditText BusquedaProducto;
     String ProductosNuevosStr,Empresa;
-    LinearLayout EagleOcultar, TrackOneOcultar, RodatechOcultar, PartechOcultar, SharkOcultar,MechanicOcultar,GspOcultar,VazloOcultar;
+    LinearLayout EagleOcultar, TrackOneOcultar, RodatechOcultar, PartechOcultar, SharkOcultar,MechanicOcultar,GspOcultar,VazloOcultar,ZoomsOcultar,KFFOcultar;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -149,6 +157,8 @@ public class HomeFragment extends Fragment {
         recyclerViewMechanic = view.findViewById(R.id.listProductosMechanic);
         recyclerViewGSP = view.findViewById(R.id.listProductosGSP);
         recyclerViewVazlo = view.findViewById(R.id.listProductosVazlo);
+        recyclerViewZoms = view.findViewById(R.id.listProductoszoms);
+        recyclerViewKFF = view.findViewById(R.id.listProductoskff);
 
 
         BusquedaProducto = view.findViewById(R.id.idBusqueda);
@@ -160,6 +170,9 @@ public class HomeFragment extends Fragment {
         MechanicOcultar = view.findViewById(R.id.MechanicOcultar);
         GspOcultar = view.findViewById(R.id.GSPOcultar);
         VazloOcultar = view.findViewById(R.id.VazloOcultar);
+        ZoomsOcultar = view.findViewById(R.id.ZoomsOcultar);
+        KFFOcultar= view.findViewById(R.id.KFFOcultar);
+        Whatssap=view.findViewById(R.id.whatssap);
 
         //Preference
         SharedPreferences preference = requireActivity().getSharedPreferences("Login", Context.MODE_PRIVATE);
@@ -167,6 +180,8 @@ public class HomeFragment extends Fragment {
 
         preferenceClie = requireActivity().getSharedPreferences("clienteCompra", Context.MODE_PRIVATE);
         editor2 = preferenceClie.edit();
+
+
 
 
         strusr = preference.getString("user", "null");
@@ -185,10 +200,73 @@ public class HomeFragment extends Fragment {
         sliderView = view.findViewById(R.id.image_slider);
 
 
+
+        Whatssap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switch (StrServer) {
+                    case "jacve.dyndns.org:9085":
+                        String msj = "";
+                        String numeroTel = "+522224558969";
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        String uri = "whatsapp://send?phone=" + numeroTel + "&text=" + msj;
+                        intent.setData(Uri.parse(uri));
+                        startActivity(intent);
+                        break;
+                    case "autodis.ath.cx:9085":
+                         msj = "";
+                         numeroTel = "+522224558969";
+                         intent = new Intent(Intent.ACTION_VIEW);
+                         uri = "whatsapp://send?phone=" + numeroTel + "&text=" + msj;
+                        intent.setData(Uri.parse(uri));
+                        startActivity(intent);
+                        break;
+                    case "cecra.ath.cx:9085":
+                        msj = "";
+                        numeroTel = "+526623602711";
+                        intent = new Intent(Intent.ACTION_VIEW);
+                        uri = "whatsapp://send?phone=" + numeroTel + "&text=" + msj;
+                        intent.setData(Uri.parse(uri));
+                        startActivity(intent);
+                        break;
+                    case "guvi.ath.cx:9085":
+
+                        break;
+                    case "cedistabasco.ddns.net:9085":
+
+                        break;
+                    case "sprautomotive.servehttp.com:9090":
+
+                        break;
+                    case "sprautomotive.servehttp.com:9095":
+
+                        break;
+                    case "sprautomotive.servehttp.com:9080":
+
+                        break;
+                    case "sprautomotive.servehttp.com:9085":
+                        msj = "";
+                        numeroTel = "+524613150857";
+                        intent = new Intent(Intent.ACTION_VIEW);
+                        uri = "whatsapp://send?phone=" + numeroTel + "&text=" + msj;
+                        intent.setData(Uri.parse(uri));
+                        startActivity(intent);
+                        break;
+                    case "vazlocolombia.dyndns.org:9085":
+
+                        break;
+                    default:
+
+                        break;
+                }
+
+            }
+        });
+
         switch (StrServer) {
             case "jacve.dyndns.org:9085":
                 Empresa = "https://www.jacve.mx/imagenes/";
-                url="https://www.jacve.mx/img/banners/";
+                url="https://www.jacve.mx/img/banners";
                 Banners="https://jacve.mx/api/banners";
                 break;
             case "autodis.ath.cx:9085":
@@ -291,6 +369,14 @@ public class HomeFragment extends Fragment {
         LinearLayoutManager horizontalLayoutManagaer7 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         recyclerViewVazlo.setLayoutManager(horizontalLayoutManagaer7);
 
+        ListaProductoskff = new ArrayList<>();
+        LinearLayoutManager horizontalLayoutManagaer8 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        recyclerViewKFF.setLayoutManager(horizontalLayoutManagaer8);
+
+        ListaProductoszoms = new ArrayList<>();
+        LinearLayoutManager horizontalLayoutManagaer9 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        recyclerViewZoms.setLayoutManager(horizontalLayoutManagaer9);
+
 
 
         Calendar calendar = Calendar.getInstance();
@@ -357,6 +443,8 @@ public class HomeFragment extends Fragment {
                 VazloOcultar.setVisibility(View.GONE);
                 MechanicOcultar.setVisibility(View.GONE);
                 GspOcultar.setVisibility(View.GONE);
+                ZoomsOcultar.setVisibility(View.GONE);
+                KFFOcultar.setVisibility(View.GONE);
 
                 break;
             case "sprautomotive.servehttp.com:9095":
@@ -368,6 +456,8 @@ public class HomeFragment extends Fragment {
                 SharkOcultar.setVisibility(View.GONE);
                 MechanicOcultar.setVisibility(View.GONE);
                 GspOcultar.setVisibility(View.GONE);
+                ZoomsOcultar.setVisibility(View.GONE);
+                KFFOcultar.setVisibility(View.GONE);
                 break;
             case "sprautomotive.servehttp.com:9080":
                 EagleOcultar.setVisibility(View.GONE);
@@ -378,6 +468,8 @@ public class HomeFragment extends Fragment {
                 VazloOcultar.setVisibility(View.GONE);
                 MechanicOcultar.setVisibility(View.GONE);
                 GspOcultar.setVisibility(View.GONE);
+                ZoomsOcultar.setVisibility(View.GONE);
+                KFFOcultar.setVisibility(View.GONE);
                 break;
             case "vazlocolombia.dyndns.org:9085":
                 EagleOcultar.setVisibility(View.VISIBLE);
@@ -388,6 +480,8 @@ public class HomeFragment extends Fragment {
                 VazloOcultar.setVisibility(View.GONE);
                 MechanicOcultar.setVisibility(View.GONE);
                 GspOcultar.setVisibility(View.GONE);
+                ZoomsOcultar.setVisibility(View.GONE);
+                KFFOcultar.setVisibility(View.GONE);
                 break;
             case "autodis.ath.cx:9085":
                 EagleOcultar.setVisibility(View.VISIBLE);
@@ -398,6 +492,8 @@ public class HomeFragment extends Fragment {
                 VazloOcultar.setVisibility(View.GONE);
                 MechanicOcultar.setVisibility(View.GONE);
                 GspOcultar.setVisibility(View.GONE);
+                ZoomsOcultar.setVisibility(View.GONE);
+                KFFOcultar.setVisibility(View.GONE);
                 break;
             case "jacve.dyndns.org:9085":
                 EagleOcultar.setVisibility(View.GONE);
@@ -408,6 +504,8 @@ public class HomeFragment extends Fragment {
                 VazloOcultar.setVisibility(View.GONE);
                 MechanicOcultar.setVisibility(View.VISIBLE);
                 GspOcultar.setVisibility(View.VISIBLE);
+                ZoomsOcultar.setVisibility(View.VISIBLE);
+                KFFOcultar.setVisibility(View.VISIBLE);
 
                 break;
             default:
@@ -419,6 +517,8 @@ public class HomeFragment extends Fragment {
                 VazloOcultar.setVisibility(View.VISIBLE);
                 MechanicOcultar.setVisibility(View.GONE);
                 GspOcultar.setVisibility(View.GONE);
+                ZoomsOcultar.setVisibility(View.GONE);
+                KFFOcultar.setVisibility(View.GONE);
 
                 break;
         }
@@ -464,6 +564,8 @@ public class HomeFragment extends Fragment {
         ListaProductosMechanic = new ArrayList<>();
         ListaProductosGSP = new ArrayList<>();
         ListaProductosVazlo = new ArrayList<>();
+        ListaProductoszoms = new ArrayList<>();
+        ListaProductoskff = new ArrayList<>();
         conn = new ConexionSQLiteHelper(getActivity(), "bd_Carrito", null, 1);
         SQLiteDatabase db = conn.getReadableDatabase();
         @SuppressLint("Recycle") Cursor fila = db.rawQuery("select * from productos ", null);
@@ -530,6 +632,30 @@ public class HomeFragment extends Fragment {
                                 fila.getString(4),
                                 fila.getString(5)));
                         break;
+                    case "14":
+                        if (!StrServer.equals("jacve.dyndns.org:9085")){
+                            ListaProductosVazlo.add(new ProductosNuevosSANDG(fila.getString(1),
+                                    fila.getString(2),
+                                    fila.getString(3),
+                                    fila.getString(4),
+                                    fila.getString(5)));
+                        }else {
+                            ListaProductoskff.add(new ProductosNuevosSANDG(fila.getString(1),
+                                    fila.getString(2),
+                                    fila.getString(3),
+                                    fila.getString(4),
+                                    fila.getString(5)));
+
+                        }
+                        break;
+                    case "15":
+                        ListaProductoszoms.add(new ProductosNuevosSANDG(fila.getString(1),
+                                fila.getString(2),
+                                fila.getString(3),
+                                fila.getString(4),
+                                fila.getString(5)));
+                        break;
+
                     default:
                         break;
                 }
@@ -552,6 +678,13 @@ public class HomeFragment extends Fragment {
                 recyclerViewMechanic.setAdapter(adapter5);
                 AdaptadorProductosGSP adapter6 = new AdaptadorProductosGSP(ListaProductosGSP, context,Empresa);
                 recyclerViewGSP.setAdapter(adapter6);
+                AdaptadorProductosVazlo adapter7 = new AdaptadorProductosVazlo(ListaProductosVazlo, context,Empresa);
+                recyclerViewVazlo.setAdapter(adapter7);
+                AdaptadorProductosKFF adapter8= new AdaptadorProductosKFF(ListaProductoskff, context,Empresa);
+                recyclerViewKFF.setAdapter(adapter8);
+                AdaptadorProductosZoms adapter9 = new AdaptadorProductosZoms(ListaProductoszoms, context,Empresa);
+                recyclerViewZoms.setAdapter(adapter9);
+
 
 
 
@@ -654,6 +787,52 @@ public class HomeFragment extends Fragment {
                         int position = recyclerViewGSP.getChildAdapterPosition(Objects.requireNonNull(recyclerViewGSP.findContainingItemView(view)));
                         Intent ProductosDetallados = new Intent(getActivity(), DetalladoProductosActivity.class);
                         String Producto = ListaProductosGSP.get(position).getClave();
+                        ProductosDetallados.putExtra("Producto", Producto);
+                        ProductosDetallados.putExtra("claveVentana", "1");
+                        startActivity(ProductosDetallados);
+
+
+                    }
+                });
+
+                adapter7.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        int position = recyclerViewVazlo.getChildAdapterPosition(Objects.requireNonNull(recyclerViewVazlo.findContainingItemView(view)));
+                        Intent ProductosDetallados = new Intent(getActivity(), DetalladoProductosActivity.class);
+                        String Producto = ListaProductosVazlo.get(position).getClave();
+                        ProductosDetallados.putExtra("Producto", Producto);
+                        ProductosDetallados.putExtra("claveVentana", "1");
+                        startActivity(ProductosDetallados);
+
+
+                    }
+                });
+
+
+
+                adapter8.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        int position = recyclerViewKFF.getChildAdapterPosition(Objects.requireNonNull(recyclerViewKFF.findContainingItemView(view)));
+                        Intent ProductosDetallados = new Intent(getActivity(), DetalladoProductosActivity.class);
+                        String Producto = ListaProductoskff.get(position).getClave();
+                        ProductosDetallados.putExtra("Producto", Producto);
+                        ProductosDetallados.putExtra("claveVentana", "1");
+                        startActivity(ProductosDetallados);
+
+
+                    }
+                });
+
+
+
+                adapter9.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        int position = recyclerViewZoms.getChildAdapterPosition(Objects.requireNonNull(recyclerViewZoms.findContainingItemView(view)));
+                        Intent ProductosDetallados = new Intent(getActivity(), DetalladoProductosActivity.class);
+                        String Producto = ListaProductoszoms.get(position).getClave();
                         ProductosDetallados.putExtra("Producto", Producto);
                         ProductosDetallados.putExtra("claveVentana", "1");
                         startActivity(ProductosDetallados);
@@ -864,6 +1043,16 @@ public class HomeFragment extends Fragment {
                     case "13":
                         ListaProductosMechanic.add(new ProductosNuevosSANDG(Clave, Descripcion, Tipo,TipoFotos,LineaFotos));
                         break;
+                    case "14":
+                        if (!StrServer.equals("jacve.dyndns.org:9085")){
+                            ListaProductosVazlo.add(new ProductosNuevosSANDG(Clave, Descripcion, Tipo,TipoFotos,LineaFotos));
+                        }else{
+                            ListaProductoskff.add(new ProductosNuevosSANDG(Clave, Descripcion, Tipo,TipoFotos,LineaFotos));
+                        }
+                        break;
+                    case"15":
+                        ListaProductoszoms.add(new ProductosNuevosSANDG(Clave, Descripcion, Tipo,TipoFotos,LineaFotos));
+                        break;
                     default:
                         break;
                 }
@@ -884,6 +1073,12 @@ public class HomeFragment extends Fragment {
             recyclerViewMechanic.setAdapter(adapter5);
             AdaptadorProductosGSP adapter6 = new AdaptadorProductosGSP(ListaProductosGSP, context,Empresa);
             recyclerViewGSP.setAdapter(adapter6);
+            AdaptadorProductosVazlo adapter7 = new AdaptadorProductosVazlo(ListaProductosVazlo, context,Empresa);
+            recyclerViewVazlo.setAdapter(adapter7);
+            AdaptadorProductosKFF adapter8 = new AdaptadorProductosKFF(ListaProductoskff, context,Empresa);
+            recyclerViewKFF.setAdapter(adapter8);
+            AdaptadorProductosZoms adapter9 = new AdaptadorProductosZoms(ListaProductoszoms, context,Empresa);
+            recyclerViewZoms.setAdapter(adapter9);
 
             adapter.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -981,6 +1176,51 @@ public class HomeFragment extends Fragment {
 
                 }
             });
+
+            adapter7.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = recyclerViewVazlo.getChildAdapterPosition(Objects.requireNonNull(recyclerViewVazlo.findContainingItemView(view)));
+                    Intent ProductosDetallados = new Intent(getActivity(), DetalladoProductosActivity.class);
+                    String Producto = ListaProductosVazlo.get(position).getClave();
+                    ProductosDetallados.putExtra("Producto", Producto);
+                    startActivity(ProductosDetallados);
+
+
+
+                }
+            });
+
+
+
+            adapter8.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = recyclerViewKFF.getChildAdapterPosition(Objects.requireNonNull(recyclerViewKFF.findContainingItemView(view)));
+                    Intent ProductosDetallados = new Intent(getActivity(), DetalladoProductosActivity.class);
+                    String Producto = ListaProductoskff.get(position).getClave();
+                    ProductosDetallados.putExtra("Producto", Producto);
+                    startActivity(ProductosDetallados);
+
+
+
+                }
+            });
+
+            adapter9.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = recyclerViewZoms.getChildAdapterPosition(Objects.requireNonNull(recyclerViewZoms.findContainingItemView(view)));
+                    Intent ProductosDetallados = new Intent(getActivity(), DetalladoProductosActivity.class);
+                    String Producto = ListaProductoszoms.get(position).getClave();
+                    ProductosDetallados.putExtra("Producto", Producto);
+                    startActivity(ProductosDetallados);
+
+
+
+                }
+            });
+
 
 
             mDialog.dismiss();

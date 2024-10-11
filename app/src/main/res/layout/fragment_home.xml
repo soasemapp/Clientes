@@ -7,6 +7,18 @@
     android:fitsSystemWindows="true"
     tools:context=".ui.home.HomeFragment">
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/whatssap"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="20dp"
+        android:tintMode="add"
+        android:src="@drawable/icons8_whatsapp_48"
+
+
+        />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -203,8 +215,6 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
                     </androidx.recyclerview.widget.RecyclerView>
-
-
 
 
                 </LinearLayout>
@@ -630,10 +640,163 @@
 
 
 
+                <LinearLayout
+
+                    android:id="@+id/ZoomsOcultar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="7dp"
+                    android:background="@drawable/rodatechfondoinicio">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp"
+                        android:gravity="center"
+                        >
+
+                        <View
+                            android:layout_width="5dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/blue_200"
+                            />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_margin="5dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:autoSizeMaxTextSize="20sp"
+                                android:autoSizeMinTextSize="15sp"
+                                android:text="ZOMS"
+                                android:textColor="@color/white"
+                                android:textStyle="bold" />
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:autoSizeMinTextSize="10sp"
+                                android:autoSizeMaxTextSize="13sp"
+                                android:text="Quimiecos"
+                                android:textColor="@color/white"
+                                />
+
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="110dp"
+                            android:layout_weight="1.5"
+                            android:src="@drawable/zoms"
+
+                            />
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/listProductoszoms"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                    </androidx.recyclerview.widget.RecyclerView>
 
 
 
 
+                </LinearLayout>
+
+
+
+
+
+
+                <LinearLayout
+
+                    android:id="@+id/KFFOcultar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="7dp"
+                    android:background="@drawable/sharkfondoinicio">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp"
+                        android:gravity="center"
+                        >
+
+                        <View
+                            android:layout_width="5dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/blue_200"
+                            />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_margin="5dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:autoSizeMaxTextSize="20sp"
+                                android:autoSizeMinTextSize="15sp"
+                                android:text="KFF"
+                                android:textColor="@color/white"
+                                android:textStyle="bold" />
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:autoSizeMinTextSize="10sp"
+                                android:autoSizeMaxTextSize="13sp"
+                                android:text="Silicon"
+                                android:textColor="@color/white"
+                                />
+
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="110dp"
+                            android:layout_weight="1.5"
+                            android:src="@drawable/kff"
+
+                            />
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/listProductoskff"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                    </androidx.recyclerview.widget.RecyclerView>
+
+
+
+
+                </LinearLayout>
+
+
+
+
+
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
             </LinearLayout>
 
