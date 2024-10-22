@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.almacen.keplerclientesapp">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -15,14 +14,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+
         <activity
             android:name=".BusquedaActivity"
-            android:parentActivityName=".activity.inicioActivity"
-            />
+            android:parentActivityName=".activity.inicioActivity" />
         <activity
             android:name=".EstadodeCuentaActivity"
-            android:parentActivityName=".activity.inicioActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".activity.inicioActivity" />
         <activity
             android:name=".activity.ActivityFactuDetall"
             android:parentActivityName=".EstadodeCuentaActivity" />
@@ -55,7 +54,8 @@
             android:configChanges="screenSize|orientation"
             android:parentActivityName=".activity.MainActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".activity.MainActivity"
+        <activity
+            android:name=".activity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

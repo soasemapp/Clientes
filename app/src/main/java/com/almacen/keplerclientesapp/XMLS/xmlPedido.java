@@ -303,7 +303,7 @@ public class xmlPedido extends SoapSerializationEnvelope {
 
 
         writer.startTag(tem, "k_81");
-        writer.text("V");
+        writer.text("C");
         writer.endTag(tem, "k_81");
 
 
