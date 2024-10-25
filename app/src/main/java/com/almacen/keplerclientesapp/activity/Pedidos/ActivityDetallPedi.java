@@ -72,7 +72,7 @@ protected void onCreate(Bundle savedInstanceState) {
         tableLayout = (TableLayout) findViewById(R.id.table);
 
 
-        mDialog = new SpotsDialog.Builder().setContext(ActivityDetallPedi.this).setMessage("Espere un momento...").build();
+        mDialog = new SpotsDialog(ActivityDetallPedi.this);
         preference = getSharedPreferences("Login", Context.MODE_PRIVATE);
         editor = preference.edit();
         strusr = preference.getString("user", "null");

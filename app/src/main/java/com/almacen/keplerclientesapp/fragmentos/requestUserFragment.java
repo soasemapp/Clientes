@@ -100,8 +100,7 @@ public class requestUserFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        mDialog = new SpotsDialog.Builder().setContext(getActivity()).setMessage("Espere un momento...").build();
-
+        mDialog = new SpotsDialog(getActivity());
 
         int Empresa = 0;
         // Inflate the layout for this fragment

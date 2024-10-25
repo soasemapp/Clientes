@@ -70,8 +70,8 @@ public class EstadodeCuentaActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_estadode_cuenta);
-        mDialog = new SpotsDialog.Builder().setContext(EstadodeCuentaActivity.this).setMessage("Un momento...").build();
 
+        mDialog = new SpotsDialog(EstadodeCuentaActivity.this);
         Cliente = findViewById(R.id.idcliente);
         idlistFacturas = findViewById(R.id.idlistFacturas);
         tableLayout = findViewById(R.id.table);

@@ -164,8 +164,7 @@ public class CarritoComprasActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_carrito_compras);
-        mDialog = new SpotsDialog.Builder().setContext(CarritoComprasActivity.this).setMessage("Espere un momento...").build();
-
+        mDialog = new SpotsDialog(CarritoComprasActivity.this);
         MyToolbar.show(this, "", false);
         recyclerCarrtio = (RecyclerView) findViewById(R.id.lisCarrito);
 

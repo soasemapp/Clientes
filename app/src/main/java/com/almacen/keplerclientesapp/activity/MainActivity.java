@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity  {
 
     @Override
     public void onBackPressed() {
+        super.onBackPressed();
         AlertDialog.Builder mensaje=new AlertDialog.Builder(this);
         mensaje.setTitle("¿Desea salir de la aplicacion?").setIcon(R.drawable.icons8_exit_64);
         mensaje.setCancelable(false);

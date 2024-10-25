@@ -27,6 +27,7 @@ public class PrimeraPaActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        super.onBackPressed();
         AlertDialog.Builder mensaje=new AlertDialog.Builder(this);
         mensaje.setTitle("¿Desea Salir de la Aplicacion?").setIcon(R.drawable.icons8_fire_exit_100);
         mensaje.setCancelable(false);

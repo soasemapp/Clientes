@@ -96,7 +96,7 @@ public class BusquedaActivity extends AppCompatActivity {
         setContentView(R.layout.activity_busqueda);
 
 
-        mDialog = new SpotsDialog.Builder().setContext(BusquedaActivity.this).setMessage("Espere un momento...").build();
+        mDialog = new SpotsDialog(BusquedaActivity.this);
         mDialog.setCancelable(false);
         SharedPreferences preference = getSharedPreferences("Login", Context.MODE_PRIVATE);
         MyToolbar.show(this, "Busqueda", true);

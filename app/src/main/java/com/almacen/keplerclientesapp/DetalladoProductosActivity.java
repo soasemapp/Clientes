@@ -138,7 +138,7 @@ public class DetalladoProductosActivity extends AppCompatActivity {
         editor = preference.edit();
         preferenceClie = getSharedPreferences("clienteCompra", Context.MODE_PRIVATE);
         editor = preferenceClie.edit();
-        mDialog = new SpotsDialog.Builder().setContext(DetalladoProductosActivity.this).setMessage("Espere un momento...").build();
+        mDialog = new SpotsDialog(DetalladoProductosActivity.this);
         mDialog.setCancelable(false);
         strusr = preference.getString("user", "null");
         strpass = preference.getString("pass", "null");

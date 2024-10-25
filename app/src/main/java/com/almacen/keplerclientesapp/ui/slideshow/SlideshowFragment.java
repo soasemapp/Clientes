@@ -94,7 +94,7 @@ public class SlideshowFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_slideshow, container, false);
-        mDialog = new SpotsDialog.Builder().setContext(getActivity()).setMessage("Un momento...").build();
+        mDialog = new SpotsDialog(getActivity());
 
         Cliente = view.findViewById(R.id.idcliente);
         idlistFacturas = view.findViewById(R.id.idlistFacturas);

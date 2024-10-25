@@ -58,8 +58,7 @@ public class ActivityConsulCoti extends AppCompatActivity {
         setContentView(R.layout.activity_consul_coti);
 
         MyToolbar.show(this, "Orden de Venta", false);
-        mDialog = new SpotsDialog.Builder().setContext(ActivityConsulCoti.this).setMessage("Espere un momento...").build();
-
+        mDialog = new SpotsDialog(ActivityConsulCoti.this);
         preference = getSharedPreferences("Login", Context.MODE_PRIVATE);
         editor = preference.edit();
 

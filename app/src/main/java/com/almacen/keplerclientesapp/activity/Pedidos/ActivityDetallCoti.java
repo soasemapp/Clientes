@@ -147,8 +147,8 @@ public class ActivityDetallCoti extends AppCompatActivity {
 
         preference = getSharedPreferences("Login", Context.MODE_PRIVATE);
         editor = preference.edit();
-        mDialog = new SpotsDialog.Builder().setContext(ActivityDetallCoti.this).setMessage("Espere un momento...").build();
 
+        mDialog = new SpotsDialog(ActivityDetallCoti.this);
         strusr = preference.getString("user", "null");
         strpass = preference.getString("pass", "null");
         strname = preference.getString("name", "null");

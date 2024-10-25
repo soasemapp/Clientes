@@ -68,8 +68,7 @@ public class ActivityFactuDetall extends AppCompatActivity {
 
 
 
-        mDialog = new SpotsDialog.Builder().setContext(ActivityFactuDetall.this).setMessage("Espere un momento...").build();
-
+        mDialog = new SpotsDialog(ActivityFactuDetall.this);
         strusr = preference.getString("user", "null");
         strpass =preference.getString("pass", "null");
         strname = preference.getString("name", "null");

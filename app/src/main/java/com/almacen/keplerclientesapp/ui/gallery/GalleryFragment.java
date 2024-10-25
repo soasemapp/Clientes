@@ -65,8 +65,7 @@ public class GalleryFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_gallery, container, false);
         imageView = (ImageView) view.findViewById(R.id.imageview);
 
-        mDialog = new SpotsDialog.Builder().setContext(getActivity()).setMessage("Un momento...").build();
-
+        mDialog = new SpotsDialog(getActivity());
 
         preference = getActivity().getSharedPreferences("Login", Context.MODE_PRIVATE);
         editor = preference.edit();

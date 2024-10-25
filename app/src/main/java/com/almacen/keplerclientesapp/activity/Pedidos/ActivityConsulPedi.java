@@ -69,7 +69,7 @@ public class ActivityConsulPedi extends AppCompatActivity {
         setContentView(R.layout.activity_consul_pedi);
 
         MyToolbar.show(this, "Pedido", false);
-        mDialog = new SpotsDialog.Builder().setContext(ActivityConsulPedi.this).setMessage("Espere un momento...").build();
+        mDialog = new SpotsDialog(ActivityConsulPedi.this);
         preference = getSharedPreferences("Login", Context.MODE_PRIVATE);
         editor = preference.edit();
         strusr = preference.getString("user", "null");
